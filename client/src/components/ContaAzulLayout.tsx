@@ -205,7 +205,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
-                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-24 h-[calc(100vh-6rem)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
+                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-24 h-[calc(100vh-96px)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
                         {/* Cabeçalho do submenu com seta de voltar */}
                         <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a] rounded-tr-2xl">
                           <button 

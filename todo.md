@@ -434,3 +434,8 @@
 - [x] Mover sidebar para começar logo abaixo da topbar (top-0 ao invés de top-24)
 - [x] Aumentar logo Track de h-32 para h-[140px]
 - [x] Ajustar altura da topbar de h-16 para h-24 para acomodar logo maior
+
+
+## Corrigir Posicionamento do Submenu
+- [x] Ajustar submenu para começar em top-24 (abaixo da topbar) ao invés de top-0
+- [x] Ajustar altura do submenu para h-[calc(100vh-96px)] para compensar topbar h-24
