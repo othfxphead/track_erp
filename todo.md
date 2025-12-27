@@ -643,3 +643,17 @@
 - [x] Adicionar hover com fundo vermelho no botão X
 - [x] Impedir propagação do clique no botão X (stopPropagation)
 - [x] Testar funcionalidade completa (testado: botão X remove notificação da lista)
+
+## Corrigir Erros TypeScript (27/12/2025)
+- [ ] Identificar código problemático no db.ts (linhas 688, 702)
+- [ ] Identificar código problemático no routers.ts (linha 46)
+- [ ] Remover código não utilizado de tentativas anteriores
+- [ ] Verificar que não há mais erros TypeScript
+- [ ] Confirmar que o site continua funcionando normalmente
+
+
+## Correções de Bugs e Erros
+- [x] Corrigir ~26 erros TypeScript no db.ts (referências a 'schema.' que não existia)
+- [x] Substituir todas as referências de schema.produtos por produtos
+- [x] Substituir todas as referências de schema.lancamentosFinanceiros por lancamentosFinanceiros
+- [x] Validar compilação TypeScript sem erros (npx tsc --noEmit)

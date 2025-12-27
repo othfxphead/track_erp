@@ -43,7 +43,7 @@ export const appRouter = router({
         return await db.getFluxoCaixaPorMes(input?.dataInicio, input?.dataFim);
       }),
     notificacoes: protectedProcedure.query(async ({ ctx }) => {
-      return await getNotificacoes(ctx.user.id);
+      return await db.getNotificacoes(ctx.user.id);
     }),
   }),
 
