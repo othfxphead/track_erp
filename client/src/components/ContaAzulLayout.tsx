@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-[#1e3a5f] text-white transition-all duration-300 z-40 ${
+          className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseEnter={() => setSidebarHovered(true)}
@@ -150,12 +150,12 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           {/* Botão de toggle fixo e sobreposto */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#1e3a5f] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
+            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#00A3E0] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
           >
             {isExpanded ? (
-              <ChevronLeft className="w-4 h-4 text-[#1e3a5f]" />
+              <ChevronLeft className="w-4 h-4 text-[#00A3E0]" />
             ) : (
-              <ChevronRight className="w-4 h-4 text-[#1e3a5f]" />
+              <ChevronRight className="w-4 h-4 text-[#00A3E0]" />
             )}
           </button>
 
@@ -173,9 +173,9 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            className={`w-full flex items-center justify-center h-12 hover:bg-[#2c5282] transition-colors ${
+                            className={`w-full flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors ${
                               location.startsWith(item.submenu[0].path.split("/")[1])
-                                ? "bg-[#2c5282] border-l-4 border-blue-400"
+                                ? "bg-[#0088C0] border-l-4 border-white"
                                 : ""
                             }`}
                           >
@@ -189,8 +189,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     ) : (
                       <button
                         onClick={() => toggleMenu(item.id)}
-                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#2c5282] transition-colors ${
-                          expandedMenus.includes(item.id) ? "bg-[#2c5282]" : ""
+                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#0088C0] transition-colors ${
+                          expandedMenus.includes(item.id) ? "bg-[#0088C0]" : ""
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -227,13 +227,13 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu expandido quando sidebar está aberta */}
                     {isExpanded && expandedMenus.includes(item.id) && (
-                      <div className="bg-[#152a45] py-1">
+                      <div className="bg-[#0088C0] py-1">
                         {item.submenu.map((subitem) => (
                           <Link key={subitem.path} href={subitem.path}>
                             <span
-                              className={`block px-12 py-2 text-sm hover:bg-[#2c5282] transition-colors cursor-pointer ${
+                              className={`block px-12 py-2 text-sm hover:bg-[#006FA0] transition-colors cursor-pointer ${
                                 location === subitem.path
-                                  ? "bg-[#2c5282] text-white font-medium border-l-4 border-blue-400"
+                                  ? "bg-[#006FA0] text-white font-medium border-l-4 border-white"
                                   : "text-gray-300"
                               }`}
                             >
@@ -251,8 +251,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div
-                            className={`flex items-center justify-center h-12 hover:bg-[#2c5282] transition-colors cursor-pointer ${
-                              location === item.path ? "bg-[#2c5282] border-l-4 border-blue-400" : ""
+                            className={`flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
+                              location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
                             }`}
                           >
                             {item.icon}
@@ -264,8 +264,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </Tooltip>
                     ) : (
                       <div
-                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#2c5282] transition-colors cursor-pointer ${
-                          location === item.path ? "bg-[#2c5282] border-l-4 border-blue-400" : ""
+                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
+                          location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
                         }`}
                       >
                         {item.icon}
@@ -286,11 +286,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
             <div className="flex items-center gap-6">
               {/* Logo TRACK */}
               <Link href="/">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-xl">T</span>
-                  </div>
-                  <span className="text-xl font-bold text-gray-900">TRACK</span>
+                <div className="flex items-center cursor-pointer">
+                  <img src="/logo-track-erp.png" alt="Track ERP" className="h-12" />
                 </div>
               </Link>
 
@@ -309,7 +306,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
               {/* Novo registro */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="h-9 bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button className="h-8 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm">
                     <Plus className="w-4 h-4 mr-2" />
                     Novo registro
                     <ChevronDown className="w-4 h-4 ml-2" />
@@ -341,20 +338,20 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
               </DropdownMenu>
 
               {/* Notificações */}
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative h-8 w-8">
                 <Bell className="w-5 h-5 text-gray-600" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </Button>
 
               {/* Ajuda */}
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="h-8 w-8">
                 <HelpCircle className="w-5 h-5 text-gray-600" />
               </Button>
 
               {/* Menu do usuário */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-9 gap-2">
+                  <Button variant="ghost" className="h-8 gap-2 px-2">
                     <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {user?.name?.charAt(0).toUpperCase() || "U"}

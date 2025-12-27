@@ -349,3 +349,11 @@
 - [ ] Botão "Visualizar NF" e download XML
 - [ ] Dropdowns com ícones e setas corretas
 - [ ] Responsividade mobile (menu e formulários)
+
+
+## Atualização Visual - Logo e Cores
+- [x] Copiar logo Track ERP para pasta public
+- [x] Mudar cores do menu lateral para azul #00A3E0 (mesma cor da logo)
+- [x] Substituir ícone T + texto TRACK por logo Track ERP completa na topbar
+- [x] Diminuir altura dos botões (h-9 → h-8, menos padding)
+- [x] Aplicar botões mais finos em toda aplicação
