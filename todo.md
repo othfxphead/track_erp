@@ -447,3 +447,8 @@
 - [x] Ajustar altura da sidebar para h-[calc(100vh-80px)]
 - [x] Ajustar submenu para top-20 e h-[calc(100vh-80px)]
 - [x] Ajustar main content para mt-20
+
+
+## Corrigir Brecha e Botão Toggle
+- [x] Preencher brecha branca entre menu lateral e submenu com cor do submenu (#003d7a)
+- [x] Mover botão toggle (setinha) do topo (top-6) para o rodapé (bottom-6) do menu lateral

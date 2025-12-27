@@ -145,10 +145,10 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
             setHoveredItem(null);
           }}
         >
-          {/* Botão de toggle fixo e sobreposto */}
+          {/* Botão de toggle fixo e sobreposto - no rodapé */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#00A3E0] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
+            className="absolute -right-3 bottom-6 z-50 w-6 h-6 bg-white border-2 border-[#00A3E0] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
           >
             {isExpanded ? (
               <ChevronLeft className="w-4 h-4 text-[#00A3E0]" />
@@ -205,7 +205,10 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
-                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-80px)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
+                      <>
+                        {/* Preenchimento da brecha entre menus */}
+                        <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-80px)] w-1 bg-[#003d7a] z-40`} />
+                        <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-80px)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
                         {/* Cabeçalho do submenu com seta de voltar */}
                         <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a] rounded-tr-2xl">
                           <button 
@@ -238,6 +241,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                           ))}
                         </div>
                       </div>
+                      </>
                     )}
 
 
