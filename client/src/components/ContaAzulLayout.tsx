@@ -213,13 +213,13 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                         </div>
                         {item.submenu.map((subitem) => (
                           <Link key={subitem.path} href={subitem.path}>
-                            <a
-                              className={`block px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
+                            <span
+                              className={`block px-4 py-2 text-sm hover:bg-gray-100 transition-colors cursor-pointer ${
                                 location === subitem.path ? "bg-blue-50 text-blue-600 font-medium" : ""
                               }`}
                             >
                               {subitem.label}
-                            </a>
+                            </span>
                           </Link>
                         ))}
                       </div>
@@ -230,15 +230,15 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <div className="bg-[#152a45] py-1">
                         {item.submenu.map((subitem) => (
                           <Link key={subitem.path} href={subitem.path}>
-                            <a
-                              className={`block px-12 py-2 text-sm hover:bg-[#2c5282] transition-colors ${
+                            <span
+                              className={`block px-12 py-2 text-sm hover:bg-[#2c5282] transition-colors cursor-pointer ${
                                 location === subitem.path
                                   ? "bg-[#2c5282] text-white font-medium border-l-4 border-blue-400"
                                   : "text-gray-300"
                               }`}
                             >
                               {subitem.label}
-                            </a>
+                            </span>
                           </Link>
                         ))}
                       </div>
@@ -250,27 +250,27 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     {!isExpanded ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <a
-                            className={`flex items-center justify-center h-12 hover:bg-[#2c5282] transition-colors ${
+                          <div
+                            className={`flex items-center justify-center h-12 hover:bg-[#2c5282] transition-colors cursor-pointer ${
                               location === item.path ? "bg-[#2c5282] border-l-4 border-blue-400" : ""
                             }`}
                           >
                             {item.icon}
-                          </a>
+                          </div>
                         </TooltipTrigger>
                         <TooltipContent side="right" className="bg-gray-900 text-white">
                           {item.label}
                         </TooltipContent>
                       </Tooltip>
                     ) : (
-                      <a
-                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#2c5282] transition-colors ${
+                      <div
+                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#2c5282] transition-colors cursor-pointer ${
                           location === item.path ? "bg-[#2c5282] border-l-4 border-blue-400" : ""
                         }`}
                       >
                         {item.icon}
                         <span className="text-sm font-medium">{item.label}</span>
-                      </a>
+                      </div>
                     )}
                   </Link>
                 )}
