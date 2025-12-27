@@ -31,12 +31,14 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
-import { toast } from "sonner";
+} from "lucide-react";import { toast } from "sonner";
+import NovoOrcamentoModal from "@/components/NovoOrcamentoModal";
+
 export default function OrcamentosNew() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("todos");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showNovoOrcamento, setShowNovoOrcamento] = useState(false);
   const itemsPerPage = 10;
 
   // Queries
@@ -89,7 +91,8 @@ export default function OrcamentosNew() {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
         {/* Cabeçalho */}
         <div className="flex items-center justify-between">
           <div>
@@ -98,10 +101,13 @@ export default function OrcamentosNew() {
               Gerencie seus orçamentos e propostas comerciais
             </p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 h-9 px-4">
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Orçamento
-          </Button>
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
+          onClick={() => setShowNovoOrcamento(true)}
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Orçamento
+        </Button>
         </div>
 
         {/* Barra de ações */}
@@ -321,5 +327,12 @@ export default function OrcamentosNew() {
           )}
         </Card>
       </div>
+
+      {/* Modal Novo Orçamento */}
+      <NovoOrcamentoModal
+        open={showNovoOrcamento}
+        onOpenChange={setShowNovoOrcamento}
+      />
+    </>
   );
 }

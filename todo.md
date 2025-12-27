@@ -228,3 +228,68 @@
 - [x] Adicionar campos Bairro, Cidade, Estado (dropdown), CEP (00000-000)
 - [x] Implementar validações de campos obrigatórios
 - [x] Adicionar botão Salvar no final do formulário
+
+
+## Formulário de Novo Orçamento Completo
+- [x] Criar modal em tela cheia para Novo Orçamento
+- [x] Adicionar campo Tipo da venda (Orçamento, Venda avulsa, Venda recorrente)
+- [x] Adicionar campo Situação da negociação (dropdown)
+- [x] Adicionar botão "Consultar cliente no Serasa" ao lado do campo cliente
+- [x] Implementar aba "Informações" com campos básicos
+- [x] Implementar aba "Itens" com tabela de produtos/serviços
+- [x] Implementar aba "Valor" com desconto (% ou R$) e cálculo automático
+- [x] Implementar aba "Observações de pagamento"
+- [x] Implementar aba "Complemento NF"
+- [x] Adicionar cálculo automático: Itens – Desconto = Total líquido
+- [x] Marcar campos obrigatórios com asterisco
+
+## Formulário de Nova Venda Completo
+- [ ] Criar modal em tela cheia para Nova Venda
+- [ ] Adicionar campo Categoria financeira
+- [ ] Adicionar campo Centro de custo
+- [ ] Adicionar campo Forma de pagamento
+- [ ] Adicionar campo Conta de recebimento
+- [ ] Adicionar campo Condição de pagamento
+- [ ] Adicionar campo Data de vencimento
+- [ ] Implementar seção de Parcelamento com botão "Editar parcelas"
+- [ ] Adicionar seção de Informações fiscais completas
+- [ ] Reutilizar abas de Itens, Valor e Observações do orçamento
+
+## Formulário de Venda Recorrente (Contrato)
+- [ ] Criar modal em tela cheia para Venda Recorrente
+- [ ] Adicionar campo Data de início
+- [ ] Adicionar campo Dia da geração
+- [ ] Adicionar campo Data da primeira venda
+- [ ] Implementar seção Configuração de recorrência
+- [ ] Adicionar campo Intervalo (mensal, semanal, etc)
+- [ ] Adicionar campo Término (data ou quantidade)
+- [ ] Adicionar campo Vigência do contrato
+- [ ] Adicionar Classificação final (categoria e centro de custo)
+
+## Tela de Detalhes da Venda
+- [ ] Criar página de detalhes da venda
+- [ ] Adicionar alerta verde "Nota Fiscal emitida com sucesso" com ícone check
+- [ ] Adicionar botão "Download XML" da nota fiscal
+- [ ] Criar tabela de itens vendidos (Produto, Tipo, Detalhes, Quantidade, Valor unitário, Subtotal)
+- [ ] Mostrar Total líquido no canto inferior direito
+- [ ] Adicionar botão verde "Visualizar nota fiscal"
+- [ ] Implementar dropdown "Outras ações" (Enviar, Imprimir, Clonar, Excluir)
+
+## Menu de Ações nos Registros
+- [ ] Adicionar dropdown "Ações" em cada linha da tabela de orçamentos
+- [ ] Implementar ação "Editar"
+- [ ] Implementar ação "Enviar" (por email)
+- [ ] Implementar ação "Clonar"
+- [ ] Implementar ação "Imprimir"
+- [ ] Implementar ação "Excluir" (com confirmação)
+- [ ] Implementar ação "Criar venda" (converter orçamento em venda)
+- [ ] Adicionar mesmo menu nas tabelas de vendas
+
+## Melhorias de UX
+- [ ] Adicionar ícone de ajuda ("?") ao lado de campos complexos
+- [ ] Adicionar checkbox para seleção múltipla de registros
+- [ ] Melhorar mensagem "sem registros" com ilustração
+- [ ] Adicionar tooltip de confirmação ao excluir
+- [ ] Garantir máscaras de moeda e datas brasileiras em todos os campos
+- [ ] Implementar responsividade para mobile e tablet
+- [ ] Testar navegação entre todos os módulos sem erro de rota
