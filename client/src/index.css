@@ -262,3 +262,58 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
+/* ========================================
+   Estilos personalizados para Date Picker (Calendário)
+   ======================================== */
+
+/* Container principal do calendário */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Estilos para o popup do calendário (Chrome/Edge) */
+input[type="date"]::-webkit-datetime-edit {
+  padding: 0;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+input[type="date"]::-webkit-datetime-edit-text {
+  padding: 0 0.3em;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  padding: 0 0.2em;
+}
+
+/* Estilos adicionais para melhorar a aparência do input de data */
+input[type="date"] {
+  position: relative;
+  font-family: inherit;
+}
+
+/* Remove a aparência padrão do navegador para ter mais controle */
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+
+/* Estilo para quando o campo está vazio (placeholder) */
+input[type="date"]:invalid::-webkit-datetime-edit {
+  color: #9ca3af; /* text-gray-400 */
+}
+
+/* Estilo para quando o campo tem valor */
+input[type="date"]:valid::-webkit-datetime-edit {
+  color: inherit;
+}

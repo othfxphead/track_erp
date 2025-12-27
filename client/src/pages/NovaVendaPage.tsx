@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { NovoClienteModal } from "@/components/NovoClienteModal";
 import { NovoProdutoModal } from "@/components/NovoProdutoModal";
 import { NovoServicoModal } from "@/components/NovoServicoModal";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export default function NovaVendaPage() {
   const [, setLocation] = useLocation();
@@ -35,7 +36,7 @@ export default function NovaVendaPage() {
   const [formData, setFormData] = useState({
     numero: "",
     clienteId: "",
-    dataVenda: new Date().toISOString().split("T")[0],
+    dataVenda: new Date(),
     vendedorResponsavel: "",
     status: "pendente",
     formaPagamento: "",
@@ -233,11 +234,10 @@ export default function NovaVendaPage() {
                 </div>
                 <div>
                   <Label htmlFor="data">Data da venda *</Label>
-                  <Input
-                    id="data"
-                    type="date"
-                    value={formData.dataVenda}
-                    onChange={(e) => setFormData(prev => ({ ...prev, dataVenda: e.target.value }))}
+                  <DatePicker
+                    date={formData.dataVenda}
+                    onDateChange={(date) => setFormData(prev => ({ ...prev, dataVenda: date || new Date() }))}
+                    placeholder="Selecione a data da venda"
                   />
                 </div>
               </div>

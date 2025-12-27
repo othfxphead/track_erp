@@ -582,3 +582,12 @@
 - [x] Implementar salvamento via tRPC (servicos.create)
 - [x] Atualizar lista de serviços após salvar
 - [x] Selecionar automaticamente o serviço recém-criado no dropdown
+
+## Melhorar Visual dos Calendários (27/12/2025)
+- [x] Adicionar estilos CSS personalizados para date pickers
+- [x] Melhorar cores, bordas e espaçamento
+- [x] Deixar dia atual destacado com fundo azul claro
+- [x] Melhorar botões de navegação (setas)
+- [x] Adicionar sombra e borda arredondada no container
+- [x] Melhorar hover e transições
+- [x] Testar em diferentes páginas (testado na NovaVendaPage)
