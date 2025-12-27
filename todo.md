@@ -452,3 +452,19 @@
 ## Corrigir Brecha e Botão Toggle
 - [x] Preencher brecha branca entre menu lateral e submenu com cor do submenu (#003d7a)
 - [x] Mover botão toggle (setinha) do topo (top-6) para o rodapé (bottom-6) do menu lateral
+
+
+## Funcionalidades - Dados da Empresa
+- [x] Criar tabela `empresas` no banco de dados (logo, razão social, nome fantasia, CNPJ, etc.)
+- [x] Criar procedures tRPC para salvar e buscar dados da empresa (empresa.get, empresa.upsert, empresa.uploadLogo)
+- [x] Implementar upload de logo da empresa para S3 com conversão base64
+- [x] Atualizar logo Track na topbar dinamicamente quando logo da empresa for carregada
+- [x] Atualizar nome "Track ERP" na topbar quando nome fantasia for preenchido
+- [x] Implementar formulário completo de Dados da Empresa (ConfiguracoesCompleta.tsx)
+- [x] Adicionar preview de logo carregada com indicador de loading
+- [x] Carregar dados existentes da empresa ao abrir a página
+- [ ] Adicionar máscaras brasileiras (CNPJ, telefone, CEP) nos inputs
+- [x] Implementar menu dropdown de perfil do usuário (canto superior direito)
+- [x] Adicionar opções no menu de perfil: Perfil, Empresa, Configurações, Sair (logout funcional)
+- [x] Conectar botão Empresa do menu de perfil à página /configuracoes/dados-empresa
+- [x] Conectar botão Configurações do menu de perfil à página /configuracoes

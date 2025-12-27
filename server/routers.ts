@@ -62,6 +62,37 @@ export const appRouter = router({
         });
         return { success: true, id };
       }),
+    uploadLogo: protectedProcedure
+      .input(z.object({
+        base64: z.string(),
+        fileName: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const { storagePut } = await import("./storage");
+        const buffer = Buffer.from(input.base64, "base64");
+        const randomSuffix = Math.random().toString(36).substring(7);
+        const key = `logos/${Date.now()}-${randomSuffix}-${input.fileName}`;
+        const { url } = await storagePut(key, buffer, input.mimeType);
+        
+        // Buscar empresa existente e atualizar logo
+        const empresaAtual = await db.getEmpresa();
+        if (empresaAtual) {
+          await db.upsertEmpresa({
+            ...empresaAtual,
+            logoUrl: url,
+          });
+        }
+        
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "upload_logo",
+          modulo: "configuracoes",
+          descricao: "Logo da empresa atualizada",
+        });
+        
+        return { success: true, url };
+      }),
   }),
 
   // Clientes

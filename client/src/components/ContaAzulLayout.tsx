@@ -114,6 +114,7 @@ const menuItems: MenuItem[] = [
 export default function ContaAzulLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
+  const { data: empresa } = trpc.empresa.get.useQuery();
   const logoutMutation = trpc.auth.logout.useMutation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarHovered, setSidebarHovered] = useState(false);
@@ -286,13 +287,13 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           {/* Topbar */}
           <header className="fixed top-0 right-0 left-0 h-20 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
             <div className="flex items-center gap-12">
-              {/* Logo TRACK */}
+              {/* Logo Empresa */}
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
                   <img 
-                    src="/logo-track-erp.png" 
-                    alt="Track ERP" 
-                    className="h-[140px] transition-all duration-300 hover:scale-[1.5] hover:z-50" 
+                    src={empresa?.logoUrl || "/logo-track-erp.png"} 
+                    alt={empresa?.nomeFantasia || "Track ERP"} 
+                    className="h-[140px] transition-all duration-300 hover:scale-[1.05] hover:z-50 object-contain" 
                   />
                 </div>
               </Link>

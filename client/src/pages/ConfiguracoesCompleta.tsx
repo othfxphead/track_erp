@@ -5,11 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
 import { Upload, Save, Building2, FileKey, CreditCard, Users, Link as LinkIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function ConfiguracoesCompleta() {
   const { data: empresa, refetch } = trpc.empresa.get.useQuery();
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   
   const [dadosEmpresa, setDadosEmpresa] = useState({
     razaoSocial: "",
@@ -47,13 +49,52 @@ export default function ConfiguracoesCompleta() {
     serasaApiKey: "",
   });
 
+  // Carregar dados da empresa quando disponível
+  useEffect(() => {
+    if (empresa) {
+      setDadosEmpresa({
+        razaoSocial: empresa.razaoSocial || "",
+        nomeFantasia: empresa.nomeFantasia || "",
+        cnpj: empresa.cnpj || "",
+        inscricaoEstadual: empresa.inscricaoEstadual || "",
+        inscricaoMunicipal: empresa.inscricaoMunicipal || "",
+        telefone: empresa.telefone || "",
+        email: empresa.email || "",
+        endereco: empresa.endereco || "",
+        numero: "",
+        complemento: "",
+        bairro: "",
+        cidade: empresa.cidade || "",
+        estado: empresa.estado || "",
+        cep: empresa.cep || "",
+      });
+      setLogoPreview(empresa.logoUrl || null);
+    }
+  }, [empresa]);
+
   const updateEmpresaMutation = trpc.empresa.upsert.useMutation({
     onSuccess: () => {
       toast.success("Dados da empresa atualizados!");
       refetch();
+      // Recarregar página para atualizar logo/nome na topbar
+      setTimeout(() => window.location.reload(), 1000);
     },
     onError: (error: any) => {
       toast.error(`Erro: ${error.message}`);
+    },
+  });
+
+  const uploadLogoMutation = trpc.empresa.uploadLogo.useMutation({
+    onSuccess: (data) => {
+      toast.success("Logo atualizada com sucesso!");
+      setLogoPreview(data.url);
+      refetch();
+      // Recarregar página para atualizar logo na topbar
+      setTimeout(() => window.location.reload(), 1000);
+    },
+    onError: (error: any) => {
+      toast.error(`Erro ao fazer upload: ${error.message}`);
+      setIsUploading(false);
     },
   });
 
@@ -61,11 +102,48 @@ export default function ConfiguracoesCompleta() {
     updateEmpresaMutation.mutate(dadosEmpresa);
   };
 
-  const handleUploadLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // TODO: Implementar upload para S3
-      toast.info("Upload de logo será implementado com S3");
+    if (!file) return;
+
+    // Validar arquivo
+    const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/svg+xml"];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Formato inválido. Use PNG, JPG ou SVG.");
+      return;
+    }
+
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSize) {
+      toast.error("Arquivo muito grande. Máximo 2MB.");
+      return;
+    }
+
+    setIsUploading(true);
+    
+    try {
+      // Converter para base64
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result as string;
+        const base64Data = base64.split(",")[1]; // Remover prefixo data:image/...
+        
+        await uploadLogoMutation.mutateAsync({
+          base64: base64Data,
+          fileName: file.name,
+          mimeType: file.type,
+        });
+        
+        setIsUploading(false);
+      };
+      reader.onerror = () => {
+        toast.error("Erro ao ler arquivo");
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Erro no upload:", error);
+      setIsUploading(false);
     }
   };
 
@@ -136,8 +214,12 @@ export default function ConfiguracoesCompleta() {
                 <div>
                   <Label>Logo da Empresa</Label>
                   <div className="mt-2 flex items-center gap-4">
-                    <div className="w-24 h-24 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted">
-                      <Upload className="h-8 w-8 text-muted-foreground" />
+                    <div className="w-24 h-24 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted overflow-hidden">
+                      {logoPreview ? (
+                        <img src={logoPreview} alt="Logo" className="w-full h-full object-contain" />
+                      ) : (
+                        <Upload className="h-8 w-8 text-muted-foreground" />
+                      )}
                     </div>
                     <div>
                       <Input
@@ -145,9 +227,10 @@ export default function ConfiguracoesCompleta() {
                         accept="image/*"
                         onChange={handleUploadLogo}
                         className="max-w-xs"
+                        disabled={isUploading}
                       />
                       <p className="text-xs text-muted-foreground mt-1">
-                        PNG, JPG ou SVG (máx. 2MB)
+                        {isUploading ? "Fazendo upload..." : "PNG, JPG ou SVG (máx. 2MB)"}
                       </p>
                     </div>
                   </div>
