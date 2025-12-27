@@ -419,3 +419,7 @@
 ## Remover Scrollbar do Menu
 - [x] Remover barra de scroll visível do menu lateral
 - [x] Manter funcionalidade de scroll se necessário (ocultar apenas visualmente)
+
+
+## Remover Logo do Menu Lateral
+- [x] Remover texto "Track" do topo do menu lateral expandido (confirmado que não existe no código atual)
