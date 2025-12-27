@@ -281,14 +281,14 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
         <div className={`flex-1 flex flex-col transition-all duration-300 ${isExpanded ? "ml-64" : "ml-16"}`}>
           {/* Topbar */}
           <header className="fixed top-0 right-0 left-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-12">
               {/* Logo TRACK */}
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
                   <img 
                     src="/logo-track-erp.png" 
                     alt="Track ERP" 
-                    className="h-16 transition-all duration-300 hover:scale-[2] hover:z-50" 
+                    className="h-24 transition-all duration-300 hover:scale-[1.5] hover:z-50" 
                   />
                 </div>
               </Link>
@@ -392,7 +392,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           </header>
 
           {/* Content */}
-          <main className="mt-20 flex-1 overflow-auto">
+          <main className="mt-24 flex-1 overflow-auto">
             <div className="p-6">{children}</div>
           </main>
         </div>

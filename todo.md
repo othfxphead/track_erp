@@ -402,3 +402,9 @@
 - [x] Implementar navegação no botão "Novo Produto" do dropdown
 - [ ] Implementar navegação nos botões de Ações Rápidas do Dashboard
 - [ ] Refazer páginas conforme especificações originais do usuário
+
+
+## Ajuste de Logo e Espaçamento
+- [x] Aumentar logo Track para h-24 (maior)
+- [x] Adicionar mais espaço entre logo e campo de pesquisa (gap-12 ou maior)
+- [x] Ajustar altura da topbar se necessário para acomodar logo maior
