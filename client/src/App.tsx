@@ -9,9 +9,11 @@ import Produtos from "./pages/Produtos";
 import Clientes from "./pages/Clientes";
 import Apresentacao from "./pages/Apresentacao";
 import Orcamentos from "./pages/Orcamentos";
-import Vendas from "./pages/Vendas";
+import VendasCompleta from "./pages/VendasCompleta";
 import Servicos from "./pages/Servicos";
-import { Compras, Estoque, Financeiro, Fiscal, Relatorios, Configuracoes, ConsultaSerasa } from "./pages/ModulosSimples";
+import { Compras, Estoque, Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
+import FinanceiroCompleto from "./pages/FinanceiroCompleto";
+import ConfiguracoesCompleta from "./pages/ConfiguracoesCompleta";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -20,17 +22,17 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/apresentacao"} component={Apresentacao} />
       <Route path={"/orcamentos"} component={Orcamentos} />
-      <Route path={"/vendas"} component={Vendas} />
+      <Route path={"/vendas"} component={VendasCompleta} />
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
       <Route path={"/servicos"} component={Servicos} />
       <Route path={"/compras"} component={Compras} />
       <Route path={"/estoque"} component={Estoque} />
-      <Route path={"/financeiro"} component={Financeiro} />
+      <Route path={"/financeiro"} component={FinanceiroCompleto} />
       <Route path={"/fiscal"} component={Fiscal} />
       <Route path={"/relatorios"} component={Relatorios} />
       <Route path={"/serasa"} component={ConsultaSerasa} />
-      <Route path={"/configuracoes"} component={Configuracoes} />
+      <Route path={"/configuracoes"} component={ConfiguracoesCompleta} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
