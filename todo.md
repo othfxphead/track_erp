@@ -468,3 +468,17 @@
 - [x] Adicionar opções no menu de perfil: Perfil, Empresa, Configurações, Sair (logout funcional)
 - [x] Conectar botão Empresa do menu de perfil à página /configuracoes/dados-empresa
 - [x] Conectar botão Configurações do menu de perfil à página /configuracoes
+
+
+## Bugs - Página Dados da Empresa
+- [ ] Corrigir upload de logo (não está funcionando)
+- [ ] Corrigir salvamento de nome fantasia (não está sendo salvo)
+- [ ] Verificar procedure empresa.uploadLogo
+- [ ] Verificar procedure empresa.upsert
+- [ ] Testar atualização dinâmica da topbar após salvamento
+
+
+## Correções de Bugs Recentes
+- [x] Corrigir botão "Salvar Dados da Empresa" que não estava funcionando (solução: envolver em form com onSubmit)
+- [x] Corrigir validação de email para aceitar strings vazias
+- [x] Aplicar correção de formulários para todas as abas de Configurações (Empresa, Certificado, Bancário, Integrações)

@@ -99,12 +99,25 @@ export default function ConfiguracoesCompleta() {
   });
 
   const handleSaveDadosEmpresa = () => {
+    
+    // Validação básica
+    if (!dadosEmpresa.razaoSocial || !dadosEmpresa.cnpj) {
+      toast.error("Preencha os campos obrigatórios: Razão Social e CNPJ");
+      return;
+    }
+    
+    console.log("Chamando mutation...");
     updateEmpresaMutation.mutate(dadosEmpresa);
   };
 
   const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleUploadLogo chamado");
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log("Nenhum arquivo selecionado");
+      return;
+    }
+    console.log("Arquivo selecionado:", file.name, file.type, file.size);
 
     // Validar arquivo
     const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/svg+xml"];
@@ -120,29 +133,37 @@ export default function ConfiguracoesCompleta() {
     }
 
     setIsUploading(true);
+    console.log("Iniciando upload...");
     
     try {
       // Converter para base64
       const reader = new FileReader();
       reader.onload = async () => {
+        console.log("Arquivo lido com sucesso");
         const base64 = reader.result as string;
         const base64Data = base64.split(",")[1]; // Remover prefixo data:image/...
+        console.log("Base64 gerado, tamanho:", base64Data.length);
         
+        console.log("Chamando uploadLogoMutation...");
         await uploadLogoMutation.mutateAsync({
           base64: base64Data,
           fileName: file.name,
           mimeType: file.type,
         });
+        console.log("Upload concluído!");
         
         setIsUploading(false);
       };
       reader.onerror = () => {
+        console.error("Erro ao ler arquivo");
         toast.error("Erro ao ler arquivo");
         setIsUploading(false);
       };
+      console.log("Iniciando leitura do arquivo...");
       reader.readAsDataURL(file);
     } catch (error) {
       console.error("Erro no upload:", error);
+      toast.error(`Erro no upload: ${error}`);
       setIsUploading(false);
     }
   };
@@ -210,6 +231,7 @@ export default function ConfiguracoesCompleta() {
                 <CardTitle>Dados da Empresa</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleSaveDadosEmpresa(); }}>
                 {/* Upload de Logo */}
                 <div>
                   <Label>Logo da Empresa</Label>
@@ -398,11 +420,12 @@ export default function ConfiguracoesCompleta() {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                  <Button onClick={handleSaveDadosEmpresa}>
+                  <Button type="submit">
                     <Save className="h-4 w-4 mr-2" />
                     Salvar Dados da Empresa
                   </Button>
                 </div>
+                </form>
               </CardContent>
             </Card>
           </TabsContent>
@@ -414,6 +437,7 @@ export default function ConfiguracoesCompleta() {
                 <CardTitle>Certificado Digital A1</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleUploadCertificado(); }}>
                 <p className="text-sm text-muted-foreground">
                   Faça upload do seu certificado digital A1 (.pfx) para emissão de notas fiscais eletrônicas.
                 </p>
@@ -452,11 +476,12 @@ export default function ConfiguracoesCompleta() {
                 </div>
 
                 <div className="flex justify-end">
-                  <Button onClick={handleUploadCertificado}>
+                  <Button type="submit">
                     <Upload className="h-4 w-4 mr-2" />
                     Enviar Certificado
                   </Button>
                 </div>
+                </form>
               </CardContent>
             </Card>
           </TabsContent>
@@ -468,6 +493,7 @@ export default function ConfiguracoesCompleta() {
                 <CardTitle>Contas Bancárias</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleSaveContaBancaria(); }}>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="banco">Banco</Label>
@@ -522,11 +548,12 @@ export default function ConfiguracoesCompleta() {
                 </div>
 
                 <div className="flex justify-end">
-                  <Button onClick={handleSaveContaBancaria}>
+                  <Button type="submit">
                     <Save className="h-4 w-4 mr-2" />
                     Adicionar Conta
                   </Button>
                 </div>
+                </form>
 
                 <div className="border-t pt-4 mt-4">
                   <h4 className="font-semibold mb-3">Contas Cadastradas</h4>
@@ -563,6 +590,7 @@ export default function ConfiguracoesCompleta() {
                 <CardTitle>Integrações com APIs</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleSaveIntegracoes(); }}>
                 <div>
                   <Label htmlFor="focusApiKey">Focus NFe - API Key</Label>
                   <Input
@@ -628,11 +656,12 @@ export default function ConfiguracoesCompleta() {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                  <Button onClick={handleSaveIntegracoes}>
+                  <Button type="submit">
                     <Save className="h-4 w-4 mr-2" />
                     Salvar Integrações
                   </Button>
                 </div>
+                </form>
               </CardContent>
             </Card>
           </TabsContent>

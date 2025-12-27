@@ -40,7 +40,7 @@ export const appRouter = router({
         cnpj: z.string(),
         inscricaoEstadual: z.string().optional(),
         inscricaoMunicipal: z.string().optional(),
-        email: z.string().email().optional(),
+        email: z.string().email().or(z.literal("")).optional(),
         telefone: z.string().optional(),
         logoUrl: z.string().optional(),
         certificadoDigitalUrl: z.string().optional(),
@@ -82,6 +82,13 @@ export const appRouter = router({
             ...empresaAtual,
             logoUrl: url,
           });
+        } else {
+          // Criar empresa com dados mínimos se não existir
+          await db.upsertEmpresa({
+            razaoSocial: "Empresa",
+            cnpj: "00.000.000/0000-00",
+            logoUrl: url,
+          });
         }
         
         await db.createLogAuditoria({
@@ -110,7 +117,7 @@ export const appRouter = router({
         tipo: z.enum(["fisica", "juridica"]),
         nome: z.string(),
         cpfCnpj: z.string(),
-        email: z.string().email().optional(),
+        email: z.string().email().or(z.literal("")).optional(),
         telefone: z.string().optional(),
         celular: z.string().optional(),
         endereco: z.string().optional(),
@@ -137,7 +144,7 @@ export const appRouter = router({
           tipo: z.enum(["fisica", "juridica"]).optional(),
           nome: z.string().optional(),
           cpfCnpj: z.string().optional(),
-          email: z.string().email().optional(),
+          email: z.string().email().or(z.literal("")).optional(),
           telefone: z.string().optional(),
           celular: z.string().optional(),
           endereco: z.string().optional(),
@@ -171,7 +178,7 @@ export const appRouter = router({
         tipo: z.enum(["fisica", "juridica"]),
         nome: z.string(),
         cpfCnpj: z.string(),
-        email: z.string().email().optional(),
+        email: z.string().email().or(z.literal("")).optional(),
         telefone: z.string().optional(),
         endereco: z.string().optional(),
         cidade: z.string().optional(),
