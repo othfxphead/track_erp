@@ -21,12 +21,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NovoClienteModal } from "@/components/NovoClienteModal";
+import { NovoProdutoModal } from "@/components/NovoProdutoModal";
 
 export default function NovaVendaPage() {
   const [, setLocation] = useLocation();
   const navigate = (path: string) => setLocation(path);
   const [activeTab, setActiveTab] = useState("informacoes");
   const [modalNovoClienteOpen, setModalNovoClienteOpen] = useState(false);
+  const [modalNovoProdutoOpen, setModalNovoProdutoOpen] = useState(false);
   
   const [formData, setFormData] = useState({
     numero: "",
@@ -310,7 +312,7 @@ export default function NovaVendaPage() {
                             variant="ghost"
                             size="sm"
                             className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            onClick={() => window.open('/produtos', '_blank')}
+                            onClick={() => setModalNovoProdutoOpen(true)}
                           >
                             <span className="mr-2">+</span> Novo
                           </Button>
@@ -577,6 +579,15 @@ export default function NovaVendaPage() {
         onOpenChange={setModalNovoClienteOpen}
         onClienteCriado={(clienteId) => {
           setFormData(prev => ({ ...prev, clienteId: clienteId.toString() }));
+        }}
+      />
+
+      {/* Modal de Novo Produto */}
+      <NovoProdutoModal
+        open={modalNovoProdutoOpen}
+        onOpenChange={setModalNovoProdutoOpen}
+        onProdutoCriado={(produtoId) => {
+          setItemTemp(prev => ({ ...prev, produtoId: produtoId.toString() }));
         }}
       />
     </div>

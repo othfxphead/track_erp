@@ -562,3 +562,13 @@
 - [x] Adicionar rota /vendas/nova no App.tsx
 - [x] Adicionar link "Nova Venda" no botão da página de vendas
 - [x] Testar salvamento e validações
+
+## Modal de Cadastro Rápido de Produto (27/12/2025)
+- [x] Criar componente NovoProdutoModal.tsx (800px x 500px)
+- [x] Adicionar campos essenciais: Código, Nome, Preço de Venda, Estoque, Unidade
+- [x] Implementar validações de campos obrigatórios
+- [x] Integrar modal com botão "+ Novo" do dropdown de Produtos na NovaVendaPage
+- [x] Implementar salvamento via tRPC (produtos.create)
+- [x] Atualizar lista de produtos após salvar
+- [x] Selecionar automaticamente o produto recém-criado no dropdown
+- [ ] Aplicar mesmo padrão para NovoOrcamentoPage
