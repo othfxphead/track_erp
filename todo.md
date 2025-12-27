@@ -169,3 +169,14 @@
 - [x] Adicionar listagem de compras com histórico
 - [x] Implementar filtros por período e fornecedor
 - [x] Integrar com logs de auditoria
+
+
+## Dashboard de Estoque Avançado
+- [x] Criar página de dashboard de estoque com indicadores principais
+- [x] Implementar alertas de estoque mínimo com cards destacados
+- [x] Adicionar gráfico de movimentações (entradas vs saídas) por período
+- [x] Criar sistema de previsão de reposição usando IA baseado em histórico
+- [x] Implementar identificação de produtos parados (sem movimentação há 30+ dias)
+- [x] Adicionar indicadores de giro de estoque e valor total
+- [x] Criar histórico detalhado de movimentações por produto
+- [x] Implementar filtros por categoria e período
