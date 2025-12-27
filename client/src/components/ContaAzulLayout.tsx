@@ -286,12 +286,12 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
             <div className="flex items-center gap-6">
               {/* Logo TRACK */}
               <Link href="/">
-                <a className="flex items-center gap-2">
+                <div className="flex items-center gap-2 cursor-pointer">
                   <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-xl">T</span>
                   </div>
                   <span className="text-xl font-bold text-gray-900">TRACK</span>
-                </a>
+                </div>
               </Link>
 
               {/* Search */}
