@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 ${
+          className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-[#1a5490] text-white transition-all duration-300 z-40 ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseEnter={() => setSidebarHovered(true)}
@@ -150,12 +150,12 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           {/* Botão de toggle fixo e sobreposto */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#00A3E0] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
+            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#1a5490] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
           >
             {isExpanded ? (
-              <ChevronLeft className="w-4 h-4 text-[#00A3E0]" />
+              <ChevronLeft className="w-4 h-4 text-[#1a5490]" />
             ) : (
-              <ChevronRight className="w-4 h-4 text-[#00A3E0]" />
+              <ChevronRight className="w-4 h-4 text-[#1a5490]" />
             )}
           </button>
 
@@ -173,9 +173,9 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            className={`w-full flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors ${
+                            className={`w-full flex items-center justify-center h-12 hover:bg-[#2a6db0] transition-colors ${
                               location.startsWith(item.submenu[0].path.split("/")[1])
-                                ? "bg-[#0088C0] border-l-4 border-white"
+                                ? "bg-[#2a6db0] border-l-4 border-white"
                                 : ""
                             }`}
                           >
@@ -189,8 +189,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     ) : (
                       <button
                         onClick={() => toggleMenu(item.id)}
-                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#0088C0] transition-colors ${
-                          expandedMenus.includes(item.id) ? "bg-[#0088C0]" : ""
+                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#2a6db0] transition-colors ${
+                          expandedMenus.includes(item.id) ? "bg-[#2a6db0]" : ""
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -205,17 +205,17 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </button>
                     )}
 
-                    {/* Submenu - aparece com hover quando recolhido */}
-                    {hoveredItem === item.id && !isExpanded && (
-                      <div className="absolute left-16 top-0 w-56 bg-white text-gray-900 shadow-lg rounded-r-lg py-2 z-50">
-                        <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+                    {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
+                    {hoveredItem === item.id && (
+                      <div className={`absolute ${isExpanded ? 'left-64' : 'left-16'} top-0 w-56 bg-[#0f3d6f] text-white shadow-xl rounded-r-lg py-2 z-50`}>
+                        <div className="px-4 py-2 text-xs font-semibold text-gray-300 uppercase">
                           {item.label}
                         </div>
                         {item.submenu.map((subitem) => (
                           <Link key={subitem.path} href={subitem.path}>
                             <span
-                              className={`block px-4 py-2 text-sm hover:bg-gray-100 transition-colors cursor-pointer ${
-                                location === subitem.path ? "bg-blue-50 text-blue-600 font-medium" : ""
+                              className={`block px-4 py-2 text-sm hover:bg-[#1a5490] transition-colors cursor-pointer ${
+                                location === subitem.path ? "bg-[#1a5490] text-white font-medium border-l-4 border-white" : ""
                               }`}
                             >
                               {subitem.label}
@@ -225,24 +225,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </div>
                     )}
 
-                    {/* Submenu expandido quando sidebar está aberta */}
-                    {isExpanded && expandedMenus.includes(item.id) && (
-                      <div className="bg-[#0088C0] py-1">
-                        {item.submenu.map((subitem) => (
-                          <Link key={subitem.path} href={subitem.path}>
-                            <span
-                              className={`block px-12 py-2 text-sm hover:bg-[#006FA0] transition-colors cursor-pointer ${
-                                location === subitem.path
-                                  ? "bg-[#006FA0] text-white font-medium border-l-4 border-white"
-                                  : "text-gray-300"
-                              }`}
-                            >
-                              {subitem.label}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+
                   </div>
                 ) : (
                   // Item simples sem submenu
@@ -251,8 +234,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div
-                            className={`flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
-                              location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
+                            className={`flex items-center justify-center h-12 hover:bg-[#2a6db0] transition-colors cursor-pointer ${
+                              location === item.path ? "bg-[#2a6db0] border-l-4 border-white" : ""
                             }`}
                           >
                             {item.icon}
@@ -264,8 +247,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </Tooltip>
                     ) : (
                       <div
-                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
-                          location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
+                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#2a6db0] transition-colors cursor-pointer ${
+                          location === item.path ? "bg-[#2a6db0] border-l-4 border-white" : ""
                         }`}
                       >
                         {item.icon}
@@ -287,7 +270,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
               {/* Logo TRACK */}
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
-                  <img src="/logo-track-erp.png" alt="Track ERP" className="h-12" />
+                  <img src="/logo-track-erp.png" alt="Track ERP" className="h-16" />
                 </div>
               </Link>
 

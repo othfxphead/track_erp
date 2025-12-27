@@ -357,3 +357,11 @@
 - [x] Substituir ícone T + texto TRACK por logo Track ERP completa na topbar
 - [x] Diminuir altura dos botões (h-9 → h-8, menos padding)
 - [x] Aplicar botões mais finos em toda aplicação
+
+
+## Melhorias de Logo e Menu
+- [x] Aumentar logo Track na topbar (h-12 → h-16)
+- [x] Ajustar cor do menu: azul escuro #1a5490 de fundo, texto branco
+- [x] Refazer submenus para abrirem lateralmente (não inline)
+- [x] Submenus em azul mais escuro (#0f3d6f)
+- [x] Manter submenus flutuantes mesmo quando sidebar expandida
