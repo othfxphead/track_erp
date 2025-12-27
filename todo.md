@@ -547,3 +547,18 @@
 - [x] Aplicar borda sutil e profissional (cinza claro)
 - [x] Ajustar ring/outline dos inputs, selects e textareas
 - [x] Garantir consistência visual em todos os formulários
+
+## Página de Nova Venda (27/12/2025)
+- [x] Criar schema de vendas no banco de dados (drizzle/schema.ts)
+- [x] Adicionar rotas tRPC para vendas (criar, listar, buscar por ID)
+- [x] Criar página NovaVendaPage.tsx em tela cheia
+- [x] Adicionar campos: Cliente, Data da Venda, Vendedor, Situação
+- [x] Adicionar seção de Itens (produtos/serviços)
+- [x] Adicionar campos de Pagamento: Forma de pagamento, Parcelamento, Conta de recebimento
+- [x] Adicionar campos de Desconto
+- [x] Adicionar campos de Dados Fiscais: Emitir NF-e, Natureza da operação, Observações
+- [x] Adicionar cálculo de totais (subtotal, desconto, total líquido)
+- [x] Integrar com modal de cadastro rápido de cliente
+- [x] Adicionar rota /vendas/nova no App.tsx
+- [x] Adicionar link "Nova Venda" no botão da página de vendas
+- [x] Testar salvamento e validações

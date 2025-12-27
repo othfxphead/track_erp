@@ -12,6 +12,7 @@ import Apresentacao from "./pages/Apresentacao";
 import OrcamentosNew from "./pages/OrcamentosNew";
 import NovoOrcamentoPage from "./pages/NovoOrcamentoPage";
 import VendasNew from "./pages/VendasNew";
+import NovaVendaPage from "./pages/NovaVendaPage";
 import Servicos from "./pages/Servicos";
 import { Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
 import EstoqueAvancado from "./pages/EstoqueAvancado";
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/orcamentos" component={OrcamentosNew} />
         <Route path="/orcamentos/novo" component={NovoOrcamentoPage} />
       <Route path={"/vendas"} component={VendasNew} />
+      <Route path={"/vendas/nova"} component={NovaVendaPage} />
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
       <Route path={"/servicos"} component={Servicos} />

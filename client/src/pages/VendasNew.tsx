@@ -48,6 +48,8 @@ export default function VendasNew() {
   const [statusFilter, setStatusFilter] = useState<string>("todos");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedVenda, setSelectedVenda] = useState<any>(null);
+  const [, setLocation] = useState("");
+  const navigate = (path: string) => window.location.href = path;
   const [showEmitirNFS, setShowEmitirNFS] = useState(false);
   const itemsPerPage = 10;
 
@@ -122,7 +124,10 @@ export default function VendasNew() {
             Gerencie suas vendas e pedidos
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 h-9 px-4">
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
+          onClick={() => navigate("/vendas/nova")}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Nova Venda
         </Button>
