@@ -123,3 +123,6 @@
 - [x] Implementar testes de integração
 - [x] Adicionar validações de dados
 - [x] Testar fluxos completos
+
+## Bugs Reportados
+- [x] Corrigir erro de nested anchor tags na página de orçamentos
