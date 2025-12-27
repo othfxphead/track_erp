@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-24 h-[calc(100vh-6rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
+          className={`fixed left-0 top-0 h-screen bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseLeave={() => {
@@ -280,7 +280,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
         {/* Main content */}
         <div className={`flex-1 flex flex-col transition-all duration-300 ${isExpanded ? "ml-64" : "ml-16"}`}>
           {/* Topbar */}
-          <header className="fixed top-0 right-0 left-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
+          <header className="fixed top-0 right-0 left-0 h-24 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
             <div className="flex items-center gap-12">
               {/* Logo TRACK */}
               <Link href="/">
@@ -288,7 +288,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                   <img 
                     src="/logo-track-erp.png" 
                     alt="Track ERP" 
-                    className="h-32 transition-all duration-300 hover:scale-[1.5] hover:z-50" 
+                    className="h-[140px] transition-all duration-300 hover:scale-[1.5] hover:z-50" 
                   />
                 </div>
               </Link>
@@ -392,7 +392,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           </header>
 
           {/* Content */}
-          <main className="mt-24 flex-1 overflow-auto">
+          <main className="mt-28 flex-1 overflow-auto">
             <div className="p-6">{children}</div>
           </main>
         </div>

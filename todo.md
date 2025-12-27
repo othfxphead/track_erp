@@ -428,3 +428,9 @@
 ## Remover Menu Duplicado
 - [x] Identificar e remover menu branco/cinza que aparece ao lado do menu azul
 - [x] Manter apenas o menu azul principal (#00A3E0)
+
+
+## Ajustes de Layout - Sidebar e Logo
+- [x] Mover sidebar para começar logo abaixo da topbar (top-0 ao invés de top-24)
+- [x] Aumentar logo Track de h-32 para h-[140px]
+- [x] Ajustar altura da topbar de h-16 para h-24 para acomodar logo maior
