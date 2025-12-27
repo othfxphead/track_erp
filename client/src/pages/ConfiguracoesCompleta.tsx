@@ -1,4 +1,3 @@
-import ERPLayout from "@/components/ERPLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,8 +93,7 @@ export default function ConfiguracoesCompleta() {
   };
 
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Configurações</h1>
           <p className="text-muted-foreground mt-1">
@@ -557,6 +555,5 @@ export default function ConfiguracoesCompleta() {
           </TabsContent>
         </Tabs>
       </div>
-    </ERPLayout>
   );
 }

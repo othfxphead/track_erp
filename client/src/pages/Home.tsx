@@ -1,4 +1,4 @@
-import ERPLayout from "@/components/ERPLayout";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import {
@@ -52,16 +52,13 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <ERPLayout>
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
-      </ERPLayout>
     );
   }
 
   return (
-    <ERPLayout>
       <div className="space-y-6">
         {/* Header */}
         <div>
@@ -242,6 +239,5 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }

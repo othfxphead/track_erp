@@ -1,4 +1,3 @@
-import ERPLayout from "@/components/ERPLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -179,8 +178,7 @@ export default function Orcamentos() {
   );
 
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -469,6 +467,5 @@ export default function Orcamentos() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }

@@ -1,5 +1,4 @@
 // Arquivo com páginas simplificadas para módulos restantes
-import ERPLayout from "@/components/ERPLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Package, DollarSign, FileText, BarChart3, Settings } from "lucide-react";
@@ -8,8 +7,7 @@ import { toast } from "sonner";
 // Página de Compras
 export function Compras() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Compras</h1>
@@ -39,15 +37,13 @@ export function Compras() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }
 
 // Página de Estoque
 export function Estoque() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Estoque</h1>
@@ -77,15 +73,13 @@ export function Estoque() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }
 
 // Página Financeiro
 export function Financeiro() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Financeiro</h1>
@@ -157,15 +151,13 @@ export function Financeiro() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }
 
 // Página Fiscal
 export function Fiscal() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Fiscal</h1>
@@ -195,15 +187,13 @@ export function Fiscal() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }
 
 // Página de Relatórios
 export function Relatorios() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Relatórios</h1>
@@ -240,15 +230,13 @@ export function Relatorios() {
           ))}
         </div>
       </div>
-    </ERPLayout>
   );
 }
 
 // Página de Configurações
 export function Configuracoes() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Configurações</h1>
           <p className="text-muted-foreground mt-1">
@@ -287,15 +275,13 @@ export function Configuracoes() {
           ))}
         </div>
       </div>
-    </ERPLayout>
   );
 }
 
 // Página de Consulta Serasa
 export function ConsultaSerasa() {
   return (
-    <ERPLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Consulta Serasa</h1>
           <p className="text-muted-foreground mt-1">
@@ -330,6 +316,5 @@ export function ConsultaSerasa() {
           </CardContent>
         </Card>
       </div>
-    </ERPLayout>
   );
 }

@@ -423,3 +423,8 @@
 
 ## Remover Logo do Menu Lateral
 - [x] Remover texto "Track" do topo do menu lateral expandido (confirmado que não existe no código atual)
+
+
+## Remover Menu Duplicado
+- [x] Identificar e remover menu branco/cinza que aparece ao lado do menu azul
+- [x] Manter apenas o menu azul principal (#00A3E0)
