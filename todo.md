@@ -507,3 +507,16 @@
 - [ ] Criar página dedicada NovaVendaPage.tsx em tela cheia
 - [ ] Criar página dedicada NovoContratoPage.tsx em tela cheia
 - [ ] Implementar conversão de Orçamento para Venda com navegação
+
+
+## Refatoração Completa de Formulários - Seguir Referências Exatas (27/12/2025)
+- [x] Refazer página NovoOrcamentoPage com TODOS os campos das imagens de referência
+- [x] Adicionar campo "Previsão de entrega do produto ou serviço" na aba Informações
+- [x] Adicionar seção "Observações de pagamento" expansível na aba Valor
+- [x] Adicionar seção "Observações complementares da nota fiscal" expansível
+- [ ] Refazer página NovaVendaPage com campos adicionais (Categoria financeira, Centro de custo)
+- [ ] Adicionar seção "Informações de pagamento" completa (Forma, Conta, Condição, Vencimento)
+- [ ] Adicionar seção "Informações fiscais" com Natureza de operação
+- [ ] Adicionar seção "Observações de pagamento" na Nova Venda
+- [ ] Adicionar seção "Observações complementares da nota fiscal" na Nova Venda
+- [ ] Garantir que todos os formulários funcionam com onSubmit (não onClick)

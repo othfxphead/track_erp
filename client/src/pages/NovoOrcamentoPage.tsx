@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { X } from "lucide-react";
+import { X, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -27,10 +32,14 @@ export default function NovoOrcamentoPage() {
     clienteId: "",
     dataOrcamento: new Date().toISOString().split("T")[0],
     validadeOrcamento: "",
+    vendedorResponsavel: "",
     descricao: "",
+    previsaoEntrega: "",
     itens: [] as Array<{ produtoId: number; quantidade: number; valorUnitario: number; nome?: string }>,
     descontoTipo: "reais" as "reais" | "percentual",
     descontoValor: "0",
+    observacoesPagamento: "",
+    observacoesNF: "",
   });
 
   const [itemTemp, setItemTemp] = useState({
@@ -41,6 +50,7 @@ export default function NovoOrcamentoPage() {
 
   const { data: clientes } = trpc.clientes.list.useQuery();
   const { data: produtos } = trpc.produtos.list.useQuery();
+  
   const createMutation = trpc.orcamentos.create.useMutation({
     onSuccess: () => {
       toast.success("Orçamento criado com sucesso!");
@@ -146,12 +156,12 @@ export default function NovoOrcamentoPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto p-6 bg-gray-50">
           {activeTab === "informacoes" && (
-            <div className="max-w-4xl space-y-6">
+            <div className="max-w-7xl mx-auto bg-white p-6 rounded-lg space-y-6">
               {/* Tipo da venda */}
               <div>
-                <Label>Tipo da venda *</Label>
+                <Label>Tipo da venda</Label>
                 <div className="flex gap-2 mt-2">
                   <Button
                     type="button"
@@ -177,7 +187,7 @@ export default function NovoOrcamentoPage() {
                 </div>
               </div>
 
-              {/* Grid de campos */}
+              {/* Grid de campos - Linha 1 */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="numero">Número do orçamento *</Label>
@@ -190,21 +200,29 @@ export default function NovoOrcamentoPage() {
                 </div>
                 <div>
                   <Label htmlFor="cliente">Cliente *</Label>
-                  <Select
-                    value={formData.clienteId}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, clienteId: value }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um cliente" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {clientes?.map((cliente) => (
-                        <SelectItem key={cliente.id} value={cliente.id.toString()}>
-                          {cliente.nome}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex gap-2">
+                    <Select
+                      value={formData.clienteId}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, clienteId: value }))}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Selecione um cliente" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clientes?.map((cliente) => (
+                          <SelectItem key={cliente.id} value={cliente.id.toString()}>
+                            {cliente.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button type="button" variant="outline" size="sm">
+                      Consultar cliente no Serasa
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-1 mt-1">
+                    <HelpCircle className="h-4 w-4 text-blue-600" />
+                  </div>
                 </div>
                 <div>
                   <Label htmlFor="data">Data do orçamento *</Label>
@@ -217,7 +235,8 @@ export default function NovoOrcamentoPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Grid de campos - Linha 2 */}
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="validade">Validade do orçamento *</Label>
                   <Input
@@ -225,6 +244,15 @@ export default function NovoOrcamentoPage() {
                     type="date"
                     value={formData.validadeOrcamento}
                     onChange={(e) => setFormData(prev => ({ ...prev, validadeOrcamento: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="vendedor">Vendedor responsável</Label>
+                  <Input
+                    id="vendedor"
+                    value={formData.vendedorResponsavel}
+                    onChange={(e) => setFormData(prev => ({ ...prev, vendedorResponsavel: e.target.value }))}
+                    placeholder="Nome do vendedor"
                   />
                 </div>
                 <div>
@@ -255,13 +283,26 @@ export default function NovoOrcamentoPage() {
                   rows={4}
                 />
               </div>
+
+              <div>
+                <Label htmlFor="previsao">Previsão de entrega do produto ou serviço</Label>
+                <Input
+                  id="previsao"
+                  value={formData.previsaoEntrega}
+                  onChange={(e) => setFormData(prev => ({ ...prev, previsaoEntrega: e.target.value }))}
+                  placeholder="Ex: 5 dias úteis"
+                />
+              </div>
             </div>
           )}
 
           {activeTab === "itens" && (
-            <div className="max-w-4xl space-y-6">
+            <div className="max-w-7xl mx-auto bg-white p-6 rounded-lg space-y-6">
               <div>
-                <Label>Selecione ou crie um novo item *</Label>
+                <Label className="flex items-center gap-1">
+                  Selecione ou crie um novo item *
+                  <HelpCircle className="h-4 w-4 text-gray-400" />
+                </Label>
                 <div className="grid grid-cols-4 gap-4 mt-2">
                   <Select
                     value={itemTemp.produtoId}
@@ -274,7 +315,7 @@ export default function NovoOrcamentoPage() {
                       }));
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="col-span-2">
                       <SelectValue placeholder="Selecione um produto" />
                     </SelectTrigger>
                     <SelectContent>
@@ -291,13 +332,7 @@ export default function NovoOrcamentoPage() {
                     value={itemTemp.quantidade}
                     onChange={(e) => setItemTemp(prev => ({ ...prev, quantidade: e.target.value }))}
                   />
-                  <Input
-                    type="number"
-                    placeholder="Valor unitário"
-                    value={itemTemp.valorUnitario}
-                    onChange={(e) => setItemTemp(prev => ({ ...prev, valorUnitario: e.target.value }))}
-                  />
-                  <Button type="button" onClick={handleAddItem}>
+                  <Button type="button" onClick={handleAddItem} className="w-full">
                     Adicionar
                   </Button>
                 </div>
@@ -346,51 +381,87 @@ export default function NovoOrcamentoPage() {
           )}
 
           {activeTab === "valor" && (
-            <div className="max-w-4xl space-y-6">
-              <div>
-                <Label>Desconto</Label>
-                <div className="flex gap-2 mt-2">
-                  <Button
-                    type="button"
-                    variant={formData.descontoTipo === "reais" ? "default" : "outline"}
-                    onClick={() => setFormData(prev => ({ ...prev, descontoTipo: "reais" }))}
-                  >
-                    R$
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={formData.descontoTipo === "percentual" ? "default" : "outline"}
-                    onClick={() => setFormData(prev => ({ ...prev, descontoTipo: "percentual" }))}
-                  >
-                    %
-                  </Button>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.descontoValor}
-                    onChange={(e) => setFormData(prev => ({ ...prev, descontoValor: e.target.value }))}
-                    placeholder="0,00"
-                  />
+            <div className="max-w-7xl mx-auto space-y-6">
+              <div className="bg-white p-6 rounded-lg">
+                <div>
+                  <Label>Desconto</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Button
+                      type="button"
+                      variant={formData.descontoTipo === "reais" ? "default" : "outline"}
+                      onClick={() => setFormData(prev => ({ ...prev, descontoTipo: "reais" }))}
+                    >
+                      R$
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={formData.descontoTipo === "percentual" ? "default" : "outline"}
+                      onClick={() => setFormData(prev => ({ ...prev, descontoTipo: "percentual" }))}
+                    >
+                      %
+                    </Button>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.descontoValor}
+                      onChange={(e) => setFormData(prev => ({ ...prev, descontoValor: e.target.value }))}
+                      placeholder="0,00"
+                      className="max-w-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-6 bg-gray-50 mt-6">
+                  <h3 className="font-semibold mb-4">Total do Orçamento</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Itens (R$)</span>
+                      <span>{subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-red-600">
+                      <span>Desconto (R$)</span>
+                      <span>- {desconto.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-lg border-t pt-2">
+                      <span>Total líquido (R$)</span>
+                      <span>{total.toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="border rounded-lg p-6 bg-gray-50">
-                <h3 className="font-semibold mb-4">Total do Orçamento</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Itens (R$)</span>
-                    <span>R$ {subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-red-600">
-                    <span>Desconto (R$)</span>
-                    <span>- R$ {desconto.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-lg border-t pt-2">
-                    <span>Total líquido (R$)</span>
-                    <span>R$ {total.toFixed(2)}</span>
-                  </div>
-                </div>
-              </div>
+              {/* Observações de pagamento */}
+              <Collapsible className="bg-white rounded-lg">
+                <CollapsibleTrigger className="w-full px-6 py-4 flex items-center justify-between border-b">
+                  <span className="font-medium">Observações de pagamento</span>
+                  <span className="text-gray-400">▼</span>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="px-6 py-4">
+                  <Textarea
+                    value={formData.observacoesPagamento}
+                    onChange={(e) => setFormData(prev => ({ ...prev, observacoesPagamento: e.target.value }))}
+                    placeholder="Adicione observações sobre o pagamento"
+                    rows={4}
+                  />
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Observações complementares da NF */}
+              <Collapsible className="bg-white rounded-lg">
+                <CollapsibleTrigger className="w-full px-6 py-4 flex items-center justify-between border-b">
+                  <span className="font-medium">Observações complementares da nota fiscal</span>
+                  <span className="text-gray-400">▼</span>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="px-6 py-4">
+                  <Label>Observações</Label>
+                  <Textarea
+                    value={formData.observacoesNF}
+                    onChange={(e) => setFormData(prev => ({ ...prev, observacoesNF: e.target.value }))}
+                    placeholder="Inclua informações relevantes para seu cliente. Elas aparecerão na nota fiscal, nos campos 'Descrição do serviço' ou 'Informações Complementares Contribuinte', visíveis no XML, PDF e DANFE."
+                    rows={4}
+                  />
+                </CollapsibleContent>
+              </Collapsible>
             </div>
           )}
         </div>
@@ -405,7 +476,7 @@ export default function NovoOrcamentoPage() {
             className="bg-green-600 hover:bg-green-700 text-white px-8"
             disabled={createMutation.isPending}
           >
-            {createMutation.isPending ? "Salvando..." : "Salvar Orçamento"}
+            {createMutation.isPending ? "Salvando..." : "Salvar"}
           </Button>
         </div>
       </form>

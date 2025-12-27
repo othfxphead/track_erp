@@ -118,7 +118,7 @@ export default function OrcamentosNew() {
               Gerencie seus orçamentos e propostas comerciais
             </p>
           </div>
-        <Button 
+          <Button 
           className="bg-blue-600 hover:bg-blue-700 h-9"
           onClick={() => setLocation("/orcamentos/novo")}
         >
