@@ -17,6 +17,7 @@ import EstoqueAvancado from "./pages/EstoqueAvancado";
 import ComprasCompleta from "./pages/ComprasCompleta";
 import FinanceiroCompleto from "./pages/FinanceiroCompleto";
 import ConfiguracoesCompleta from "./pages/ConfiguracoesCompleta";
+import DadosEmpresa from "./pages/DadosEmpresa";
 
 function Router() {
   return (
@@ -36,6 +37,7 @@ function Router() {
       <Route path={"/relatorios"} component={Relatorios} />
       <Route path={"/serasa"} component={ConsultaSerasa} />
       <Route path={"/configuracoes"} component={ConfiguracoesCompleta} />
+      <Route path={"/configuracoes/dados-empresa"} component={DadosEmpresa} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
         <Route component={NotFound} />

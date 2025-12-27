@@ -212,3 +212,19 @@
 - [ ] Criar modais em tela cheia para Nova Venda
 - [ ] Criar modais em tela cheia para Novo Contrato
 - [ ] Padronizar estilo de botões em todas as páginas
+
+
+## Página de Configurações - Dados da Empresa
+- [x] Criar página completa de Dados da Empresa
+- [x] Implementar upload de logo da empresa (PNG, JPG, SVG - máx 2MB)
+- [x] Adicionar campo Razão Social * (obrigatório)
+- [x] Adicionar campo Nome Fantasia
+- [x] Adicionar campo CNPJ * com máscara (00.000.000/0000-00)
+- [x] Adicionar campo Inscrição Estadual
+- [x] Adicionar campo Inscrição Municipal
+- [x] Adicionar campo Telefone com máscara ((00) 0000-0000)
+- [x] Adicionar campo E-mail
+- [x] Adicionar campos de endereço (Endereço, Número, Complemento)
+- [x] Adicionar campos Bairro, Cidade, Estado (dropdown), CEP (00000-000)
+- [x] Implementar validações de campos obrigatórios
+- [x] Adicionar botão Salvar no final do formulário
