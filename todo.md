@@ -414,3 +414,8 @@
 - [x] Aumentar logo Track ainda mais (h-24 → h-32)
 - [x] Corrigir falha/borda branca entre menu lateral azul claro e submenu azul escuro
 - [x] Garantir transição visual perfeita entre os menus
+
+
+## Remover Scrollbar do Menu
+- [x] Remover barra de scroll visível do menu lateral
+- [x] Manter funcionalidade de scroll se necessário (ocultar apenas visualmente)

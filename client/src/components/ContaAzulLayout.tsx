@@ -157,7 +157,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
             )}
           </button>
 
-          <nav className="flex flex-col h-full overflow-y-auto py-4">
+          <nav className="flex flex-col h-full overflow-y-auto py-4 scrollbar-hide">
             {menuItems.map((item) => (
               <div key={item.id} className="relative">
                 {item.submenu ? (
