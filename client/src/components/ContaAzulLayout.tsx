@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-0 h-screen bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
+          className={`fixed left-0 top-20 h-[calc(100vh-80px)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseLeave={() => {
@@ -205,7 +205,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
-                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-24 h-[calc(100vh-96px)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
+                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-80px)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
                         {/* Cabeçalho do submenu com seta de voltar */}
                         <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a] rounded-tr-2xl">
                           <button 
@@ -280,7 +280,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
         {/* Main content */}
         <div className={`flex-1 flex flex-col transition-all duration-300 ${isExpanded ? "ml-64" : "ml-16"}`}>
           {/* Topbar */}
-          <header className="fixed top-0 right-0 left-0 h-24 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
+          <header className="fixed top-0 right-0 left-0 h-20 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
             <div className="flex items-center gap-12">
               {/* Logo TRACK */}
               <Link href="/">
@@ -392,7 +392,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           </header>
 
           {/* Content */}
-          <main className="mt-28 flex-1 overflow-auto">
+          <main className="mt-20 flex-1 overflow-auto">
             <div className="p-6">{children}</div>
           </main>
         </div>

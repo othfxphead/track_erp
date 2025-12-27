@@ -439,3 +439,11 @@
 ## Corrigir Posicionamento do Submenu
 - [x] Ajustar submenu para começar em top-24 (abaixo da topbar) ao invés de top-0
 - [x] Ajustar altura do submenu para h-[calc(100vh-96px)] para compensar topbar h-24
+
+
+## Ajustar Alturas - Topbar e Sidebar
+- [x] Diminuir topbar de h-24 para h-20 (80px)
+- [x] Ajustar sidebar para começar em top-20 ao invés de top-0
+- [x] Ajustar altura da sidebar para h-[calc(100vh-80px)]
+- [x] Ajustar submenu para top-20 e h-[calc(100vh-80px)]
+- [x] Ajustar main content para mt-20
