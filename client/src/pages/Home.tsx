@@ -1,5 +1,7 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import {
   DollarSign,
@@ -7,7 +9,9 @@ import {
   TrendingDown,
   AlertCircle,
   ShoppingCart,
+  Calendar,
 } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   LineChart,
   Line,
@@ -21,10 +25,57 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+type PeriodoPreset = '7d' | '30d' | '3m' | '6m' | '1a' | 'custom';
+
 export default function Home() {
+  const [periodoAtivo, setPeriodoAtivo] = useState<PeriodoPreset>('6m');
+  const [dataInicio, setDataInicio] = useState<Date | undefined>();
+  const [dataFim, setDataFim] = useState<Date | undefined>();
+
+  // Calcular datas baseado no período selecionado
+  const calcularPeriodo = (periodo: PeriodoPreset) => {
+    const hoje = new Date();
+    let inicio: Date | undefined;
+    let fim: Date | undefined = hoje;
+
+    switch (periodo) {
+      case '7d':
+        inicio = new Date(hoje.getTime() - 7 * 24 * 60 * 60 * 1000);
+        break;
+      case '30d':
+        inicio = new Date(hoje.getTime() - 30 * 24 * 60 * 60 * 1000);
+        break;
+      case '3m':
+        inicio = new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
+        break;
+      case '6m':
+        inicio = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+        break;
+      case '1a':
+        inicio = new Date(hoje.getFullYear() - 1, hoje.getMonth(), 1);
+        break;
+      case 'custom':
+        inicio = dataInicio;
+        fim = dataFim;
+        break;
+    }
+
+    return { dataInicio: inicio, dataFim: fim };
+  };
+
+  const periodo = calcularPeriodo(periodoAtivo);
+
   const { data: kpis, isLoading } = trpc.dashboard.kpis.useQuery();
-  const { data: vendasData } = trpc.dashboard.vendasPorMes.useQuery();
-  const { data: fluxoCaixaData } = trpc.dashboard.fluxoCaixaPorMes.useQuery();
+  const { data: vendasData } = trpc.dashboard.vendasPorMes.useQuery(periodo);
+  const { data: fluxoCaixaData } = trpc.dashboard.fluxoCaixaPorMes.useQuery(periodo);
+
+  const handlePeriodoChange = (novoPeriodo: PeriodoPreset) => {
+    setPeriodoAtivo(novoPeriodo);
+    if (novoPeriodo !== 'custom') {
+      setDataInicio(undefined);
+      setDataFim(undefined);
+    }
+  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -58,6 +109,82 @@ export default function Home() {
             Visão geral do seu negócio
           </p>
         </div>
+
+        {/* Filtros de Período */}
+        <Card className="card-shadow">
+          <CardContent className="pt-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Período de análise:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={periodoAtivo === '7d' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handlePeriodoChange('7d')}
+                >
+                  Últimos 7 dias
+                </Button>
+                <Button
+                  variant={periodoAtivo === '30d' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handlePeriodoChange('30d')}
+                >
+                  Últimos 30 dias
+                </Button>
+                <Button
+                  variant={periodoAtivo === '3m' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handlePeriodoChange('3m')}
+                >
+                  Últimos 3 meses
+                </Button>
+                <Button
+                  variant={periodoAtivo === '6m' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handlePeriodoChange('6m')}
+                >
+                  Últimos 6 meses
+                </Button>
+                <Button
+                  variant={periodoAtivo === '1a' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handlePeriodoChange('1a')}
+                >
+                  Último ano
+                </Button>
+                <Button
+                  variant={periodoAtivo === 'custom' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handlePeriodoChange('custom')}
+                >
+                  Período personalizado
+                </Button>
+              </div>
+              {periodoAtivo === 'custom' && (
+                <div className="flex flex-wrap gap-4 items-center">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">De:</span>
+                    <DatePicker
+                      date={dataInicio}
+                      onDateChange={setDataInicio}
+                      placeholder="Data inicial"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Até:</span>
+                    <DatePicker
+                      date={dataFim}
+                      onDateChange={setDataFim}
+                      placeholder="Data final"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* KPI Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

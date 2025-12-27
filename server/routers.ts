@@ -26,12 +26,22 @@ export const appRouter = router({
     kpis: protectedProcedure.query(async () => {
       return await db.getDashboardKPIs();
     }),
-    vendasPorMes: protectedProcedure.query(async () => {
-      return await db.getVendasPorMes();
-    }),
-    fluxoCaixaPorMes: protectedProcedure.query(async () => {
-      return await db.getFluxoCaixaPorMes();
-    }),
+    vendasPorMes: protectedProcedure
+      .input(z.object({
+        dataInicio: z.date().optional(),
+        dataFim: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return await db.getVendasPorMes(input?.dataInicio, input?.dataFim);
+      }),
+    fluxoCaixaPorMes: protectedProcedure
+      .input(z.object({
+        dataInicio: z.date().optional(),
+        dataFim: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return await db.getFluxoCaixaPorMes(input?.dataInicio, input?.dataFim);
+      }),
   }),
 
   // Empresas

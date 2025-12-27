@@ -611,3 +611,14 @@
 - [x] Adicionar tooltips interativos nos gráficos (já existentes)
 - [x] Testar com dados reais do banco de dados (testado no Dashboard)
 - [x] Garantir responsividade dos gráficos (ResponsiveContainer)
+
+## Filtros de Período no Dashboard (27/12/2025)
+- [x] Atualizar queries tRPC para aceitar parâmetros de dataInicio e dataFim
+- [x] Modificar getVendasPorMes para filtrar por período personalizado
+- [x] Modificar getFluxoCaixaPorMes para filtrar por período personalizado
+- [x] Criar componente de filtros com botões predefinidos (7d, 30d, 3m, 6m, 1a)
+- [x] Adicionar seletor de período personalizado com DatePicker range
+- [x] Implementar estado de período selecionado no Dashboard
+- [x] Atualizar gráficos automaticamente ao mudar o período
+- [x] Adicionar indicador visual do período ativo (variant default/outline)
+- [x] Testar todos os períodos predefinidos e personalizado (testados: 6m, 3m, custom)

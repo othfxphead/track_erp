@@ -477,15 +477,19 @@ export async function getDashboardKPIs() {
 }
 
 // ============= DASHBOARD CHARTS =============
-export async function getVendasPorMes() {
+export async function getVendasPorMes(dataInicio?: Date, dataFim?: Date) {
   const db = await getDb();
   if (!db) return [];
 
   const hoje = new Date();
-  const seisMesesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+  const inicio = dataInicio || new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+  const fim = dataFim || hoje;
 
   const vendasData = await db.select().from(vendas)
-    .where(gte(vendas.dataVenda, seisMesesAtras))
+    .where(and(
+      gte(vendas.dataVenda, inicio),
+      lte(vendas.dataVenda, fim)
+    ))
     .orderBy(vendas.dataVenda);
 
   // Agrupar por mês
@@ -501,31 +505,38 @@ export async function getVendasPorMes() {
     vendasPorMes[mesAno] += parseFloat(venda.valorTotal as any);
   });
 
-  // Criar array dos últimos 6 meses
+  // Criar array de meses no período
   const resultado = [];
-  for (let i = 5; i >= 0; i--) {
-    const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
-    const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
-    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    
+  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  
+  const dataAtual = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
+  const dataFinal = new Date(fim.getFullYear(), fim.getMonth(), 1);
+  
+  while (dataAtual <= dataFinal) {
+    const mesAno = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}`;
     resultado.push({
-      mes: meses[data.getMonth()],
+      mes: meses[dataAtual.getMonth()],
       valor: vendasPorMes[mesAno] || 0,
     });
+    dataAtual.setMonth(dataAtual.getMonth() + 1);
   }
 
   return resultado;
 }
 
-export async function getFluxoCaixaPorMes() {
+export async function getFluxoCaixaPorMes(dataInicio?: Date, dataFim?: Date) {
   const db = await getDb();
   if (!db) return [];
 
   const hoje = new Date();
-  const seisMesesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+  const inicio = dataInicio || new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+  const fim = dataFim || hoje;
 
   const lancamentos = await db.select().from(lancamentosFinanceiros)
-    .where(gte(lancamentosFinanceiros.dataVencimento, seisMesesAtras))
+    .where(and(
+      gte(lancamentosFinanceiros.dataVencimento, inicio),
+      lte(lancamentosFinanceiros.dataVencimento, fim)
+    ))
     .orderBy(lancamentosFinanceiros.dataVencimento);
 
   // Agrupar por mês e tipo
@@ -549,18 +560,21 @@ export async function getFluxoCaixaPorMes() {
     }
   });
 
-  // Criar array dos últimos 6 meses
+  // Criar array de meses no período
   const resultado = [];
-  for (let i = 5; i >= 0; i--) {
-    const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
-    const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
-    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    
+  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  
+  const dataAtual = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
+  const dataFinal = new Date(fim.getFullYear(), fim.getMonth(), 1);
+  
+  while (dataAtual <= dataFinal) {
+    const mesAno = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}`;
     resultado.push({
-      mes: meses[data.getMonth()],
+      mes: meses[dataAtual.getMonth()],
       receitas: receitasPorMes[mesAno] || 0,
       despesas: despesasPorMes[mesAno] || 0,
     });
+    dataAtual.setMonth(dataAtual.getMonth() + 1);
   }
 
   return resultado;
