@@ -196,3 +196,19 @@
 - [x] Criar funcionalidade Conta AI Captura para importação de documentos com OCR
 - [x] Implementar preview de PDF/XML com extração automática de dados
 - [x] Adicionar confirmação de lançamentos extraídos pela IA
+
+
+## Redesign Final - Replicar Conta Azul Pro Exato
+- [x] Mudar topbar para fundo branco (remover azul)
+- [x] Aumentar logo Track na topbar
+- [x] Implementar sidebar retraída por padrão
+- [x] Adicionar abertura de sidebar ao passar mouse ou clicar
+- [x] Redesenhar botões com estilo fino igual referências
+- [x] Refazer página de Orçamentos completa com layout Conta Azul
+- [x] Adicionar todas as colunas e informações na tabela de Orçamentos
+- [x] Refazer página de Vendas completa com layout Conta Azul
+- [x] Adicionar botão "Emitir NFS" após venda concluída
+- [ ] Criar modais em tela cheia para Novo Orçamento
+- [ ] Criar modais em tela cheia para Nova Venda
+- [ ] Criar modais em tela cheia para Novo Contrato
+- [ ] Padronizar estilo de botões em todas as páginas

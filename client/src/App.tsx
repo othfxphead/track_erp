@@ -9,8 +9,8 @@ import Home from "./pages/Home";
 import Produtos from "./pages/Produtos";
 import Clientes from "./pages/Clientes";
 import Apresentacao from "./pages/Apresentacao";
-import OrcamentosContaAzul from "./pages/OrcamentosContaAzul";
-import VendasCompleta from "./pages/VendasCompleta";
+import OrcamentosNew from "./pages/OrcamentosNew";
+import VendasNew from "./pages/VendasNew";
 import Servicos from "./pages/Servicos";
 import { Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
 import EstoqueAvancado from "./pages/EstoqueAvancado";
@@ -24,8 +24,8 @@ function Router() {
       <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/apresentacao"} component={Apresentacao} />
-      <Route path={"/orcamentos"} component={OrcamentosContaAzul} />
-      <Route path={"/vendas"} component={VendasCompleta} />
+        <Route path="/orcamentos" component={OrcamentosNew} />
+      <Route path={"/vendas"} component={VendasNew} />
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
       <Route path={"/servicos"} component={Servicos} />

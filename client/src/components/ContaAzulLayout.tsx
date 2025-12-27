@@ -109,7 +109,8 @@ const menuItems: MenuItem[] = [
 export default function ContaAzulLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarHovered, setSidebarHovered] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<string[]>(["produtos", "servicos"]);
   const logoutMutation = trpc.auth.logout.useMutation();
 
@@ -127,10 +128,15 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Topbar fixa */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-[#00a8e8] shadow-md z-50 flex items-center px-4 gap-4">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 shadow-sm z-50 flex items-center px-4 gap-4">
         {/* Logo Track */}
         <Link href="/">
-          <img src="/logo-track.png" alt="Track ERP" className="h-10 cursor-pointer" />
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">
+              T
+            </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent tracking-tight">TRACK</span>
+          </div>
         </Link>
 
         {/* Campo de pesquisa */}
@@ -178,20 +184,20 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
         </DropdownMenu>
 
         {/* Ícones de notificação e ajuda */}
-        <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+        <Button variant="ghost" size="icon" className="text-gray-600 hover:bg-gray-100">
           <Bell className="w-5 h-5" />
         </Button>
-        <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+        <Button variant="ghost" size="icon" className="text-gray-600 hover:bg-gray-100">
           <HelpCircle className="w-5 h-5" />
         </Button>
 
         {/* Menu de usuário */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="text-white hover:bg-white/10 gap-2">
+            <Button variant="ghost" className="text-gray-700 hover:bg-gray-100 gap-2">
               <div className="text-right">
                 <div className="text-sm font-semibold">{user?.name || "Usuário"}</div>
-                <div className="text-xs opacity-80">Configurações e plano</div>
+                <div className="text-xs text-gray-500">Configurações e plano</div>
               </div>
               <ChevronDown className="w-4 h-4" />
             </Button>
@@ -283,9 +289,9 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     }`}
                   >
                     {item.icon}
-                    {sidebarOpen && (
+                    {(sidebarOpen || sidebarHovered) && (
                       <>
-                        <span className="flex-1 text-left">{item.label}</span>
+                        <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>
                         {expandedMenus.includes(item.id) ? (
                           <ChevronDown className="w-4 h-4" />
                         ) : (
@@ -294,13 +300,13 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </>
                     )}
                   </button>
-                  {expandedMenus.includes(item.id) && sidebarOpen && (
+                  {expandedMenus.includes(item.id) && (sidebarOpen || sidebarHovered) && (
                     <div className="bg-[#002a3f]">
                       {item.submenu.map((subitem) => (
                         <Link
                           key={subitem.path}
                           href={subitem.path}
-                          className={`block px-4 py-2 pl-12 hover:bg-white/10 transition-colors ${
+                          className={`block px-4 py-2 pl-12 hover:bg-white/10 transition-colors whitespace-nowrap ${
                             location === subitem.path ? "bg-white/20 border-l-4 border-blue-400" : ""
                           }`}
                         >
@@ -318,7 +324,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                   }`}
                 >
                   {item.icon}
-                  {sidebarOpen && <span>{item.label}</span>}
+                  {(sidebarOpen || sidebarHovered) && <span className="whitespace-nowrap">{item.label}</span>}
                 </Link>
               )}
             </div>
@@ -326,10 +332,10 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
         </nav>
       </aside>
 
-      {/* Conteúdo principal */}
+            {/* Content area */}
       <main
-        className={`pt-16 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-16"
+        className={`transition-all duration-300 pt-16 ${
+          sidebarOpen || sidebarHovered ? "ml-64" : "ml-16"
         }`}
       >
         <div className="p-6">{children}</div>
