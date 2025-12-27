@@ -11,7 +11,8 @@ import Apresentacao from "./pages/Apresentacao";
 import Orcamentos from "./pages/Orcamentos";
 import VendasCompleta from "./pages/VendasCompleta";
 import Servicos from "./pages/Servicos";
-import { Compras, Estoque, Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
+import { Estoque, Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
+import ComprasCompleta from "./pages/ComprasCompleta";
 import FinanceiroCompleto from "./pages/FinanceiroCompleto";
 import ConfiguracoesCompleta from "./pages/ConfiguracoesCompleta";
 
@@ -26,7 +27,7 @@ function Router() {
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
       <Route path={"/servicos"} component={Servicos} />
-      <Route path={"/compras"} component={Compras} />
+      <Route path={"/compras"} component={ComprasCompleta} />
       <Route path={"/estoque"} component={Estoque} />
       <Route path={"/financeiro"} component={FinanceiroCompleto} />
       <Route path={"/fiscal"} component={Fiscal} />

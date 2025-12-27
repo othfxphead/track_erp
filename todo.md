@@ -158,3 +158,14 @@
 - [x] Adicionar filtros por período nos relatórios
 - [x] Criar formulário completo de Compras
 - [x] Implementar atualização automática de estoque
+
+
+## Módulo de Compras Completo
+- [x] Criar página de Compras com formulário completo
+- [x] Implementar seleção de fornecedor (cadastro se não existir)
+- [x] Adicionar seleção múltipla de produtos com quantidade e preço
+- [x] Implementar cálculo automático de totais (subtotal, desconto, total)
+- [x] Criar lógica de atualização automática de estoque após compra
+- [x] Adicionar listagem de compras com histórico
+- [x] Implementar filtros por período e fornecedor
+- [x] Integrar com logs de auditoria
