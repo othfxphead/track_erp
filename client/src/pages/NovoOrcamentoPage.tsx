@@ -19,12 +19,14 @@ import {
 } from "@/components/ui/collapsible";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { NovoClienteModal } from "@/components/NovoClienteModal";
 
 export default function NovoOrcamentoPage() {
   const [, setLocation] = useLocation();
   const navigate = (path: string) => setLocation(path);
   const [activeTab, setActiveTab] = useState("informacoes");
   const [tipoVenda, setTipoVenda] = useState("orcamento");
+  const [modalNovoClienteOpen, setModalNovoClienteOpen] = useState(false);
   
   const [formData, setFormData] = useState({
     situacaoNegociacao: "em_negociacao",
@@ -209,6 +211,17 @@ export default function NovoOrcamentoPage() {
                         <SelectValue placeholder="Selecione um cliente" />
                       </SelectTrigger>
                       <SelectContent>
+                        <div className="px-2 py-1.5 border-b">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            onClick={() => setModalNovoClienteOpen(true)}
+                          >
+                            <span className="mr-2">+</span> Novo
+                          </Button>
+                        </div>
                         {clientes?.map((cliente) => (
                           <SelectItem key={cliente.id} value={cliente.id.toString()}>
                             {cliente.nome}
@@ -216,7 +229,11 @@ export default function NovoOrcamentoPage() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button type="button" variant="outline" size="sm">
+                    <Button 
+                      type="button" 
+                      size="sm"
+                      className="bg-[#E91E63] hover:bg-[#C2185B] text-white border-0"
+                    >
                       Consultar cliente no Serasa
                     </Button>
                   </div>
@@ -319,6 +336,17 @@ export default function NovoOrcamentoPage() {
                       <SelectValue placeholder="Selecione um produto" />
                     </SelectTrigger>
                     <SelectContent>
+                      <div className="px-2 py-1.5 border-b">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          onClick={() => window.open('/produtos', '_blank')}
+                        >
+                          <span className="mr-2">+</span> Novo
+                        </Button>
+                      </div>
                       {produtos?.map((produto) => (
                         <SelectItem key={produto.id} value={produto.id.toString()}>
                           {produto.nome}
@@ -480,6 +508,15 @@ export default function NovoOrcamentoPage() {
           </Button>
         </div>
       </form>
+
+      {/* Modal de Novo Cliente */}
+      <NovoClienteModal
+        open={modalNovoClienteOpen}
+        onOpenChange={setModalNovoClienteOpen}
+        onClienteCriado={(clienteId) => {
+          setFormData(prev => ({ ...prev, clienteId: clienteId.toString() }));
+        }}
+      />
     </div>
   );
 }

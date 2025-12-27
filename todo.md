@@ -520,3 +520,24 @@
 - [ ] Adicionar seção "Observações de pagamento" na Nova Venda
 - [ ] Adicionar seção "Observações complementares da nota fiscal" na Nova Venda
 - [ ] Garantir que todos os formulários funcionam com onSubmit (não onClick)
+
+
+## Melhorias UX - Dropdowns e Botões (27/12/2025)
+- [x] Adicionar cor rosa/magenta do Serasa (#E91E63) no botão "Consultar cliente no Serasa"
+- [x] Adicionar opção "+ Novo" no dropdown de Clientes
+- [x] Adicionar opção "+ Novo" no dropdown de Produtos
+- [ ] Adicionar opção "+ Novo" no dropdown de Serviços
+- [ ] Adicionar opção "+ Novo" no dropdown de Fornecedores
+- [ ] Adicionar opção "+ Novo" em todos os outros dropdowns de cadastros
+- [ ] Implementar modal/navegação para criar novo registro ao clicar em "+ Novo"
+
+## Modal de Cadastro Rápido de Cliente (27/12/2025)
+- [x] Criar componente NovoClienteModal.tsx (800px x 500px)
+- [x] Adicionar campos essenciais: Nome/Razão Social, CPF/CNPJ, Email, Telefone, Endereço
+- [x] Implementar validação de CPF/CNPJ
+- [x] Implementar máscaras nos campos (CPF/CNPJ, Telefone, CEP)
+- [x] Integrar modal com botão "+ Novo" do dropdown de Clientes
+- [x] Implementar salvamento via tRPC (clientes.create)
+- [x] Atualizar lista de clientes após salvar
+- [x] Selecionar automaticamente o cliente recém-criado no dropdown
+- [ ] Aplicar mesmo padrão para Produtos, Serviços e Fornecedores
