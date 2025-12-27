@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
@@ -115,9 +115,20 @@ const menuItems: MenuItem[] = [
 export default function ContaAzulLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const { user, loading, logout } = useAuth();
-  const { data: notificacoes } = trpc.dashboard.notificacoes.useQuery(undefined, {
+  const { data: notificacoesData } = trpc.dashboard.notificacoes.useQuery(undefined, {
     refetchInterval: 60000, // Atualizar a cada 1 minuto
-  });  const { data: empresa } = trpc.empresa.get.useQuery();
+  });
+  const [notificacoesLidas, setNotificacoesLidas] = React.useState<string[]>([]);
+  
+  // Filtrar notificações não lidas
+  const notificacoes = React.useMemo(() => {
+    if (!notificacoesData) return [];
+    return notificacoesData.filter(n => !notificacoesLidas.includes(n.id));
+  }, [notificacoesData, notificacoesLidas]);
+  
+  const marcarComoLida = (id: string) => {
+    setNotificacoesLidas(prev => [...prev, id]);
+  };  const { data: empresa } = trpc.empresa.get.useQuery();
   const logoutMutation = trpc.auth.logout.useMutation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarHovered, setSidebarHovered] = useState(false);
@@ -390,6 +401,19 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                               {new Date(notif.data).toLocaleString('pt-BR')}
                             </p>
                           </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 shrink-0 hover:bg-red-100 hover:text-red-600"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              marcarComoLida(notif.id);
+                            }}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </Button>
                         </div>
                       </DropdownMenuItem>
                     ))

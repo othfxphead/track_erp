@@ -336,3 +336,20 @@ export const logsIntegracoes = mysqlTable("logsIntegracoes", {
 
 export type LogIntegracao = typeof logsIntegracoes.$inferSelect;
 export type InsertLogIntegracao = typeof logsIntegracoes.$inferInsert;
+
+/**
+ * Notificações do sistema
+ */
+export const notificacoes = mysqlTable("notificacoes", {
+  id: int("id").autoincrement().primaryKey(),
+  usuarioId: int("usuarioId").notNull(),
+  tipo: mysqlEnum("tipo", ["info", "warning", "danger"]).notNull(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  mensagem: text("mensagem").notNull(),
+  link: varchar("link", { length: 255 }),
+  lida: boolean("lida").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Notificacao = typeof notificacoes.$inferSelect;
+export type InsertNotificacao = typeof notificacoes.$inferInsert;

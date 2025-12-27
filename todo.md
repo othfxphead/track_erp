@@ -635,3 +635,11 @@
 - [x] Adicionar links para navegar para os registros relacionados
 - [x] Implementar atualização automática a cada 1 minuto
 - [x] Testar sistema de notificações com dados reais (testado: notificação de estoque baixo funcionando)
+
+## Marcar Notificações como Lidas (27/12/2025)
+- [x] Adicionar botão "Marcar como lida" (ícone X) em cada notificação
+- [x] Implementar estado local para filtrar notificações lidas
+- [x] Filtrar apenas notificações não lidas no dropdown
+- [x] Adicionar hover com fundo vermelho no botão X
+- [x] Impedir propagação do clique no botão X (stopPropagation)
+- [x] Testar funcionalidade completa (testado: botão X remove notificação da lista)

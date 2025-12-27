@@ -183,13 +183,13 @@ export async function createFornecedor(data: InsertFornecedor) {
 export async function getAllProdutos() {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(produtos).orderBy(desc(produtos.createdAt));
+  return await db.select().from(schema.produtos).orderBy(desc(produtos.createdAt));
 }
 
 export async function getProdutoById(id: number) {
   const db = await getDb();
   if (!db) return null;
-  const result = await db.select().from(produtos).where(eq(produtos.id, id)).limit(1);
+  const result = await db.select().from(schema.produtos).where(eq(produtos.id, id)).limit(1);
   return result.length > 0 ? result[0] : null;
 }
 
@@ -334,30 +334,30 @@ export async function updateSaldoConta(id: number, novoSaldo: string) {
 export async function getAllLancamentos() {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(lancamentosFinanceiros).orderBy(desc(lancamentosFinanceiros.dataVencimento));
+  return await db.select().from(schema.lancamentosFinanceiros).orderBy(desc(schema.lancamentosFinanceiros.dataVencimento));
 }
 
 export async function getLancamentosByPeriodo(dataInicio: Date, dataFim: Date) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(lancamentosFinanceiros)
+  return await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      gte(lancamentosFinanceiros.dataVencimento, dataInicio),
-      lte(lancamentosFinanceiros.dataVencimento, dataFim)
+      gte(schema.lancamentosFinanceiros.dataVencimento, dataInicio),
+      lte(schema.lancamentosFinanceiros.dataVencimento, dataFim)
     ))
-    .orderBy(desc(lancamentosFinanceiros.dataVencimento));
+    .orderBy(desc(schema.lancamentosFinanceiros.dataVencimento));
 }
 
 export async function getLancamentosVencidos() {
   const db = await getDb();
   if (!db) return [];
   const hoje = new Date();
-  return await db.select().from(lancamentosFinanceiros)
+  return await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      eq(lancamentosFinanceiros.status, "pendente"),
-      lte(lancamentosFinanceiros.dataVencimento, hoje)
+      eq(schema.lancamentosFinanceiros.status, "pendente"),
+      lte(schema.lancamentosFinanceiros.dataVencimento, hoje)
     ))
-    .orderBy(desc(lancamentosFinanceiros.dataVencimento));
+    .orderBy(desc(schema.lancamentosFinanceiros.dataVencimento));
 }
 
 export async function createLancamento(data: InsertLancamentoFinanceiro) {
@@ -439,17 +439,17 @@ export async function getDashboardKPIs() {
   const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
 
   // Contas a receber
-  const contasReceber = await db.select().from(lancamentosFinanceiros)
+  const contasReceber = await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      eq(lancamentosFinanceiros.tipo, "receita"),
-      eq(lancamentosFinanceiros.status, "pendente")
+      eq(schema.lancamentosFinanceiros.tipo, "receita"),
+      eq(schema.lancamentosFinanceiros.status, "pendente")
     ));
 
   // Contas a pagar
-  const contasPagar = await db.select().from(lancamentosFinanceiros)
+  const contasPagar = await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      eq(lancamentosFinanceiros.tipo, "despesa"),
-      eq(lancamentosFinanceiros.status, "pendente")
+      eq(schema.lancamentosFinanceiros.tipo, "despesa"),
+      eq(schema.lancamentosFinanceiros.status, "pendente")
     ));
 
   // Contas vencidas
@@ -532,12 +532,12 @@ export async function getFluxoCaixaPorMes(dataInicio?: Date, dataFim?: Date) {
   const inicio = dataInicio || new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
   const fim = dataFim || hoje;
 
-  const lancamentos = await db.select().from(lancamentosFinanceiros)
+  const lancamentos = await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      gte(lancamentosFinanceiros.dataVencimento, inicio),
-      lte(lancamentosFinanceiros.dataVencimento, fim)
+      gte(schema.lancamentosFinanceiros.dataVencimento, inicio),
+      lte(schema.lancamentosFinanceiros.dataVencimento, fim)
     ))
-    .orderBy(lancamentosFinanceiros.dataVencimento);
+    .orderBy(schema.lancamentosFinanceiros.dataVencimento);
 
   // Agrupar por mês e tipo
   const receitasPorMes: Record<string, number> = {};
@@ -582,97 +582,125 @@ export async function getFluxoCaixaPorMes(dataInicio?: Date, dataFim?: Date) {
 
 
 // ============= NOTIFICAÇÕES =============
-export async function getNotificacoes() {
+export async function getNotificacoes(usuarioId: number) {
   const db = await getDb();
   if (!db) return [];
+  // Buscar notificações não lidas do usuário
+  const notifs = await db
+    .select()
+    .from(schema.notificacoes)
+    .where(
+      and(
+        eq(schema.notificacoes.usuarioId, usuarioId),
+        eq(schema.notificacoes.lida, false)
+      )
+    )
+    .orderBy(desc(schema.notificacoes.createdAt));
+
+  return notifs.map((n) => ({
+    id: n.id.toString(),
+    tipo: n.tipo,
+    titulo: n.titulo,
+    mensagem: n.mensagem,
+    link: n.link || undefined,
+    data: n.createdAt,
+  }));
+}
+
+/**
+ * Gera notificações automáticas para o usuário
+ * Deve ser chamada periodicamente (ex: a cada hora via cron)
+ */
+export async function gerarNotificacoesAutomaticas(usuarioId: number) {
+  const db = await getDb();
+  if (!db) return 0;
 
   const hoje = new Date();
-  const seteDiasDepois = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const proximosDias = new Date();
+  proximosDias.setDate(hoje.getDate() + 7);
 
-  const notificacoes: Array<{
-    id: string;
-    tipo: 'warning' | 'danger' | 'info';
+  const novasNotificacoes: Array<{
+    usuarioId: number;
+    tipo: "info" | "warning" | "danger";
     titulo: string;
     mensagem: string;
     link?: string;
-    data: Date;
   }> = [];
-
   // 1. Orçamentos vencidos
-  const orcamentosVencidos = await db.select().from(orcamentos)
+  const orcamentosVencidos = await db.select().from(schema.orcamentos)
     .where(and(
-      lt(orcamentos.dataValidade, hoje),
-      eq(orcamentos.status, 'pendente')
+      lt(schema.orcamentos.dataValidade, hoje),
+      eq(schema.orcamentos.status, 'pendente')
     ));
 
   orcamentosVencidos.forEach((orc) => {
-    notificacoes.push({
-      id: `orcamento-${orc.id}`,
+    novasNotificacoes.push({
+      usuarioId,
       tipo: 'warning',
       titulo: 'Orçamento vencido',
       mensagem: `Orçamento #${orc.numero} venceu em ${new Date(orc.dataValidade).toLocaleDateString('pt-BR')}`,
       link: `/orcamentos/${orc.id}`,
-      data: new Date(orc.dataValidade),
     });
   });
 
   // 2. Contas a pagar próximas do vencimento (próximos 7 dias)
-  const contasPagar = await db.select().from(lancamentosFinanceiros)
+  const contasPagar = await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      eq(lancamentosFinanceiros.tipo, 'despesa'),
-      eq(lancamentosFinanceiros.status, 'pendente'),
-      gte(lancamentosFinanceiros.dataVencimento, hoje),
-      lte(lancamentosFinanceiros.dataVencimento, seteDiasDepois)
+      eq(schema.lancamentosFinanceiros.tipo, 'despesa'),
+      eq(schema.lancamentosFinanceiros.status, 'pendente'),
+      gte(schema.lancamentosFinanceiros.dataVencimento, hoje),
+      lte(schema.lancamentosFinanceiros.dataVencimento, proximosDias)
     ));
 
   contasPagar.forEach((conta) => {
     const diasRestantes = Math.ceil((new Date(conta.dataVencimento).getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
-    notificacoes.push({
-      id: `conta-pagar-${conta.id}`,
+    novasNotificacoes.push({
+      usuarioId,
       tipo: diasRestantes <= 3 ? 'danger' : 'warning',
       titulo: 'Conta a pagar próxima do vencimento',
       mensagem: `${conta.descricao} - R$ ${parseFloat(conta.valor as any).toFixed(2)} vence em ${diasRestantes} dia(s)`,
       link: `/financeiro`,
-      data: new Date(conta.dataVencimento),
     });
   });
 
   // 3. Contas a receber próximas do vencimento (próximos 7 dias)
-  const contasReceber = await db.select().from(lancamentosFinanceiros)
+  const contasReceber = await db.select().from(schema.lancamentosFinanceiros)
     .where(and(
-      eq(lancamentosFinanceiros.tipo, 'receita'),
-      eq(lancamentosFinanceiros.status, 'pendente'),
-      gte(lancamentosFinanceiros.dataVencimento, hoje),
-      lte(lancamentosFinanceiros.dataVencimento, seteDiasDepois)
+      eq(schema.lancamentosFinanceiros.tipo, 'receita'),
+      eq(schema.lancamentosFinanceiros.status, 'pendente'),
+      gte(schema.lancamentosFinanceiros.dataVencimento, hoje),
+      lte(schema.lancamentosFinanceiros.dataVencimento, proximosDias)
     ));
 
   contasReceber.forEach((conta) => {
     const diasRestantes = Math.ceil((new Date(conta.dataVencimento).getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
-    notificacoes.push({
-      id: `conta-receber-${conta.id}`,
+    novasNotificacoes.push({
+      usuarioId,
       tipo: 'info',
       titulo: 'Conta a receber próxima do vencimento',
       mensagem: `${conta.descricao} - R$ ${parseFloat(conta.valor as any).toFixed(2)} vence em ${diasRestantes} dia(s)`,
       link: `/financeiro`,
-      data: new Date(conta.dataVencimento),
     });
   });
 
   // 4. Produtos com estoque baixo
-  const produtosEstoqueBaixo = await db.select().from(produtos)
-    .where(sql`${produtos.estoque} <= ${produtos.estoqueMinimo}`);
+  const produtosEstoqueBaixo = await db.select().from(schema.produtos)
+    .where(sql`${schema.produtos.estoque} <= ${schema.produtos.estoqueMinimo}`);
 
   produtosEstoqueBaixo.forEach((produto) => {
-    notificacoes.push({
-      id: `estoque-${produto.id}`,
+    novasNotificacoes.push({
+      usuarioId,
       tipo: 'danger',
       titulo: 'Estoque baixo',
       mensagem: `${produto.nome} - Estoque: ${produto.estoque} (mínimo: ${produto.estoqueMinimo})`,
       link: `/produtos`,
-      data: hoje,
     });
   });
 
-  // Ordenar por data (mais recentes primeiro)
-  return notificacoes.sort((a, b) => b.data.getTime() - a.data.getTime());
+  // Inserir todas as novas notificações no banco
+  if (novasNotificacoes.length > 0) {
+    await db.insert(schema.notificacoes).values(novasNotificacoes);
+  }
+
+  return novasNotificacoes.length;
 }
