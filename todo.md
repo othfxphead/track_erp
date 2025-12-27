@@ -408,3 +408,9 @@
 - [x] Aumentar logo Track para h-24 (maior)
 - [x] Adicionar mais espaço entre logo e campo de pesquisa (gap-12 ou maior)
 - [x] Ajustar altura da topbar se necessário para acomodar logo maior
+
+
+## Ajustes Visuais Finais
+- [x] Aumentar logo Track ainda mais (h-24 → h-32)
+- [x] Corrigir falha/borda branca entre menu lateral azul claro e submenu azul escuro
+- [x] Garantir transição visual perfeita entre os menus

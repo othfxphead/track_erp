@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-20 h-[calc(100vh-5rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
+          className={`fixed left-0 top-24 h-[calc(100vh-6rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseLeave={() => {
@@ -205,7 +205,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
-                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-5rem)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
+                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-24 h-[calc(100vh-6rem)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
                         {/* Cabeçalho do submenu com seta de voltar */}
                         <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a] rounded-tr-2xl">
                           <button 
@@ -288,7 +288,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                   <img 
                     src="/logo-track-erp.png" 
                     alt="Track ERP" 
-                    className="h-24 transition-all duration-300 hover:scale-[1.5] hover:z-50" 
+                    className="h-32 transition-all duration-300 hover:scale-[1.5] hover:z-50" 
                   />
                 </div>
               </Link>
