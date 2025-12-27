@@ -388,3 +388,17 @@
 - [x] Adicionar border-radius nos menus (rounded-r-2xl)
 - [x] Adicionar sombras suaves nos menus (shadow-lg, shadow-2xl)
 - [x] Melhorar visual geral dos dropdowns
+
+
+## Refinamento Final - Botões e Navegação
+- [x] Afinar botões ainda mais (h-7, px-2, py-1, text-xs)
+- [x] Aplicar botões finos globalmente no button.tsx
+- [x] Menu principal só abre/fecha ao clicar na seta (não hover)
+- [x] Submenus continuam abrindo ao hover
+- [x] Implementar navegação no botão "Novo Orçamento" do dropdown
+- [x] Implementar navegação no botão "Nova Venda" do dropdown
+- [x] Implementar navegação no botão "Novo Contrato" do dropdown
+- [x] Implementar navegação no botão "Novo Cliente" do dropdown
+- [x] Implementar navegação no botão "Novo Produto" do dropdown
+- [ ] Implementar navegação nos botões de Ações Rápidas do Dashboard
+- [ ] Refazer páginas conforme especificações originais do usuário

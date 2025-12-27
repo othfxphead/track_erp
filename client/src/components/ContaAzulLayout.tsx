@@ -120,7 +120,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
 
-  const isExpanded = sidebarOpen || sidebarHovered;
+  const isExpanded = sidebarOpen;
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -141,9 +141,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           className={`fixed left-0 top-20 h-[calc(100vh-5rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
             isExpanded ? "w-64" : "w-16"
           }`}
-          onMouseEnter={() => setSidebarHovered(true)}
           onMouseLeave={() => {
-            setSidebarHovered(false);
             setHoveredItem(null);
           }}
         >
@@ -317,24 +315,24 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/orcamentos")}>
                     <FileText className="w-4 h-4 mr-2" />
                     Novo Orçamento
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/vendas")}>
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Nova Venda
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/contratos")}>
                     <FileCheck className="w-4 h-4 mr-2" />
                     Novo Contrato
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/clientes")}>
                     <User className="w-4 h-4 mr-2" />
                     Novo Cliente
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/produtos")}>
                     <Package className="w-4 h-4 mr-2" />
                     Novo Produto
                   </DropdownMenuItem>
