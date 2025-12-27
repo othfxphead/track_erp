@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
 import { Plus, FileText, Trash2, ShoppingCart } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -34,7 +35,7 @@ export default function VendasCompleta() {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     clienteId: "",
-    dataVenda: new Date().toISOString().split("T")[0],
+    dataVenda: new Date(),
     observacoes: "",
     itens: [] as Array<{ 
       tipo: "produto" | "servico";
@@ -64,7 +65,7 @@ export default function VendasCompleta() {
       setOpen(false);
       setFormData({
         clienteId: "",
-        dataVenda: new Date().toISOString().split("T")[0],
+        dataVenda: new Date(),
         observacoes: "",
         itens: [],
       });
@@ -235,13 +236,12 @@ export default function VendasCompleta() {
                   </div>
                   <div>
                     <Label htmlFor="dataVenda">Data da Venda</Label>
-                    <Input
-                      id="dataVenda"
-                      type="date"
-                      value={formData.dataVenda}
-                      onChange={(e) =>
-                        setFormData({ ...formData, dataVenda: e.target.value })
+                    <DatePicker
+                      date={formData.dataVenda}
+                      onDateChange={(date) =>
+                        setFormData({ ...formData, dataVenda: date || new Date() })
                       }
+                      placeholder="Selecione a data da venda"
                     />
                   </div>
                 </div>

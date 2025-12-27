@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
 import { Plus, Trash2, ShoppingCart, Package } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -42,7 +43,7 @@ export default function ComprasCompleta() {
   const [openFornecedor, setOpenFornecedor] = useState(false);
   const [formData, setFormData] = useState({
     fornecedorId: "",
-    dataCompra: new Date().toISOString().split("T")[0],
+    dataCompra: new Date(),
     desconto: "0",
     observacoes: "",
   });
@@ -73,7 +74,7 @@ export default function ComprasCompleta() {
       setOpen(false);
       setFormData({
         fornecedorId: "",
-        dataCompra: new Date().toISOString().split("T")[0],
+        dataCompra: new Date(),
         desconto: "0",
         observacoes: "",
       });
@@ -266,13 +267,12 @@ export default function ComprasCompleta() {
                     </div>
                     <div>
                       <Label htmlFor="dataCompra">Data da Compra</Label>
-                      <Input
-                        id="dataCompra"
-                        type="date"
-                        value={formData.dataCompra}
-                        onChange={(e) =>
-                          setFormData({ ...formData, dataCompra: e.target.value })
+                      <DatePicker
+                        date={formData.dataCompra}
+                        onDateChange={(date) =>
+                          setFormData({ ...formData, dataCompra: date || new Date() })
                         }
+                        placeholder="Selecione a data da compra"
                       />
                     </div>
                   </div>

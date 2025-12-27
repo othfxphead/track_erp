@@ -591,3 +591,13 @@
 - [x] Adicionar sombra e borda arredondada no container
 - [x] Melhorar hover e transições
 - [x] Testar em diferentes páginas (testado na NovaVendaPage)
+
+## Aplicar DatePicker em Todas as Páginas (27/12/2025)
+- [x] Buscar todas as páginas com input type="date" (6 campos em 5 páginas)
+- [x] Substituir em NovoOrcamentoPage (2 campos: data do orçamento e validade)
+- [x] Substituir em Orcamentos.tsx (data de validade)
+- [x] Substituir em VendasCompleta.tsx (data da venda)
+- [x] Substituir em FinanceiroCompleto.tsx (data de vencimento)
+- [x] Substituir em ComprasCompleta.tsx (data da compra)
+- [x] Testar funcionamento em cada página (testado em NovoOrcamentoPage)
+- [x] Garantir consistência visual em todo o sistema

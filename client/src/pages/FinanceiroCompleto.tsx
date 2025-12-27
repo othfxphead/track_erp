@@ -28,6 +28,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
 import { Plus, TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -37,7 +38,7 @@ export default function FinanceiroCompleto() {
     tipo: "receita" as "receita" | "despesa",
     descricao: "",
     valor: "",
-    dataVencimento: new Date().toISOString().split("T")[0],
+    dataVencimento: new Date(),
     categoria: "",
     formaPagamento: "",
     observacoes: "",
@@ -56,7 +57,7 @@ export default function FinanceiroCompleto() {
         tipo: "receita",
         descricao: "",
         valor: "",
-        dataVencimento: new Date().toISOString().split("T")[0],
+        dataVencimento: new Date(),
         categoria: "",
         formaPagamento: "",
         observacoes: "",
@@ -205,13 +206,12 @@ export default function FinanceiroCompleto() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="dataVencimento">Data de Vencimento</Label>
-                    <Input
-                      id="dataVencimento"
-                      type="date"
-                      value={formData.dataVencimento}
-                      onChange={(e) =>
-                        setFormData({ ...formData, dataVencimento: e.target.value })
+                    <DatePicker
+                      date={formData.dataVencimento}
+                      onDateChange={(date) =>
+                        setFormData({ ...formData, dataVencimento: date || new Date() })
                       }
+                      placeholder="Selecione a data de vencimento"
                     />
                   </div>
                   <div>

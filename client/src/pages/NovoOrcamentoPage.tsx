@@ -20,6 +20,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NovoClienteModal } from "@/components/NovoClienteModal";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export default function NovoOrcamentoPage() {
   const [, setLocation] = useLocation();
@@ -32,8 +33,8 @@ export default function NovoOrcamentoPage() {
     situacaoNegociacao: "em_negociacao",
     numeroOrcamento: "",
     clienteId: "",
-    dataOrcamento: new Date().toISOString().split("T")[0],
-    validadeOrcamento: "",
+    dataOrcamento: new Date(),
+    validadeOrcamento: undefined as Date | undefined,
     vendedorResponsavel: "",
     descricao: "",
     previsaoEntrega: "",
@@ -100,7 +101,7 @@ export default function NovoOrcamentoPage() {
     const { subtotal, desconto, total } = calcularTotais();
     createMutation.mutate({
       clienteId: parseInt(formData.clienteId),
-      dataValidade: new Date(formData.validadeOrcamento),
+      dataValidade: formData.validadeOrcamento || new Date(),
       observacoes: formData.descricao,
       valorTotal: total.toString(),
       itens: formData.itens.map(item => ({
@@ -243,11 +244,10 @@ export default function NovoOrcamentoPage() {
                 </div>
                 <div>
                   <Label htmlFor="data">Data do orçamento *</Label>
-                  <Input
-                    id="data"
-                    type="date"
-                    value={formData.dataOrcamento}
-                    onChange={(e) => setFormData(prev => ({ ...prev, dataOrcamento: e.target.value }))}
+                  <DatePicker
+                    date={formData.dataOrcamento}
+                    onDateChange={(date) => setFormData(prev => ({ ...prev, dataOrcamento: date || new Date() }))}
+                    placeholder="Selecione a data do orçamento"
                   />
                 </div>
               </div>
@@ -256,11 +256,10 @@ export default function NovoOrcamentoPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="validade">Validade do orçamento *</Label>
-                  <Input
-                    id="validade"
-                    type="date"
-                    value={formData.validadeOrcamento}
-                    onChange={(e) => setFormData(prev => ({ ...prev, validadeOrcamento: e.target.value }))}
+                  <DatePicker
+                    date={formData.validadeOrcamento}
+                    onDateChange={(date) => setFormData(prev => ({ ...prev, validadeOrcamento: date }))}
+                    placeholder="Selecione a validade do orçamento"
                   />
                 </div>
                 <div>

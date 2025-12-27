@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
 import { Plus, Edit, CheckCircle, XCircle, Clock, Trash2 } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -34,7 +35,7 @@ export default function Orcamentos() {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     clienteId: "",
-    dataValidade: "",
+    dataValidade: undefined as Date | undefined,
     observacoes: "",
     itens: [] as Array<{ produtoId: number; quantidade: number; valorUnitario: number }>,
   });
@@ -56,7 +57,7 @@ export default function Orcamentos() {
       setOpen(false);
       setFormData({
         clienteId: "",
-        dataValidade: "",
+        dataValidade: undefined,
         observacoes: "",
         itens: [],
       });
@@ -222,13 +223,12 @@ export default function Orcamentos() {
                   </div>
                   <div>
                     <Label htmlFor="dataValidade">Data de Validade</Label>
-                    <Input
-                      id="dataValidade"
-                      type="date"
-                      value={formData.dataValidade}
-                      onChange={(e) =>
-                        setFormData({ ...formData, dataValidade: e.target.value })
+                    <DatePicker
+                      date={formData.dataValidade}
+                      onDateChange={(date) =>
+                        setFormData({ ...formData, dataValidade: date })
                       }
+                      placeholder="Selecione a data de validade"
                     />
                   </div>
                 </div>
