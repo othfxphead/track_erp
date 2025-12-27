@@ -1,4 +1,4 @@
-import { eq, desc, and, gte, lte, sql, or } from "drizzle-orm";
+import { eq, desc, and, gte, lte, lt, sql, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
   InsertUser, users,
@@ -578,4 +578,101 @@ export async function getFluxoCaixaPorMes(dataInicio?: Date, dataFim?: Date) {
   }
 
   return resultado;
+}
+
+
+// ============= NOTIFICAÇÕES =============
+export async function getNotificacoes() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const hoje = new Date();
+  const seteDiasDepois = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  const notificacoes: Array<{
+    id: string;
+    tipo: 'warning' | 'danger' | 'info';
+    titulo: string;
+    mensagem: string;
+    link?: string;
+    data: Date;
+  }> = [];
+
+  // 1. Orçamentos vencidos
+  const orcamentosVencidos = await db.select().from(orcamentos)
+    .where(and(
+      lt(orcamentos.dataValidade, hoje),
+      eq(orcamentos.status, 'pendente')
+    ));
+
+  orcamentosVencidos.forEach((orc) => {
+    notificacoes.push({
+      id: `orcamento-${orc.id}`,
+      tipo: 'warning',
+      titulo: 'Orçamento vencido',
+      mensagem: `Orçamento #${orc.numero} venceu em ${new Date(orc.dataValidade).toLocaleDateString('pt-BR')}`,
+      link: `/orcamentos/${orc.id}`,
+      data: new Date(orc.dataValidade),
+    });
+  });
+
+  // 2. Contas a pagar próximas do vencimento (próximos 7 dias)
+  const contasPagar = await db.select().from(lancamentosFinanceiros)
+    .where(and(
+      eq(lancamentosFinanceiros.tipo, 'despesa'),
+      eq(lancamentosFinanceiros.status, 'pendente'),
+      gte(lancamentosFinanceiros.dataVencimento, hoje),
+      lte(lancamentosFinanceiros.dataVencimento, seteDiasDepois)
+    ));
+
+  contasPagar.forEach((conta) => {
+    const diasRestantes = Math.ceil((new Date(conta.dataVencimento).getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+    notificacoes.push({
+      id: `conta-pagar-${conta.id}`,
+      tipo: diasRestantes <= 3 ? 'danger' : 'warning',
+      titulo: 'Conta a pagar próxima do vencimento',
+      mensagem: `${conta.descricao} - R$ ${parseFloat(conta.valor as any).toFixed(2)} vence em ${diasRestantes} dia(s)`,
+      link: `/financeiro`,
+      data: new Date(conta.dataVencimento),
+    });
+  });
+
+  // 3. Contas a receber próximas do vencimento (próximos 7 dias)
+  const contasReceber = await db.select().from(lancamentosFinanceiros)
+    .where(and(
+      eq(lancamentosFinanceiros.tipo, 'receita'),
+      eq(lancamentosFinanceiros.status, 'pendente'),
+      gte(lancamentosFinanceiros.dataVencimento, hoje),
+      lte(lancamentosFinanceiros.dataVencimento, seteDiasDepois)
+    ));
+
+  contasReceber.forEach((conta) => {
+    const diasRestantes = Math.ceil((new Date(conta.dataVencimento).getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+    notificacoes.push({
+      id: `conta-receber-${conta.id}`,
+      tipo: 'info',
+      titulo: 'Conta a receber próxima do vencimento',
+      mensagem: `${conta.descricao} - R$ ${parseFloat(conta.valor as any).toFixed(2)} vence em ${diasRestantes} dia(s)`,
+      link: `/financeiro`,
+      data: new Date(conta.dataVencimento),
+    });
+  });
+
+  // 4. Produtos com estoque baixo
+  const produtosEstoqueBaixo = await db.select().from(produtos)
+    .where(sql`${produtos.estoque} <= ${produtos.estoqueMinimo}`);
+
+  produtosEstoqueBaixo.forEach((produto) => {
+    notificacoes.push({
+      id: `estoque-${produto.id}`,
+      tipo: 'danger',
+      titulo: 'Estoque baixo',
+      mensagem: `${produto.nome} - Estoque: ${produto.estoque} (mínimo: ${produto.estoqueMinimo})`,
+      link: `/produtos`,
+      data: hoje,
+    });
+  });
+
+  // Ordenar por data (mais recentes primeiro)
+  return notificacoes.sort((a, b) => b.data.getTime() - a.data.getTime());
 }

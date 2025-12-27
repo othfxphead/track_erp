@@ -622,3 +622,16 @@
 - [x] Atualizar gráficos automaticamente ao mudar o período
 - [x] Adicionar indicador visual do período ativo (variant default/outline)
 - [x] Testar todos os períodos predefinidos e personalizado (testados: 6m, 3m, custom)
+
+## Sistema de Notificações em Tempo Real (27/12/2025)
+- [x] Criar query tRPC para buscar orçamentos vencidos
+- [x] Criar query tRPC para buscar contas a pagar/receber próximas do vencimento (próximos 7 dias)
+- [x] Criar query tRPC para buscar produtos com estoque baixo (abaixo do estoque mínimo)
+- [x] Criar função getNotificacoes no db.ts
+- [x] Adicionar rota dashboard.notificacoes no routers.ts
+- [x] Implementar dropdown de notificações no ContaAzulLayout
+- [x] Adicionar badge de contagem no ícone de sino (mostra número de notificações)
+- [x] Estilizar notificações por tipo (warning=amarelo, danger=vermelho, info=azul)
+- [x] Adicionar links para navegar para os registros relacionados
+- [x] Implementar atualização automática a cada 1 minuto
+- [x] Testar sistema de notificações com dados reais (testado: notificação de estoque baixo funcionando)

@@ -42,6 +42,7 @@ import {
   Users,
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 
 interface MenuItem {
@@ -113,8 +114,10 @@ const menuItems: MenuItem[] = [
 
 export default function ContaAzulLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
-  const { user } = useAuth();
-  const { data: empresa } = trpc.empresa.get.useQuery();
+  const { user, loading, logout } = useAuth();
+  const { data: notificacoes } = trpc.dashboard.notificacoes.useQuery(undefined, {
+    refetchInterval: 60000, // Atualizar a cada 1 minuto
+  });  const { data: empresa } = trpc.empresa.get.useQuery();
   const logoutMutation = trpc.auth.logout.useMutation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarHovered, setSidebarHovered] = useState(false);
@@ -345,10 +348,58 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
               </DropdownMenu>
 
               {/* Notificações */}
-              <Button variant="ghost" size="icon" className="relative h-8 w-8">
-                <Bell className="w-5 h-5 text-gray-600" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="relative h-8 w-8">
+                    <Bell className="w-5 h-5 text-gray-600" />
+                    {notificacoes && notificacoes.length > 0 && (
+                      <span className="absolute top-0 right-0 h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                        {notificacoes.length > 9 ? '9+' : notificacoes.length}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-96 max-h-[500px] overflow-y-auto">
+                  <DropdownMenuLabel className="text-base font-semibold">Notificações</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {notificacoes && notificacoes.length > 0 ? (
+                    notificacoes.map((notif) => (
+                      <DropdownMenuItem
+                        key={notif.id}
+                        className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent"
+                        onClick={() => {
+                          if (notif.link) {
+                            setLocation(notif.link);
+                          }
+                        }}
+                      >
+                        <div className="flex items-start gap-2 w-full">
+                          <div
+                            className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                              notif.tipo === 'danger'
+                                ? 'bg-red-500'
+                                : notif.tipo === 'warning'
+                                ? 'bg-yellow-500'
+                                : 'bg-blue-500'
+                            }`}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground">{notif.titulo}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{notif.mensagem}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {new Date(notif.data).toLocaleString('pt-BR')}
+                            </p>
+                          </div>
+                        </div>
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      Nenhuma notificação no momento
+                    </div>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               {/* Ajuda */}
               <Button variant="ghost" size="icon" className="h-8 w-8">

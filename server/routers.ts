@@ -42,6 +42,9 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return await db.getFluxoCaixaPorMes(input?.dataInicio, input?.dataFim);
       }),
+    notificacoes: protectedProcedure.query(async () => {
+      return await db.getNotificacoes();
+    }),
   }),
 
   // Empresas
