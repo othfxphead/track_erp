@@ -76,4 +76,19 @@ export const aiRouter = router({
     .mutation(async ({ input }) => {
       return await aiHelpers.gerarLembretes(input.lancamentos);
     }),
+
+  // Processar documento com OCR
+  processarDocumento: protectedProcedure
+    .input(z.object({
+      arquivo: z.string(), // base64
+      tipoArquivo: z.string(),
+      nomeArquivo: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      return await aiHelpers.processarDocumentoOCR(
+        input.arquivo,
+        input.tipoArquivo,
+        input.nomeArquivo
+      );
+    }),
 });

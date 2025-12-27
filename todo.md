@@ -180,3 +180,19 @@
 - [x] Adicionar indicadores de giro de estoque e valor total
 - [x] Criar histórico detalhado de movimentações por produto
 - [x] Implementar filtros por categoria e período
+
+
+## Redesign Completo Estilo Conta Azul
+- [x] Criar topbar fixa azul clara com logo Track grande clicável
+- [x] Adicionar campo de pesquisa global na topbar
+- [x] Implementar botão "Novo registro" com dropdown na topbar
+- [x] Adicionar ícones de notificação e ajuda na topbar
+- [x] Criar sidebar retrátil azul escuro com ícones
+- [x] Implementar submenus expansíveis (Produtos, Serviços, Cadastros, Configurações)
+- [x] Adicionar menu de usuário com dropdown no canto superior direito
+- [x] Criar módulo de Orçamentos completo com filtros e cards de status
+- [x] Implementar formulário de orçamento com abas (Informações, Itens, Valor, Observações)
+- [x] Adicionar seleção de cliente com botão "Consultar no Serasa"
+- [x] Criar funcionalidade Conta AI Captura para importação de documentos com OCR
+- [x] Implementar preview de PDF/XML com extração automática de dados
+- [x] Adicionar confirmação de lançamentos extraídos pela IA

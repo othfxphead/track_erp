@@ -362,3 +362,226 @@ export async function gerarLembretes(
     return [];
   }
 }
+
+/**
+ * Processa documento (PDF, XML, imagem) com OCR e extrai dados estruturados
+ */
+export async function processarDocumentoOCR(
+  arquivoBase64: string,
+  tipoArquivo: string,
+  nomeArquivo: string
+): Promise<{
+  tipo: "nfe" | "nfse" | "recibo" | "boleto" | "outro";
+  numero?: string;
+  dataEmissao?: string;
+  fornecedor?: {
+    nome: string;
+    cnpj: string;
+  };
+  cliente?: {
+    nome: string;
+    cpfCnpj: string;
+  };
+  valorTotal: number;
+  itens?: Array<{
+    descricao: string;
+    quantidade: number;
+    valorUnitario: number;
+    valorTotal: number;
+  }>;
+  impostos?: {
+    icms?: number;
+    ipi?: number;
+    pis?: number;
+    cofins?: number;
+  };
+  observacoes?: string;
+}> {
+  try {
+    // Se for XML, extrair diretamente
+    if (tipoArquivo.includes("xml")) {
+      const xmlContent = Buffer.from(
+        arquivoBase64.split(",")[1] || arquivoBase64,
+        "base64"
+      ).toString("utf-8");
+      
+      // Usar IA para extrair dados do XML
+      const response = await invokeLLM({
+        messages: [
+          {
+            role: "system",
+            content: "Você é um especialista em extrair dados de documentos fiscais XML (NF-e, NFS-e). Analise o XML e extraia todas as informações relevantes de forma estruturada.",
+          },
+          {
+            role: "user",
+            content: `Extraia os dados deste XML de nota fiscal:\n\n${xmlContent.substring(0, 3000)}`,
+          },
+        ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "documento_fiscal",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                tipo: {
+                  type: "string",
+                  enum: ["nfe", "nfse", "recibo", "boleto", "outro"],
+                },
+                numero: { type: "string" },
+                dataEmissao: { type: "string" },
+                fornecedor: {
+                  type: "object",
+                  properties: {
+                    nome: { type: "string" },
+                    cnpj: { type: "string" },
+                  },
+                  required: ["nome", "cnpj"],
+                  additionalProperties: false,
+                },
+                valorTotal: { type: "number" },
+                itens: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      descricao: { type: "string" },
+                      quantidade: { type: "number" },
+                      valorUnitario: { type: "number" },
+                      valorTotal: { type: "number" },
+                    },
+                    required: ["descricao", "quantidade", "valorUnitario", "valorTotal"],
+                    additionalProperties: false,
+                  },
+                },
+                impostos: {
+                  type: "object",
+                  properties: {
+                    icms: { type: "number" },
+                    ipi: { type: "number" },
+                    pis: { type: "number" },
+                    cofins: { type: "number" },
+                  },
+                  required: [],
+                  additionalProperties: false,
+                },
+                observacoes: { type: "string" },
+              },
+              required: ["tipo", "valorTotal"],
+              additionalProperties: false,
+            },
+          },
+        },
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (content && typeof content === 'string') {
+        return JSON.parse(content);
+      }
+    }
+
+    // Se for PDF ou imagem, usar visão da IA
+    if (tipoArquivo.includes("pdf") || tipoArquivo.startsWith("image/")) {
+      const response = await invokeLLM({
+        messages: [
+          {
+            role: "system",
+            content: "Você é um especialista em OCR e extração de dados de documentos fiscais. Analise a imagem/PDF e extraia todas as informações de forma estruturada e precisa.",
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "Extraia todos os dados deste documento fiscal (NF-e, NFS-e, recibo, boleto, etc.). Identifique o tipo, fornecedor, itens, valores e impostos.",
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: arquivoBase64,
+                  detail: "high",
+                },
+              },
+            ],
+          },
+        ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "documento_fiscal",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                tipo: {
+                  type: "string",
+                  enum: ["nfe", "nfse", "recibo", "boleto", "outro"],
+                },
+                numero: { type: "string" },
+                dataEmissao: { type: "string" },
+                fornecedor: {
+                  type: "object",
+                  properties: {
+                    nome: { type: "string" },
+                    cnpj: { type: "string" },
+                  },
+                  required: ["nome", "cnpj"],
+                  additionalProperties: false,
+                },
+                valorTotal: { type: "number" },
+                itens: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      descricao: { type: "string" },
+                      quantidade: { type: "number" },
+                      valorUnitario: { type: "number" },
+                      valorTotal: { type: "number" },
+                    },
+                    required: ["descricao", "quantidade", "valorUnitario", "valorTotal"],
+                    additionalProperties: false,
+                  },
+                },
+                impostos: {
+                  type: "object",
+                  properties: {
+                    icms: { type: "number" },
+                    ipi: { type: "number" },
+                    pis: { type: "number" },
+                    cofins: { type: "number" },
+                  },
+                  required: [],
+                  additionalProperties: false,
+                },
+                observacoes: { type: "string" },
+              },
+              required: ["tipo", "valorTotal"],
+              additionalProperties: false,
+            },
+          },
+        },
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (content && typeof content === 'string') {
+        return JSON.parse(content);
+      }
+    }
+
+    // Fallback
+    return {
+      tipo: "outro",
+      valorTotal: 0,
+      observacoes: "Não foi possível extrair dados do documento",
+    };
+  } catch (error) {
+    console.error("Erro ao processar documento com OCR:", error);
+    return {
+      tipo: "outro",
+      valorTotal: 0,
+      observacoes: "Erro ao processar documento",
+    };
+  }
+}

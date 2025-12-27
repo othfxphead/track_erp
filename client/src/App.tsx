@@ -4,11 +4,12 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import ContaAzulLayout from "./components/ContaAzulLayout";
 import Home from "./pages/Home";
 import Produtos from "./pages/Produtos";
 import Clientes from "./pages/Clientes";
 import Apresentacao from "./pages/Apresentacao";
-import Orcamentos from "./pages/Orcamentos";
+import OrcamentosContaAzul from "./pages/OrcamentosContaAzul";
 import VendasCompleta from "./pages/VendasCompleta";
 import Servicos from "./pages/Servicos";
 import { Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
@@ -18,12 +19,12 @@ import FinanceiroCompleto from "./pages/FinanceiroCompleto";
 import ConfiguracoesCompleta from "./pages/ConfiguracoesCompleta";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
+    <ContaAzulLayout>
+      <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/apresentacao"} component={Apresentacao} />
-      <Route path={"/orcamentos"} component={Orcamentos} />
+      <Route path={"/orcamentos"} component={OrcamentosContaAzul} />
       <Route path={"/vendas"} component={VendasCompleta} />
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
@@ -37,8 +38,9 @@ function Router() {
       <Route path={"/configuracoes"} component={ConfiguracoesCompleta} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+        <Route component={NotFound} />
+      </Switch>
+    </ContaAzulLayout>
   );
 }
 
