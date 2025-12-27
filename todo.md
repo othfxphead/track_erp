@@ -303,3 +303,49 @@
 - [x] Melhorar altura das abas (h-12)
 - [x] Aumentar padding dos cards (p-6)
 - [x] Melhorar espaçamento do resumo financeiro
+
+
+## VISUAL E NAVEGAÇÃO
+- [x] Mover logo TRACK para topbar à esquerda
+- [x] Remover logo do menu lateral
+- [x] Menu lateral azul escuro
+- [x] Melhorar hover funcional no menu
+- [x] Submenu abre ao passar o mouse
+- [x] Corrigir seta do menu lateral (sobreposta, abrir/fechar)
+- [x] Tooltip com nome do item ao passar mouse (menu recolhido)
+- [ ] Botões finos com fundo branco e borda azul/verde
+- [ ] Padding interno alinhado em formulários e dashboards
+
+## TELAS E COMPONENTES
+- [ ] Cards de totais com cores corretas (vermelho, amarelo, verde, azul)
+- [ ] Tabela de orçamentos estilo Conta Azul com filtros
+- [ ] Organizar formulários: Informações, Itens, Valores, Pagamento, NF
+- [ ] Formulário de nova venda completo
+- [ ] Formulário de orçamento completo
+- [ ] Formulário de contrato recorrente completo
+- [x] Dropdown de ações funcional (Editar, Enviar, Clonar, Excluir, Criar venda)
+- [ ] Máscara de moeda brasileira (R$ 0,00)
+- [ ] Máscara de data BR (DD/MM/YYYY)
+
+## COMPORTAMENTOS E FUNCIONALIDADES
+- [ ] Submenus abrem com hover (não clique)
+- [ ] Feedback visual em botões (loading/check)
+- [ ] Corrigir erros de rota e 404
+- [ ] Tabelas e cards 100% responsivos
+- [ ] Botões de importar/exportar visíveis
+
+## INTEGRAÇÕES E DIFERENCIAIS
+- [ ] Botão "Consultar cliente no Serasa" funcional
+- [ ] Emissão automática de NF com API Focus
+- [ ] Conectores/placeholders para Asaas
+- [ ] Conectores/placeholders para Sicredi
+- [ ] Espaço para integração CRM futura
+- [ ] IA para preenchimento automático de campos
+- [ ] IA para sugestões (cliente, descrição itens)
+
+## EXTRAS IMPORTANTES
+- [ ] Modo escuro com contraste ideal
+- [ ] Aviso "NF emitida com sucesso" no topo
+- [ ] Botão "Visualizar NF" e download XML
+- [ ] Dropdowns com ícones e setas corretas
+- [ ] Responsividade mobile (menu e formulários)
