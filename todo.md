@@ -126,3 +126,16 @@
 
 ## Bugs Reportados
 - [x] Corrigir erro de nested anchor tags na página de orçamentos
+
+
+## Implementação dos Módulos Restantes
+- [x] Implementar página completa de Orçamentos
+- [x] Implementar página completa de Vendas
+- [x] Implementar página completa de Serviços
+- [x] Implementar página completa de Compras
+- [x] Implementar página completa de Estoque
+- [x] Implementar página completa do Financeiro
+- [x] Implementar página completa do Fiscal
+- [x] Implementar página completa de Relatórios
+- [x] Implementar página completa de Configurações
+- [x] Implementar página de Consulta Serasa

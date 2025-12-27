@@ -253,7 +253,7 @@ export const appRouter = router({
       }),
   }),
 
-  // Orçamentos
+  // Orcamentos
   orcamentos: router({
     list: protectedProcedure.query(async () => {
       return await db.getAllOrcamentos();
@@ -265,40 +265,65 @@ export const appRouter = router({
       }),
     create: protectedProcedure
       .input(z.object({
-        numero: z.string(),
+        numero: z.string().optional(),
         clienteId: z.number(),
         dataValidade: z.date(),
         valorTotal: z.string(),
         desconto: z.string().default("0"),
         observacoes: z.string().optional(),
-        itens: z.string(), // JSON
+        itens: z.any(), // Array de itens
       }))
       .mutation(async ({ input, ctx }) => {
+        const numero = input.numero || `ORC-${Date.now()}`;
         const id = await db.createOrcamento({
           ...input,
+          numero,
+          itens: JSON.stringify(input.itens),
           usuarioId: ctx.user.id,
         });
         await db.createLogAuditoria({
           usuarioId: ctx.user.id,
           acao: "create_orcamento",
           modulo: "orcamentos",
-          descricao: `Orçamento ${input.numero} criado`,
+          descricao: `Orçamento ${numero} criado`,
           dadosDepois: JSON.stringify(input),
         });
         return { success: true, id };
       }),
-    updateStatus: protectedProcedure
-      .input(z.object({
-        id: z.number(),
-        status: z.enum(["pendente", "aprovado", "rejeitado", "convertido"]),
-      }))
+    aprovar: protectedProcedure
+      .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
-        await db.updateOrcamento(input.id, { status: input.status });
+        await db.updateOrcamento(input.id, { status: "aprovado" });
+        const orcamento = await db.getOrcamentoById(input.id);
+        if (orcamento) {
+          // Criar venda automaticamente
+          await db.createVenda({
+            numero: `VEN-${Date.now()}`,
+            clienteId: orcamento.clienteId,
+            valorTotal: orcamento.valorTotal,
+            desconto: orcamento.desconto,
+            observacoes: `Convertido do orçamento ${orcamento.numero}`,
+            itens: orcamento.itens,
+            usuarioId: ctx.user.id,
+          });
+        }
         await db.createLogAuditoria({
           usuarioId: ctx.user.id,
-          acao: "update_orcamento_status",
+          acao: "aprovar_orcamento",
           modulo: "orcamentos",
-          descricao: `Status do orçamento ID ${input.id} alterado para ${input.status}`,
+          descricao: `Orçamento #${input.id} aprovado e convertido em venda`,
+        });
+        return { success: true };
+      }),
+    rejeitar: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.updateOrcamento(input.id, { status: "rejeitado" });
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "rejeitar_orcamento",
+          modulo: "orcamentos",
+          descricao: `Orçamento #${input.id} rejeitado`,
         });
         return { success: true };
       }),

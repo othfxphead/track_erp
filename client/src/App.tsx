@@ -8,6 +8,10 @@ import Home from "./pages/Home";
 import Produtos from "./pages/Produtos";
 import Clientes from "./pages/Clientes";
 import Apresentacao from "./pages/Apresentacao";
+import Orcamentos from "./pages/Orcamentos";
+import Vendas from "./pages/Vendas";
+import Servicos from "./pages/Servicos";
+import { Compras, Estoque, Financeiro, Fiscal, Relatorios, Configuracoes, ConsultaSerasa } from "./pages/ModulosSimples";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -15,18 +19,18 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/apresentacao"} component={Apresentacao} />
-      <Route path={"/orcamentos"} component={() => <div>Orçamentos - Em desenvolvimento</div>} />
-      <Route path={"/vendas"} component={() => <div>Vendas - Em desenvolvimento</div>} />
+      <Route path={"/orcamentos"} component={Orcamentos} />
+      <Route path={"/vendas"} component={Vendas} />
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
-      <Route path={"/servicos"} component={() => <div>Serviços - Em desenvolvimento</div>} />
-      <Route path={"/compras"} component={() => <div>Compras - Em desenvolvimento</div>} />
-      <Route path={"/estoque"} component={() => <div>Estoque - Em desenvolvimento</div>} />
-      <Route path={"/financeiro"} component={() => <div>Financeiro - Em desenvolvimento</div>} />
-      <Route path={"/fiscal"} component={() => <div>Fiscal - Em desenvolvimento</div>} />
-      <Route path={"/relatorios"} component={() => <div>Relatórios - Em desenvolvimento</div>} />
-      <Route path={"/serasa"} component={() => <div>Consulta Serasa - Em desenvolvimento</div>} />
-      <Route path={"/configuracoes"} component={() => <div>Configurações - Em desenvolvimento</div>} />
+      <Route path={"/servicos"} component={Servicos} />
+      <Route path={"/compras"} component={Compras} />
+      <Route path={"/estoque"} component={Estoque} />
+      <Route path={"/financeiro"} component={Financeiro} />
+      <Route path={"/fiscal"} component={Fiscal} />
+      <Route path={"/relatorios"} component={Relatorios} />
+      <Route path={"/serasa"} component={ConsultaSerasa} />
+      <Route path={"/configuracoes"} component={Configuracoes} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
