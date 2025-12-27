@@ -112,7 +112,7 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function ContaAzulLayout({ children }: { children: React.ReactNode }) {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { user } = useAuth();
   const logoutMutation = trpc.auth.logout.useMutation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-20 h-[calc(100vh-5rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 ${
+          className={`fixed left-0 top-20 h-[calc(100vh-5rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseEnter={() => setSidebarHovered(true)}
@@ -207,9 +207,9 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
-                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-5rem)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto`}>
+                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-5rem)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto rounded-r-2xl`}>
                         {/* Cabeçalho do submenu com seta de voltar */}
-                        <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a]">
+                        <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a] rounded-tr-2xl">
                           <button 
                             onClick={() => setHoveredItem(null)}
                             className="hover:bg-[#003d7a] p-1 rounded transition-colors"
@@ -287,7 +287,11 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
               {/* Logo TRACK */}
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
-                  <img src="/logo-track-erp.png" alt="Track ERP" className="h-16" />
+                  <img 
+                    src="/logo-track-erp.png" 
+                    alt="Track ERP" 
+                    className="h-16 transition-all duration-300 hover:scale-[2] hover:z-50" 
+                  />
                 </div>
               </Link>
 
@@ -367,15 +371,15 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/perfil")}>
                     <User className="w-4 h-4 mr-2" />
                     Perfil
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/configuracoes/dados-empresa")}>
                     <Building className="w-4 h-4 mr-2" />
                     Empresa
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation("/configuracoes")}>
                     <Settings className="w-4 h-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>

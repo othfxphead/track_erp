@@ -117,7 +117,7 @@ export default function NovoOrcamentoModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-7xl h-[95vh] flex flex-col p-0">
+      <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] flex flex-col p-0">
         <DialogHeader className="px-8 py-5 border-b">
           <DialogTitle className="text-2xl">Novo Orçamento</DialogTitle>
         </DialogHeader>

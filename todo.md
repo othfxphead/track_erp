@@ -375,3 +375,16 @@
 - [x] Adicionar estrelas de favoritos nos itens (hover amarelo)
 - [ ] Categorias em uppercase (CADASTROS, CONFIGURAÇÕES)
 - [x] Item ativo com fundo mais escuro no submenu (#004d8a)
+
+
+## Correções e Melhorias UX
+- [x] Aumentar modal de Novo Orçamento (max-w-[95vw] w-[95vw])
+- [x] Implementar botão "Perfil" do menu de usuário (navega para /perfil)
+- [x] Implementar botão "Empresa" do menu de usuário (navega para /configuracoes/dados-empresa)
+- [x] Implementar botão "Configurações" do menu de usuário (navega para /configuracoes)
+- [x] Implementar botão "Sair" do menu de usuário (logout funcional)
+- [x] Aumentar logo Track 2x ao passar hover (scale-[2])
+- [x] Fazer submenus abrirem automaticamente ao passar hover (já implementado)
+- [x] Adicionar border-radius nos menus (rounded-r-2xl)
+- [x] Adicionar sombras suaves nos menus (shadow-lg, shadow-2xl)
+- [x] Melhorar visual geral dos dropdowns
