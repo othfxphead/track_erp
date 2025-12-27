@@ -116,7 +116,24 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
+  }
+  
+  /* Remover bordas grossas e rings dos inputs */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    @apply ring-0 border-gray-300;
+  }
+  
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    @apply ring-0 border-gray-400;
   }
   body {
     @apply bg-background text-foreground;

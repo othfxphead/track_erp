@@ -541,3 +541,9 @@
 - [x] Atualizar lista de clientes após salvar
 - [x] Selecionar automaticamente o cliente recém-criado no dropdown
 - [ ] Aplicar mesmo padrão para Produtos, Serviços e Fornecedores
+
+## Ajustes de Estilo - Bordas dos Inputs (27/12/2025)
+- [x] Remover bordas azuis grossas dos inputs em foco
+- [x] Aplicar borda sutil e profissional (cinza claro)
+- [x] Ajustar ring/outline dos inputs, selects e textareas
+- [x] Garantir consistência visual em todos os formulários
