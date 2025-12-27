@@ -475,3 +475,93 @@ export async function getDashboardKPIs() {
     quantidadeVencidas: contasVencidas.length,
   };
 }
+
+// ============= DASHBOARD CHARTS =============
+export async function getVendasPorMes() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const hoje = new Date();
+  const seisMesesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+
+  const vendasData = await db.select().from(vendas)
+    .where(gte(vendas.dataVenda, seisMesesAtras))
+    .orderBy(vendas.dataVenda);
+
+  // Agrupar por mês
+  const vendasPorMes: Record<string, number> = {};
+  
+  vendasData.forEach((venda) => {
+    const data = new Date(venda.dataVenda);
+    const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+    
+    if (!vendasPorMes[mesAno]) {
+      vendasPorMes[mesAno] = 0;
+    }
+    vendasPorMes[mesAno] += parseFloat(venda.valorTotal as any);
+  });
+
+  // Criar array dos últimos 6 meses
+  const resultado = [];
+  for (let i = 5; i >= 0; i--) {
+    const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+    const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    
+    resultado.push({
+      mes: meses[data.getMonth()],
+      valor: vendasPorMes[mesAno] || 0,
+    });
+  }
+
+  return resultado;
+}
+
+export async function getFluxoCaixaPorMes() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const hoje = new Date();
+  const seisMesesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1);
+
+  const lancamentos = await db.select().from(lancamentosFinanceiros)
+    .where(gte(lancamentosFinanceiros.dataVencimento, seisMesesAtras))
+    .orderBy(lancamentosFinanceiros.dataVencimento);
+
+  // Agrupar por mês e tipo
+  const receitasPorMes: Record<string, number> = {};
+  const despesasPorMes: Record<string, number> = {};
+  
+  lancamentos.forEach((lancamento) => {
+    const data = new Date(lancamento.dataVencimento);
+    const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+    
+    if (lancamento.tipo === 'receita') {
+      if (!receitasPorMes[mesAno]) {
+        receitasPorMes[mesAno] = 0;
+      }
+      receitasPorMes[mesAno] += parseFloat(lancamento.valor as any);
+    } else {
+      if (!despesasPorMes[mesAno]) {
+        despesasPorMes[mesAno] = 0;
+      }
+      despesasPorMes[mesAno] += parseFloat(lancamento.valor as any);
+    }
+  });
+
+  // Criar array dos últimos 6 meses
+  const resultado = [];
+  for (let i = 5; i >= 0; i--) {
+    const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+    const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    
+    resultado.push({
+      mes: meses[data.getMonth()],
+      receitas: receitasPorMes[mesAno] || 0,
+      despesas: despesasPorMes[mesAno] || 0,
+    });
+  }
+
+  return resultado;
+}

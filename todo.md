@@ -601,3 +601,13 @@
 - [x] Substituir em ComprasCompleta.tsx (data da compra)
 - [x] Testar funcionamento em cada página (testado em NovoOrcamentoPage)
 - [x] Garantir consistência visual em todo o sistema
+
+## Gráficos Dinâmicos no Dashboard (27/12/2025)
+- [x] Criar query tRPC para buscar dados de vendas dos últimos 6 meses (getVendasPorMes)
+- [x] Criar query tRPC para buscar dados de receitas e despesas dos últimos 6 meses (getFluxoCaixaPorMes)
+- [x] Instalar biblioteca Recharts
+- [x] Implementar gráfico de Fluxo de Caixa (receitas vs despesas)
+- [x] Implementar gráfico de Evolução de Vendas
+- [x] Adicionar tooltips interativos nos gráficos (já existentes)
+- [x] Testar com dados reais do banco de dados (testado no Dashboard)
+- [x] Garantir responsividade dos gráficos (ResponsiveContainer)

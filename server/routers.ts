@@ -26,6 +26,12 @@ export const appRouter = router({
     kpis: protectedProcedure.query(async () => {
       return await db.getDashboardKPIs();
     }),
+    vendasPorMes: protectedProcedure.query(async () => {
+      return await db.getVendasPorMes();
+    }),
+    fluxoCaixaPorMes: protectedProcedure.query(async () => {
+      return await db.getFluxoCaixaPorMes();
+    }),
   }),
 
   // Empresas

@@ -23,6 +23,8 @@ import {
 
 export default function Home() {
   const { data: kpis, isLoading } = trpc.dashboard.kpis.useQuery();
+  const { data: vendasData } = trpc.dashboard.vendasPorMes.useQuery();
+  const { data: fluxoCaixaData } = trpc.dashboard.fluxoCaixaPorMes.useQuery();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -31,24 +33,13 @@ export default function Home() {
     }).format(value);
   };
 
-  // Dados fictícios para os gráficos (em produção viriam do backend)
-  const fluxoCaixaData = [
-    { mes: "Jan", receitas: 45000, despesas: 32000 },
-    { mes: "Fev", receitas: 52000, despesas: 35000 },
-    { mes: "Mar", receitas: 48000, despesas: 38000 },
-    { mes: "Abr", receitas: 61000, despesas: 42000 },
-    { mes: "Mai", receitas: 55000, despesas: 40000 },
-    { mes: "Jun", receitas: 67000, despesas: 45000 },
-  ];
+  // Dados dos gráficos vindo do backend via tRPC
+  const vendasChartData = vendasData?.map(item => ({
+    mes: item.mes,
+    vendas: item.valor,
+  })) || [];
 
-  const vendasData = [
-    { mes: "Jan", vendas: 45000 },
-    { mes: "Fev", vendas: 52000 },
-    { mes: "Mar", vendas: 48000 },
-    { mes: "Abr", vendas: 61000 },
-    { mes: "Mai", vendas: 55000 },
-    { mes: "Jun", vendas: 67000 },
-  ];
+  const fluxoCaixaChartData = fluxoCaixaData || [];
 
   if (isLoading) {
     return (
@@ -151,7 +142,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={fluxoCaixaData}>
+                <LineChart data={fluxoCaixaChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="mes" />
                   <YAxis />
@@ -188,7 +179,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={vendasData}>
+                <BarChart data={vendasChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="mes" />
                   <YAxis />
