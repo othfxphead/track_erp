@@ -138,7 +138,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-[#1a5490] text-white transition-all duration-300 z-40 ${
+          className={`fixed left-0 top-20 h-[calc(100vh-5rem)] bg-[#00A3E0] text-white transition-all duration-300 z-40 ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseEnter={() => setSidebarHovered(true)}
@@ -150,12 +150,12 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           {/* Botão de toggle fixo e sobreposto */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#1a5490] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
+            className="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-[#00A3E0] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-md"
           >
             {isExpanded ? (
-              <ChevronLeft className="w-4 h-4 text-[#1a5490]" />
+              <ChevronLeft className="w-4 h-4 text-[#00A3E0]" />
             ) : (
-              <ChevronRight className="w-4 h-4 text-[#1a5490]" />
+              <ChevronRight className="w-4 h-4 text-[#00A3E0]" />
             )}
           </button>
 
@@ -173,9 +173,9 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            className={`w-full flex items-center justify-center h-12 hover:bg-[#2a6db0] transition-colors ${
+                            className={`w-full flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors ${
                               location.startsWith(item.submenu[0].path.split("/")[1])
-                                ? "bg-[#2a6db0] border-l-4 border-white"
+                                ? "bg-[#0088C0] border-l-4 border-white"
                                 : ""
                             }`}
                           >
@@ -189,8 +189,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     ) : (
                       <button
                         onClick={() => toggleMenu(item.id)}
-                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#2a6db0] transition-colors ${
-                          expandedMenus.includes(item.id) ? "bg-[#2a6db0]" : ""
+                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#0088C0] transition-colors ${
+                          expandedMenus.includes(item.id) ? "bg-[#0088C0]" : ""
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -207,21 +207,38 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
 
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
-                      <div className={`absolute ${isExpanded ? 'left-64' : 'left-16'} top-0 w-56 bg-[#0f3d6f] text-white shadow-xl rounded-r-lg py-2 z-50`}>
-                        <div className="px-4 py-2 text-xs font-semibold text-gray-300 uppercase">
-                          {item.label}
+                      <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-5rem)] w-80 bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto`}>
+                        {/* Cabeçalho do submenu com seta de voltar */}
+                        <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a]">
+                          <button 
+                            onClick={() => setHoveredItem(null)}
+                            className="hover:bg-[#003d7a] p-1 rounded transition-colors"
+                          >
+                            <ChevronLeft className="w-5 h-5" />
+                          </button>
+                          <span className="text-lg font-semibold">{item.label}</span>
                         </div>
-                        {item.submenu.map((subitem) => (
-                          <Link key={subitem.path} href={subitem.path}>
-                            <span
-                              className={`block px-4 py-2 text-sm hover:bg-[#1a5490] transition-colors cursor-pointer ${
-                                location === subitem.path ? "bg-[#1a5490] text-white font-medium border-l-4 border-white" : ""
-                              }`}
-                            >
-                              {subitem.label}
-                            </span>
-                          </Link>
-                        ))}
+                        
+                        {/* Itens do submenu */}
+                        <div className="py-2">
+                          {item.submenu.map((subitem) => (
+                            <Link key={subitem.path} href={subitem.path}>
+                              <div
+                                className={`flex items-center justify-between px-6 py-3 text-base hover:bg-[#004d8a] transition-colors cursor-pointer ${
+                                  location === subitem.path ? "bg-[#004d8a] text-white font-medium border-l-4 border-white" : ""
+                                }`}
+                              >
+                                <span>{subitem.label}</span>
+                                {/* Estrela de favorito */}
+                                <button className="hover:text-yellow-400 transition-colors">
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     )}
 
@@ -234,8 +251,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div
-                            className={`flex items-center justify-center h-12 hover:bg-[#2a6db0] transition-colors cursor-pointer ${
-                              location === item.path ? "bg-[#2a6db0] border-l-4 border-white" : ""
+                            className={`flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
+                              location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
                             }`}
                           >
                             {item.icon}
@@ -247,8 +264,8 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </Tooltip>
                     ) : (
                       <div
-                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#2a6db0] transition-colors cursor-pointer ${
-                          location === item.path ? "bg-[#2a6db0] border-l-4 border-white" : ""
+                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
+                          location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
                         }`}
                       >
                         {item.icon}
@@ -373,7 +390,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
           </header>
 
           {/* Content */}
-          <main className="mt-16 flex-1 overflow-auto">
+          <main className="mt-20 flex-1 overflow-auto">
             <div className="p-6">{children}</div>
           </main>
         </div>

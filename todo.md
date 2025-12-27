@@ -365,3 +365,13 @@
 - [x] Refazer submenus para abrirem lateralmente (não inline)
 - [x] Submenus em azul mais escuro (#0f3d6f)
 - [x] Manter submenus flutuantes mesmo quando sidebar expandida
+
+
+## Padrão Visual Conta Azul Completo
+- [x] Ajustar logo Track: grande (h-16), visível, object-contain
+- [x] Sidebar azul claro #00A3E0 (como Conta Azul)
+- [x] Submenu azul escuro #003d7a ocupando área completa ao lado (w-80, h-full)
+- [x] Adicionar seta de voltar no topo do submenu (ChevronLeft)
+- [x] Adicionar estrelas de favoritos nos itens (hover amarelo)
+- [ ] Categorias em uppercase (CADASTROS, CONFIGURAÇÕES)
+- [x] Item ativo com fundo mais escuro no submenu (#004d8a)
