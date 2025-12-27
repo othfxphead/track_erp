@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,36 +15,47 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
-interface NovoOrcamentoModalProps {
+interface NovaVendaModalProps {
   open: boolean;
   onOpenChange?: (open: boolean) => void;
   onClose?: () => void;
   onSuccess?: () => void;
+  orcamentoParaConverter?: any;
 }
 
-export default function NovoOrcamentoModal({
+export default function NovaVendaModal({
   open,
   onOpenChange,
   onClose,
   onSuccess,
-}: NovoOrcamentoModalProps) {
+  orcamentoParaConverter,
+}: NovaVendaModalProps) {
   const handleClose = () => {
     if (onOpenChange) onOpenChange(false);
     if (onClose) onClose();
   };
+  
   const [activeTab, setActiveTab] = useState("informacoes");
-  const [tipoVenda, setTipoVenda] = useState("orcamento");
+  const [tipoVenda, setTipoVenda] = useState("venda_avulsa");
   
   const [formData, setFormData] = useState({
-    situacaoNegociacao: "em_negociacao",
-    numeroOrcamento: "",
+    situacaoNegociacao: "aprovado",
+    numeroVenda: "",
     clienteId: "",
-    dataOrcamento: new Date().toISOString().split("T")[0],
-    validadeOrcamento: "",
-    descricao: "",
+    dataVenda: new Date().toISOString().split("T")[0],
+    categoriaFinanceira: "",
+    centroCusto: "",
+    vendedorResponsavel: "",
     itens: [] as Array<{ produtoId: number; quantidade: number; valorUnitario: number; nome?: string }>,
     descontoTipo: "reais" as "reais" | "percentual",
     descontoValor: "0",
+    formaPagamento: "",
+    contaRecebimento: "",
+    condicaoPagamento: "a_vista",
+    vencimento: new Date().toISOString().split("T")[0],
+    observacoesPagamento: "",
+    naturezaOperacao: "",
+    observacoesComplementares: "",
   });
 
   const [itemTemp, setItemTemp] = useState({
@@ -56,9 +67,9 @@ export default function NovoOrcamentoModal({
   const { data: clientes } = trpc.clientes.list.useQuery();
   const { data: produtos } = trpc.produtos.list.useQuery();
   
-  const createMutation = trpc.orcamentos.create.useMutation({
+  const createMutation = trpc.vendas.create.useMutation({
     onSuccess: () => {
-      toast.success("Orçamento criado!");
+      toast.success("Venda criada com sucesso!");
       if (onSuccess) onSuccess();
       handleClose();
     },
@@ -66,6 +77,18 @@ export default function NovoOrcamentoModal({
       toast.error(`Erro: ${error.message}`);
     },
   });
+
+  // Preencher dados do orçamento se estiver convertendo
+  useEffect(() => {
+    if (orcamentoParaConverter) {
+      setFormData(prev => ({
+        ...prev,
+        clienteId: orcamentoParaConverter.clienteId?.toString() || "",
+        itens: orcamentoParaConverter.itens || [],
+        observacoesComplementares: orcamentoParaConverter.observacoes || "",
+      }));
+    }
+  }, [orcamentoParaConverter]);
 
   const handleAddItem = () => {
     if (!itemTemp.produtoId) {
@@ -101,14 +124,15 @@ export default function NovoOrcamentoModal({
       toast.error("Preencha todos os campos obrigatórios");
       return;
     }
-    const { subtotal, desconto, total } = calcularTotais();
+    const { total, desconto } = calcularTotais();
     createMutation.mutate({
+      numero: formData.numeroVenda || `VND-${Date.now()}`,
       clienteId: parseInt(formData.clienteId),
-      dataValidade: new Date(formData.validadeOrcamento),
       valorTotal: total.toFixed(2),
       desconto: desconto.toFixed(2),
-      observacoes: formData.descricao,
-      itens: formData.itens,
+      formaPagamento: formData.formaPagamento,
+      observacoes: formData.observacoesComplementares,
+      itens: JSON.stringify(formData.itens),
     });
   };
 
@@ -128,22 +152,10 @@ export default function NovoOrcamentoModal({
   if (!open) return null;
 
   return createPortal(
-    <div 
-      className="fixed inset-0 z-[9999] bg-white"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 9999,
-      }}
-    >
+    <div className="fixed inset-0 z-[9999] bg-white">
       {/* Header */}
       <div className="border-b bg-white px-6 py-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Novo orçamento {formData.numeroOrcamento}</h2>
+        <h2 className="text-xl font-semibold">Nova venda {formData.numeroVenda}</h2>
         <Button variant="ghost" size="icon" onClick={handleClose}>
           <X className="h-5 w-5" />
         </Button>
@@ -152,7 +164,7 @@ export default function NovoOrcamentoModal({
       {/* Tabs */}
       <div className="border-b bg-gray-50">
         <div className="px-6 flex gap-8">
-          {["informacoes", "itens", "valor"].map(tab => (
+          {["informacoes", "itens", "valor", "info_pagamento", "obs_pagamento", "fiscal", "obs_complementares"].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -165,6 +177,10 @@ export default function NovoOrcamentoModal({
               {tab === "informacoes" && "Informações"}
               {tab === "itens" && "Itens"}
               {tab === "valor" && "Valor"}
+              {tab === "info_pagamento" && "Informações de pagamento"}
+              {tab === "obs_pagamento" && "Observações de pagamento"}
+              {tab === "fiscal" && "Informações fiscais"}
+              {tab === "obs_complementares" && "Observações complementares"}
             </button>
           ))}
         </div>
@@ -183,7 +199,7 @@ export default function NovoOrcamentoModal({
                   {[
                     { value: "orcamento", label: "Orçamento" },
                     { value: "venda_avulsa", label: "Venda avulsa" },
-                    { value: "venda_recorrente", label: "Venda recorrente/contrato" }
+                    { value: "venda_recorrente", label: "Venda recorrente (contrato)" }
                   ].map(tipo => (
                     <button
                       key={tipo.value}
@@ -201,8 +217,39 @@ export default function NovoOrcamentoModal({
                 </div>
               </div>
 
+              {/* Situação da negociação */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700">
+                  Situação da negociação <span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={formData.situacaoNegociacao}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, situacaoNegociacao: value }))}
+                >
+                  <SelectTrigger className="mt-1.5">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="aprovado">Aprovado</SelectItem>
+                    <SelectItem value="em_negociacao">Em negociação</SelectItem>
+                    <SelectItem value="cancelado">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Grid de campos */}
               <div className="grid grid-cols-3 gap-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">
+                    Número da venda <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    value={formData.numeroVenda}
+                    onChange={(e) => setFormData(prev => ({ ...prev, numeroVenda: e.target.value }))}
+                    placeholder="Gerado automaticamente"
+                    className="mt-1.5"
+                  />
+                </div>
                 <div>
                   <Label className="text-sm font-medium text-gray-700">
                     Cliente <span className="text-red-500">*</span>
@@ -223,38 +270,63 @@ export default function NovoOrcamentoModal({
                 </div>
                 <div>
                   <Label className="text-sm font-medium text-gray-700">
-                    Data do orçamento <span className="text-red-500">*</span>
+                    Data de venda <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     type="date"
-                    value={formData.dataOrcamento}
-                    onChange={(e) => setFormData(prev => ({ ...prev, dataOrcamento: e.target.value }))}
-                    className="mt-1.5"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">
-                    Validade <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    type="date"
-                    value={formData.validadeOrcamento}
-                    onChange={(e) => setFormData(prev => ({ ...prev, validadeOrcamento: e.target.value }))}
+                    value={formData.dataVenda}
+                    onChange={(e) => setFormData(prev => ({ ...prev, dataVenda: e.target.value }))}
                     className="mt-1.5"
                   />
                 </div>
               </div>
 
-              {/* Descrição */}
-              <div>
-                <Label className="text-sm font-medium text-gray-700">Descrição</Label>
-                <Textarea
-                  value={formData.descricao}
-                  onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
-                  rows={4}
-                  className="mt-1.5 resize-none"
-                  placeholder="Faça uma breve descrição sobre a sua empresa e os produtos que você vende."
-                />
+              {/* Categoria financeira e centro de custo */}
+              <div className="grid grid-cols-3 gap-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Categoria financeira</Label>
+                  <Select
+                    value={formData.categoriaFinanceira}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, categoriaFinanceira: value }))}
+                  >
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="receitas_servicos">Receitas de Serviços</SelectItem>
+                      <SelectItem value="receitas_produtos">Receitas de Produtos</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Centro de custo</Label>
+                  <Select
+                    value={formData.centroCusto}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, centroCusto: value }))}
+                  >
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="002_oficina">002 - OFICINA</SelectItem>
+                      <SelectItem value="001_administrativo">001 - ADMINISTRATIVO</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Vendedor responsável</Label>
+                  <Select
+                    value={formData.vendedorResponsavel}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, vendedorResponsavel: value }))}
+                  >
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="thiago">Thiago Figueredo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           )}
@@ -370,9 +442,9 @@ export default function NovoOrcamentoModal({
                 </div>
               </div>
 
-              {/* Total do Orçamento */}
+              {/* Total da Venda */}
               <div className="bg-gray-50 border rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Total do Orçamento</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Total da Venda</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">Itens (R$)</span>
@@ -390,6 +462,136 @@ export default function NovoOrcamentoModal({
               </div>
             </div>
           )}
+
+          {/* Aba Informações de Pagamento */}
+          {activeTab === "info_pagamento" && (
+            <div className="max-w-6xl space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Forma de pagamento</Label>
+                  <Select
+                    value={formData.formaPagamento}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, formaPagamento: value }))}
+                  >
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                      <SelectItem value="pix">PIX</SelectItem>
+                      <SelectItem value="cartao_credito">Cartão de Crédito</SelectItem>
+                      <SelectItem value="cartao_debito">Cartão de Débito</SelectItem>
+                      <SelectItem value="boleto">Boleto</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Conta de recebimento</Label>
+                  <Select
+                    value={formData.contaRecebimento}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, contaRecebimento: value }))}
+                  >
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="caixa">Caixa</SelectItem>
+                      <SelectItem value="banco">Banco</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Percentual</Label>
+                  <Input value="100 %" disabled className="mt-1.5 bg-gray-50" />
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Valor a receber</Label>
+                  <Input value={`R$ ${total.toFixed(2)}`} disabled className="mt-1.5 bg-gray-50" />
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">
+                    Condição de pagamento <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.condicaoPagamento}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, condicaoPagamento: value }))}
+                  >
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="a_vista">À vista</SelectItem>
+                      <SelectItem value="30_dias">30 dias</SelectItem>
+                      <SelectItem value="60_dias">60 dias</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium text-gray-700">
+                  Vencimento <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  type="date"
+                  value={formData.vencimento}
+                  onChange={(e) => setFormData(prev => ({ ...prev, vencimento: e.target.value }))}
+                  className="mt-1.5 max-w-xs"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Aba Observações de Pagamento */}
+          {activeTab === "obs_pagamento" && (
+            <div className="max-w-6xl">
+              <Label className="text-sm font-medium text-gray-700">Observações</Label>
+              <Textarea
+                value={formData.observacoesPagamento}
+                onChange={(e) => setFormData(prev => ({ ...prev, observacoesPagamento: e.target.value }))}
+                rows={6}
+                className="mt-1.5 resize-none"
+              />
+            </div>
+          )}
+
+          {/* Aba Informações Fiscais */}
+          {activeTab === "fiscal" && (
+            <div className="max-w-6xl">
+              <Label className="text-sm font-medium text-gray-700">
+                Natureza de operação <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={formData.naturezaOperacao}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, naturezaOperacao: value }))}
+              >
+                <SelectTrigger className="mt-1.5">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="venda">Venda de mercadoria</SelectItem>
+                  <SelectItem value="servico">Prestação de serviço</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {/* Aba Observações Complementares */}
+          {activeTab === "obs_complementares" && (
+            <div className="max-w-6xl">
+              <Label className="text-sm font-medium text-gray-700">Observações</Label>
+              <Textarea
+                value={formData.observacoesComplementares}
+                onChange={(e) => setFormData(prev => ({ ...prev, observacoesComplementares: e.target.value }))}
+                rows={6}
+                className="mt-1.5 resize-none"
+                placeholder="Inclua informações relevantes para seu cliente. Elas aparecerão na nota fiscal, nos campos 'Descrição do serviço' ou 'Informações Complementares Contribuinte', visíveis no XML, PDF e DANFE."
+              />
+            </div>
+          )}
         </div>
 
         {/* Footer */}
@@ -402,7 +604,7 @@ export default function NovoOrcamentoModal({
             className="bg-green-600 hover:bg-green-700 text-white px-8"
             disabled={createMutation.isPending}
           >
-            {createMutation.isPending ? "Salvando..." : "Salvar Orçamento"}
+            {createMutation.isPending ? "Salvando..." : "Salvar"}
           </Button>
         </div>
       </form>

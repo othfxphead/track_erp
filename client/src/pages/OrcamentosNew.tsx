@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,12 +47,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import NovoOrcamentoModal from "@/components/NovoOrcamentoModal";
+import NovaVendaModal from "@/components/NovaVendaModal";
 
 export default function OrcamentosNew() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("todos");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showNovoOrcamento, setShowNovoOrcamento] = useState(false);
+  const [, setLocation] = useLocation();
+  const [showNovaVenda, setShowNovaVenda] = useState(false);
+  const [orcamentoParaConverter, setOrcamentoParaConverter] = useState<any>(null);
   const itemsPerPage = 10;
 
   // Queries
@@ -115,8 +119,8 @@ export default function OrcamentosNew() {
             </p>
           </div>
         <Button 
-          className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
-          onClick={() => setShowNovoOrcamento(true)}
+          className="bg-blue-600 hover:bg-blue-700 h-9"
+          onClick={() => setLocation("/orcamentos/novo")}
         >
           <Plus className="w-4 h-4 mr-2" />
           Novo Orçamento
@@ -340,7 +344,8 @@ export default function OrcamentosNew() {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   onClick={() => {
-                                    toast.success("Criando venda a partir do orçamento...");
+                                    setOrcamentoParaConverter(orcamento);
+                                    setShowNovaVenda(true);
                                   }}
                                   className="text-green-600"
                                 >
@@ -405,10 +410,16 @@ export default function OrcamentosNew() {
         </Card>
       </div>
 
-      {/* Modal Novo Orçamento */}
-      <NovoOrcamentoModal
-        open={showNovoOrcamento}
-        onOpenChange={setShowNovoOrcamento}
+
+
+      {/* Modal Nova Venda (Conversão de Orçamento) */}
+      <NovaVendaModal
+        open={showNovaVenda}
+        onOpenChange={(open) => {
+          setShowNovaVenda(open);
+          if (!open) setOrcamentoParaConverter(null);
+        }}
+        orcamentoParaConverter={orcamentoParaConverter}
       />
     </>
   );

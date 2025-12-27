@@ -482,3 +482,28 @@
 - [x] Corrigir botão "Salvar Dados da Empresa" que não estava funcionando (solução: envolver em form com onSubmit)
 - [x] Corrigir validação de email para aceitar strings vazias
 - [x] Aplicar correção de formulários para todas as abas de Configurações (Empresa, Certificado, Bancário, Integrações)
+
+
+## Refatoração de Formulários - Padrão Conta Azul Tela Cheia
+- [ ] Refatorar formulário de Novo Orçamento para tela cheia
+- [ ] Adicionar todas as abas: Informações, Itens, Valor, Informações de Pagamento, Observações de Pagamento, Informações Fiscais, Observações Complementares
+- [ ] Refatorar formulário de Nova Venda para tela cheia (mesma estrutura)
+- [ ] Criar formulário de Novo Contrato seguindo mesmo padrão
+- [ ] Implementar conversão de Orçamento para Venda com preenchimento automático de dados
+- [ ] Organizar campos em grid responsivo e bem espaçado
+- [ ] Garantir que todos os botões funcionam (aplicar correção de form + onSubmit)
+- [ ] Adicionar botões Cancelar e Salvar fixos no rodapé
+- [ ] Testar fluxo completo de criação e conversão
+
+
+## Refatoração de Formulários em Tela Cheia (27/12/2025)
+- [x] Criar página dedicada NovoOrcamentoPage.tsx em tela cheia
+- [x] Adicionar rota /orcamentos/novo no App.tsx
+- [x] Atualizar botão "Novo Orçamento" para navegar para página dedicada
+- [x] Implementar formulário com abas (Informações, Itens, Valor)
+- [x] Adicionar header fixo com título e botão fechar
+- [x] Adicionar footer fixo com botões Cancelar e Salvar
+- [x] Corrigir todos os erros de TypeScript e compilação
+- [ ] Criar página dedicada NovaVendaPage.tsx em tela cheia
+- [ ] Criar página dedicada NovoContratoPage.tsx em tela cheia
+- [ ] Implementar conversão de Orçamento para Venda com navegação
