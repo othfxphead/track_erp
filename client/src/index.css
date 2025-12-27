@@ -119,6 +119,32 @@
     @apply border-border;
   }
   
+  /* Remover TODAS as bordas de foco azuis (focus ring) globalmente */
+  *:focus,
+  *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    @apply ring-0;
+  }
+  
+  /* Remover focus ring de botões */
+  button:focus,
+  button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    @apply ring-0;
+  }
+  
+  /* Remover focus ring de elementos clicáveis */
+  a:focus,
+  a:focus-visible,
+  [role="button"]:focus,
+  [role="button"]:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    @apply ring-0;
+  }
+  
   /* Remover bordas grossas e rings dos inputs */
   input:focus,
   textarea:focus,

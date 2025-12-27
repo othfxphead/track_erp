@@ -657,3 +657,11 @@
 - [x] Substituir todas as referências de schema.produtos por produtos
 - [x] Substituir todas as referências de schema.lancamentosFinanceiros por lancamentosFinanceiros
 - [x] Validar compilação TypeScript sem erros (npx tsc --noEmit)
+
+
+## Melhorias de UX - Remover Bordas de Foco
+- [x] Remover bordas azuis de foco (focus ring) de todos os botões
+- [x] Remover bordas azuis de foco de dropdowns e selects
+- [x] Remover bordas azuis de foco de elementos clicáveis (ícones, avatares)
+- [x] Aplicar outline: none e ring-0 globalmente em elementos interativos
+- [x] Testar navegação e interação sem bordas de foco
