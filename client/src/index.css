@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -119,6 +120,31 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+  }
+  
+  /* Scrollbar customizada */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-md;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -174,4 +200,38 @@
       max-width: 1280px; /* Standard content width */
     }
   }
+}
+
+/* Utility classes adicionais */
+.text-success {
+  color: oklch(0.64 0.15 145);
+}
+
+.text-warning {
+  color: oklch(0.75 0.15 75);
+}
+
+.text-info {
+  color: oklch(0.65 0.15 230);
+}
+
+.bg-success {
+  background-color: oklch(0.64 0.15 145);
+}
+
+.bg-warning {
+  background-color: oklch(0.75 0.15 75);
+}
+
+.bg-info {
+  background-color: oklch(0.65 0.15 230);
+}
+
+/* Card com sombra suave */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.dark .card-shadow {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
 }

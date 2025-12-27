@@ -5,12 +5,28 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Produtos from "./pages/Produtos";
+import Clientes from "./pages/Clientes";
+import Apresentacao from "./pages/Apresentacao";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/apresentacao"} component={Apresentacao} />
+      <Route path={"/orcamentos"} component={() => <div>Orçamentos - Em desenvolvimento</div>} />
+      <Route path={"/vendas"} component={() => <div>Vendas - Em desenvolvimento</div>} />
+      <Route path={"/produtos"} component={Produtos} />
+      <Route path={"/clientes"} component={Clientes} />
+      <Route path={"/servicos"} component={() => <div>Serviços - Em desenvolvimento</div>} />
+      <Route path={"/compras"} component={() => <div>Compras - Em desenvolvimento</div>} />
+      <Route path={"/estoque"} component={() => <div>Estoque - Em desenvolvimento</div>} />
+      <Route path={"/financeiro"} component={() => <div>Financeiro - Em desenvolvimento</div>} />
+      <Route path={"/fiscal"} component={() => <div>Fiscal - Em desenvolvimento</div>} />
+      <Route path={"/relatorios"} component={() => <div>Relatórios - Em desenvolvimento</div>} />
+      <Route path={"/serasa"} component={() => <div>Consulta Serasa - Em desenvolvimento</div>} />
+      <Route path={"/configuracoes"} component={() => <div>Configurações - Em desenvolvimento</div>} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -28,7 +44,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
-        // switchable
+        switchable
       >
         <TooltipProvider>
           <Toaster />
