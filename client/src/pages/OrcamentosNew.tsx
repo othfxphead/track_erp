@@ -31,7 +31,20 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";import { toast } from "sonner";
+  Edit,
+  Mail,
+  Copy,
+  Trash2,
+  DollarSign,
+} from "lucide-react";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import NovoOrcamentoModal from "@/components/NovoOrcamentoModal";
 
 export default function OrcamentosNew() {
@@ -283,9 +296,73 @@ export default function OrcamentosNew() {
                       </TableCell>
                       <TableCell>{getStatusBadge(orcamento.status)}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem
+                              onClick={() => {
+                                toast.info("Editando orçamento...");
+                              }}
+                            >
+                              <Edit className="w-4 h-4 mr-2" />
+                              Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                toast.success("Orçamento enviado por e-mail!");
+                              }}
+                            >
+                              <Mail className="w-4 h-4 mr-2" />
+                              Enviar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                toast.success("Orçamento clonado!");
+                              }}
+                            >
+                              <Copy className="w-4 h-4 mr-2" />
+                              Clonar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                toast.info("Imprimindo orçamento...");
+                              }}
+                            >
+                              <Printer className="w-4 h-4 mr-2" />
+                              Imprimir
+                            </DropdownMenuItem>
+                            {orcamento.status === "aprovado" && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    toast.success("Criando venda a partir do orçamento...");
+                                  }}
+                                  className="text-green-600"
+                                >
+                                  <DollarSign className="w-4 h-4 mr-2" />
+                                  Criar venda
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => {
+                                if (confirm("Tem certeza que deseja excluir este orçamento?")) {
+                                  toast.success("Orçamento excluído!");
+                                }
+                              }}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Excluir
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))

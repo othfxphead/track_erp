@@ -293,3 +293,13 @@
 - [ ] Garantir máscaras de moeda e datas brasileiras em todos os campos
 - [ ] Implementar responsividade para mobile e tablet
 - [ ] Testar navegação entre todos os módulos sem erro de rota
+
+
+## Melhorias do Modal de Novo Orçamento
+- [x] Aumentar tamanho do modal (max-w-7xl, h-95vh)
+- [x] Melhorar espaçamento entre elementos (px-8, py-6, gap-6)
+- [x] Aumentar altura dos inputs e selects (h-11)
+- [x] Aumentar tamanho da fonte (text-base)
+- [x] Melhorar altura das abas (h-12)
+- [x] Aumentar padding dos cards (p-6)
+- [x] Melhorar espaçamento do resumo financeiro

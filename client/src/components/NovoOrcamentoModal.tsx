@@ -117,29 +117,29 @@ export default function NovoOrcamentoModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl h-[90vh] flex flex-col p-0">
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle className="text-xl">Novo Orçamento</DialogTitle>
+      <DialogContent className="max-w-7xl h-[95vh] flex flex-col p-0">
+        <DialogHeader className="px-8 py-5 border-b">
+          <DialogTitle className="text-2xl">Novo Orçamento</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-8 py-6">
           <Tabs defaultValue="informacoes" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
-              <TabsTrigger value="informacoes">Informações</TabsTrigger>
-              <TabsTrigger value="itens">Itens</TabsTrigger>
-              <TabsTrigger value="valor">Valor</TabsTrigger>
-              <TabsTrigger value="observacoes">Observações de pagamento</TabsTrigger>
-              <TabsTrigger value="complemento">Complemento NF</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-5 mb-8 h-12">
+              <TabsTrigger value="informacoes" className="text-base">Informações</TabsTrigger>
+              <TabsTrigger value="itens" className="text-base">Itens</TabsTrigger>
+              <TabsTrigger value="valor" className="text-base">Valor</TabsTrigger>
+              <TabsTrigger value="observacoes" className="text-base">Observações de pagamento</TabsTrigger>
+              <TabsTrigger value="complemento" className="text-base">Complemento NF</TabsTrigger>
             </TabsList>
 
             {/* Aba Informações */}
-            <TabsContent value="informacoes" className="space-y-4">
+            <TabsContent value="informacoes" className="space-y-6">
               {/* Tipo da Venda */}
-              <Card className="p-4">
-                <Label className="text-sm font-medium mb-3 block">
+              <Card className="p-6">
+                <Label className="text-base font-semibold mb-4 block">
                   Tipo da venda <span className="text-red-500">*</span>
                 </Label>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {[
                     { value: "orcamento", label: "Orçamento" },
                     { value: "venda_avulsa", label: "Venda avulsa" },
@@ -149,7 +149,7 @@ export default function NovoOrcamentoModal({
                       key={tipo.value}
                       type="button"
                       onClick={() => setTipoVenda(tipo.value)}
-                      className={`p-3 border-2 rounded-lg text-sm font-medium transition-colors ${
+                      className={`p-4 border-2 rounded-lg text-base font-medium transition-colors ${
                         tipoVenda === tipo.value
                           ? "border-blue-600 bg-blue-50 text-blue-700"
                           : "border-gray-200 hover:border-gray-300"
@@ -163,11 +163,11 @@ export default function NovoOrcamentoModal({
 
               {/* Situação da Negociação */}
               <div>
-                <Label htmlFor="situacao" className="text-sm font-medium">
+                <Label htmlFor="situacao" className="text-base font-medium">
                   Situação da negociação <span className="text-red-500">*</span>
                 </Label>
                 <Select value={situacao} onValueChange={setSituacao}>
-                  <SelectTrigger className="mt-1 h-9">
+                  <SelectTrigger className="mt-2 h-11 text-base">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -181,25 +181,25 @@ export default function NovoOrcamentoModal({
               </div>
 
               {/* Número do Orçamento */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="numero" className="text-sm font-medium">
+                  <Label htmlFor="numero" className="text-base font-medium">
                     Número do orçamento
                   </Label>
-                  <div className="flex gap-2 mt-1">
+                  <div className="flex gap-3 mt-2">
                     <Input
                       id="numero"
                       value={formData.numero}
                       onChange={(e) =>
                         setFormData({ ...formData, numero: e.target.value })
                       }
-                      className="h-9"
+                      className="h-11 text-base"
                       disabled={formData.numero === "AUTO"}
                     />
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-9"
+                      className="h-11 px-4"
                       onClick={() =>
                         setFormData({
                           ...formData,
@@ -215,17 +215,17 @@ export default function NovoOrcamentoModal({
 
               {/* Cliente com botão Serasa */}
               <div>
-                <Label htmlFor="cliente" className="text-sm font-medium">
+                <Label htmlFor="cliente" className="text-base font-medium">
                   Cliente <span className="text-red-500">*</span>
                 </Label>
-                <div className="flex gap-2 mt-1">
+                <div className="flex gap-3 mt-2">
                   <Select
                     value={formData.cliente}
                     onValueChange={(value) =>
                       setFormData({ ...formData, cliente: value })
                     }
                   >
-                    <SelectTrigger className="h-9">
+                    <SelectTrigger className="h-11 text-base">
                       <SelectValue placeholder="Selecione um cliente" />
                     </SelectTrigger>
                     <SelectContent>
@@ -237,7 +237,7 @@ export default function NovoOrcamentoModal({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 whitespace-nowrap"
+                    className="h-11 whitespace-nowrap px-4"
                     onClick={handleConsultarSerasa}
                   >
                     <Search className="w-4 h-4 mr-2" />
@@ -247,9 +247,9 @@ export default function NovoOrcamentoModal({
               </div>
 
               {/* Datas */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="dataEmissao" className="text-sm font-medium">
+                  <Label htmlFor="dataEmissao" className="text-base font-medium">
                     Data do orçamento <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -259,11 +259,11 @@ export default function NovoOrcamentoModal({
                     onChange={(e) =>
                       setFormData({ ...formData, dataEmissao: e.target.value })
                     }
-                    className="mt-1 h-9"
+                    className="mt-2 h-11 text-base"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="validade" className="text-sm font-medium">
+                  <Label htmlFor="validade" className="text-base font-medium">
                     Validade do orçamento <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -273,14 +273,14 @@ export default function NovoOrcamentoModal({
                     onChange={(e) =>
                       setFormData({ ...formData, validade: e.target.value })
                     }
-                    className="mt-1 h-9"
+                    className="mt-2 h-11 text-base"
                   />
                 </div>
               </div>
 
               {/* Vendedor */}
               <div>
-                <Label htmlFor="vendedor" className="text-sm font-medium">
+                <Label htmlFor="vendedor" className="text-base font-medium">
                   Vendedor responsável
                 </Label>
                 <Select
@@ -289,7 +289,7 @@ export default function NovoOrcamentoModal({
                     setFormData({ ...formData, vendedor: value })
                   }
                 >
-                  <SelectTrigger className="mt-1 h-9">
+                  <SelectTrigger className="mt-2 h-11 text-base">
                     <SelectValue placeholder="Selecione um vendedor" />
                   </SelectTrigger>
                   <SelectContent>
@@ -302,7 +302,7 @@ export default function NovoOrcamentoModal({
 
               {/* Descrição */}
               <div>
-                <Label htmlFor="descricao" className="text-sm font-medium">
+                <Label htmlFor="descricao" className="text-base font-medium">
                   Descrição
                 </Label>
                 <Textarea
@@ -312,14 +312,14 @@ export default function NovoOrcamentoModal({
                     setFormData({ ...formData, descricao: e.target.value })
                   }
                   placeholder="Adicione uma descrição do orçamento..."
-                  className="mt-1"
-                  rows={3}
+                  className="mt-2 text-base"
+                  rows={4}
                 />
               </div>
 
               {/* Previsão de Entrega */}
               <div>
-                <Label htmlFor="previsaoEntrega" className="text-sm font-medium">
+                <Label htmlFor="previsaoEntrega" className="text-base font-medium">
                   Previsão de entrega do produto ou serviço
                 </Label>
                 <Input
@@ -329,18 +329,18 @@ export default function NovoOrcamentoModal({
                   onChange={(e) =>
                     setFormData({ ...formData, previsaoEntrega: e.target.value })
                   }
-                  className="mt-1 h-9"
+                  className="mt-2 h-11 text-base"
                 />
               </div>
             </TabsContent>
 
             {/* Aba Itens */}
-            <TabsContent value="itens" className="space-y-4">
-              <Card className="p-4">
-                <Label className="text-sm font-medium mb-3 block">
+            <TabsContent value="itens" className="space-y-6">
+              <Card className="p-6">
+                <Label className="text-base font-semibold mb-4 block">
                   Adicionar item <span className="text-red-500">*</span>
                 </Label>
-                <div className="grid grid-cols-12 gap-3">
+                <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-6">
                     <Select
                       value={novoItem.produto}
@@ -348,7 +348,7 @@ export default function NovoOrcamentoModal({
                         setNovoItem({ ...novoItem, produto: value })
                       }
                     >
-                      <SelectTrigger className="h-9">
+                      <SelectTrigger className="h-11 text-base">
                         <SelectValue placeholder="Selecione um produto" />
                       </SelectTrigger>
                       <SelectContent>
@@ -366,7 +366,7 @@ export default function NovoOrcamentoModal({
                       onChange={(e) =>
                         setNovoItem({ ...novoItem, quantidade: e.target.value })
                       }
-                      className="h-9"
+                      className="h-11 text-base"
                       min="1"
                     />
                   </div>
@@ -378,7 +378,7 @@ export default function NovoOrcamentoModal({
                       onChange={(e) =>
                         setNovoItem({ ...novoItem, precoUnitario: e.target.value })
                       }
-                      className="h-9"
+                      className="h-11 text-base"
                       min="0"
                       step="0.01"
                     />
@@ -386,10 +386,10 @@ export default function NovoOrcamentoModal({
                   <div className="col-span-1">
                     <Button
                       onClick={adicionarItem}
-                      className="h-9 w-full"
+                      className="h-11 w-full"
                       size="sm"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-5 h-5" />
                     </Button>
                   </div>
                 </div>
@@ -400,24 +400,24 @@ export default function NovoOrcamentoModal({
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Produto</TableHead>
-                        <TableHead className="text-right">Quantidade</TableHead>
-                        <TableHead className="text-right">Preço Unit.</TableHead>
-                        <TableHead className="text-right">Subtotal</TableHead>
+                        <TableHead className="text-base">Produto</TableHead>
+                        <TableHead className="text-right text-base">Quantidade</TableHead>
+                        <TableHead className="text-right text-base">Preço Unit.</TableHead>
+                        <TableHead className="text-right text-base">Subtotal</TableHead>
                         <TableHead className="w-[50px]"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {itens.map((item) => (
                         <TableRow key={item.id}>
-                          <TableCell>{item.produto}</TableCell>
-                          <TableCell className="text-right">
+                          <TableCell className="text-base">{item.produto}</TableCell>
+                          <TableCell className="text-right text-base">
                             {item.quantidade}
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell className="text-right text-base">
                             R$ {parseFloat(item.precoUnitario).toFixed(2)}
                           </TableCell>
-                          <TableCell className="text-right font-semibold">
+                          <TableCell className="text-right font-semibold text-base">
                             R${" "}
                             {(
                               parseFloat(item.quantidade) *
@@ -442,21 +442,21 @@ export default function NovoOrcamentoModal({
             </TabsContent>
 
             {/* Aba Valor */}
-            <TabsContent value="valor" className="space-y-4">
-              <Card className="p-4">
-                <div className="space-y-4">
+            <TabsContent value="valor" className="space-y-6">
+              <Card className="p-6">
+                <div className="space-y-6">
                   <div>
-                    <Label className="text-sm font-medium mb-3 block">
+                    <Label className="text-base font-semibold mb-4 block">
                       Desconto
                     </Label>
-                    <div className="flex gap-3">
-                      <div className="flex gap-2">
+                    <div className="flex gap-4">
+                      <div className="flex gap-3">
                         <Button
                           type="button"
                           variant={descontoTipo === "percent" ? "default" : "outline"}
                           size="sm"
                           onClick={() => setDescontoTipo("percent")}
-                          className="h-9"
+                          className="h-11 px-6 text-base"
                         >
                           %
                         </Button>
@@ -465,7 +465,7 @@ export default function NovoOrcamentoModal({
                           variant={descontoTipo === "reais" ? "default" : "outline"}
                           size="sm"
                           onClick={() => setDescontoTipo("reais")}
-                          className="h-9"
+                          className="h-11 px-6 text-base"
                         >
                           R$
                         </Button>
@@ -475,36 +475,36 @@ export default function NovoOrcamentoModal({
                         value={desconto}
                         onChange={(e) => setDesconto(e.target.value)}
                         placeholder="0"
-                        className="h-9 max-w-[200px]"
+                        className="h-11 max-w-[250px] text-base"
                         min="0"
                         step="0.01"
                       />
                     </div>
                   </div>
 
-                  <Card className="bg-blue-50 border-blue-200 p-4">
-                    <h3 className="font-semibold text-lg mb-3">
+                  <Card className="bg-blue-50 border-blue-200 p-6">
+                    <h3 className="font-semibold text-xl mb-4">
                       Total do Orçamento
                     </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-base">
                         <span className="text-gray-600">Itens (R$):</span>
                         <span className="font-medium">
                           R$ {calcularSubtotalItens().toFixed(2)}
                         </span>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-base">
                         <span className="text-gray-600">Desconto (R$):</span>
                         <span className="font-medium text-red-600">
                           - R$ {calcularDesconto().toFixed(2)}
                         </span>
                       </div>
-                      <div className="border-t border-blue-300 pt-2 mt-2">
+                      <div className="border-t border-blue-300 pt-3 mt-3">
                         <div className="flex justify-between">
-                          <span className="font-semibold text-lg">
+                          <span className="font-semibold text-xl">
                             Total líquido (R$):
                           </span>
-                          <span className="font-bold text-xl text-blue-700">
+                          <span className="font-bold text-2xl text-blue-700">
                             R$ {calcularTotalLiquido().toFixed(2)}
                           </span>
                         </div>
@@ -516,9 +516,9 @@ export default function NovoOrcamentoModal({
             </TabsContent>
 
             {/* Aba Observações de Pagamento */}
-            <TabsContent value="observacoes" className="space-y-4">
+            <TabsContent value="observacoes" className="space-y-6">
               <div>
-                <Label htmlFor="observacoesPagamento" className="text-sm font-medium">
+                <Label htmlFor="observacoesPagamento" className="text-base font-medium">
                   Observações de pagamento
                 </Label>
                 <Textarea
@@ -531,16 +531,16 @@ export default function NovoOrcamentoModal({
                     })
                   }
                   placeholder="Adicione informações sobre formas de pagamento, condições, etc."
-                  className="mt-1"
-                  rows={6}
+                  className="mt-2 text-base"
+                  rows={8}
                 />
               </div>
             </TabsContent>
 
             {/* Aba Complemento NF */}
-            <TabsContent value="complemento" className="space-y-4">
+            <TabsContent value="complemento" className="space-y-6">
               <div>
-                <Label htmlFor="complementoNF" className="text-sm font-medium flex items-center gap-2">
+                <Label htmlFor="complementoNF" className="text-base font-medium flex items-center gap-2">
                   Complemento da Nota Fiscal
                   <HelpCircle className="w-4 h-4 text-gray-400" />
                 </Label>
@@ -551,8 +551,8 @@ export default function NovoOrcamentoModal({
                     setFormData({ ...formData, complementoNF: e.target.value })
                   }
                   placeholder="Informações adicionais que aparecerão na nota fiscal..."
-                  className="mt-1"
-                  rows={6}
+                  className="mt-2 text-base"
+                  rows={8}
                 />
               </div>
             </TabsContent>
@@ -560,12 +560,16 @@ export default function NovoOrcamentoModal({
         </div>
 
         {/* Footer com botões */}
-        <div className="px-6 py-4 border-t flex justify-end gap-3">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <div className="px-8 py-5 border-t flex justify-end gap-4">
+          <Button 
+            variant="outline" 
+            onClick={() => onOpenChange(false)}
+            className="h-11 px-6 text-base"
+          >
             Cancelar
           </Button>
           <Button
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-green-600 hover:bg-green-700 h-11 px-8 text-base"
             onClick={handleSubmit}
           >
             Salvar Orçamento
