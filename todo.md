@@ -572,3 +572,13 @@
 - [x] Atualizar lista de produtos após salvar
 - [x] Selecionar automaticamente o produto recém-criado no dropdown
 - [ ] Aplicar mesmo padrão para NovoOrcamentoPage
+
+## Modal de Cadastro Rápido de Serviço (27/12/2025)
+- [x] Criar componente NovoServicoModal.tsx (800px x 500px)
+- [x] Adicionar campos essenciais: Código, Nome, Descrição, Valor Unitário, Categoria
+- [x] Implementar validações de campos obrigatórios
+- [x] Integrar modal com botão "+ Novo" do dropdown de Serviços na NovaVendaPage
+- [x] Adicionar dropdown separado de Serviços ao lado do dropdown de Produtos
+- [x] Implementar salvamento via tRPC (servicos.create)
+- [x] Atualizar lista de serviços após salvar
+- [x] Selecionar automaticamente o serviço recém-criado no dropdown

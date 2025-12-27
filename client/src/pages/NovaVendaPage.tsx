@@ -22,6 +22,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NovoClienteModal } from "@/components/NovoClienteModal";
 import { NovoProdutoModal } from "@/components/NovoProdutoModal";
+import { NovoServicoModal } from "@/components/NovoServicoModal";
 
 export default function NovaVendaPage() {
   const [, setLocation] = useLocation();
@@ -29,6 +30,7 @@ export default function NovaVendaPage() {
   const [activeTab, setActiveTab] = useState("informacoes");
   const [modalNovoClienteOpen, setModalNovoClienteOpen] = useState(false);
   const [modalNovoProdutoOpen, setModalNovoProdutoOpen] = useState(false);
+  const [modalNovoServicoOpen, setModalNovoServicoOpen] = useState(false);
   
   const [formData, setFormData] = useState({
     numero: "",
@@ -56,6 +58,7 @@ export default function NovaVendaPage() {
 
   const { data: clientes } = trpc.clientes.list.useQuery();
   const { data: produtos } = trpc.produtos.list.useQuery();
+  const { data: servicos } = trpc.servicos.list.useQuery();
   
   const createMutation = trpc.vendas.create.useMutation({
     onSuccess: () => {
@@ -289,8 +292,8 @@ export default function NovaVendaPage() {
               <div className="border rounded-lg p-6 bg-gray-50">
                 <h3 className="font-semibold mb-4">Adicionar produto/serviço</h3>
                 <div className="grid grid-cols-4 gap-4">
-                  <div className="col-span-2">
-                    <Label htmlFor="produto">Produto/Serviço</Label>
+                  <div>
+                    <Label htmlFor="produto">Produto</Label>
                     <Select
                       value={itemTemp.produtoId}
                       onValueChange={(value) => {
@@ -320,6 +323,42 @@ export default function NovaVendaPage() {
                         {produtos?.map((produto) => (
                           <SelectItem key={produto.id} value={produto.id.toString()}>
                             {produto.nome} - R$ {produto.precoVenda}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="servico">Serviço</Label>
+                    <Select
+                      value={itemTemp.produtoId}
+                      onValueChange={(value) => {
+                        const servico = servicos?.find(s => s.id === parseInt(value));
+                        setItemTemp(prev => ({
+                          ...prev,
+                          produtoId: value,
+                          valorUnitario: servico?.valorUnitario?.toString() || "0",
+                        }));
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione um serviço" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <div className="px-2 py-1.5 border-b">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            onClick={() => setModalNovoServicoOpen(true)}
+                          >
+                            <span className="mr-2">+</span> Novo
+                          </Button>
+                        </div>
+                        {servicos?.map((servico) => (
+                          <SelectItem key={servico.id} value={servico.id.toString()}>
+                            {servico.nome} - R$ {servico.valorUnitario}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -588,6 +627,15 @@ export default function NovaVendaPage() {
         onOpenChange={setModalNovoProdutoOpen}
         onProdutoCriado={(produtoId) => {
           setItemTemp(prev => ({ ...prev, produtoId: produtoId.toString() }));
+        }}
+      />
+
+      {/* Modal de Novo Serviço */}
+      <NovoServicoModal
+        open={modalNovoServicoOpen}
+        onOpenChange={setModalNovoServicoOpen}
+        onServicoCriado={(servicoId) => {
+          setItemTemp(prev => ({ ...prev, produtoId: servicoId.toString() }));
         }}
       />
     </div>
