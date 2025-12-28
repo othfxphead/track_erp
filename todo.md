@@ -707,3 +707,7 @@
 - [ ] Buscar todos os botões com texto "Cancelar"
 - [ ] Aplicar cor verde (green-600) em Salvar e Emitir
 - [ ] Aplicar cor vermelha (red-600) em Cancelar
+
+
+## Correção de Botões Nova Venda
+- [x] Corrigir botões da página Nova Venda para seguir padrão de cores
