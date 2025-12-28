@@ -1464,7 +1464,7 @@ export const appRouter = router({
         // NFS-e
         nfseAtivo: z.boolean().optional(),
         nfseInscricaoMunicipal: z.string().optional(),
-        nfseUltimoRps: z.string().optional(),
+        nfseUltimoRps: z.union([z.string(), z.number()]).optional(),
         nfseSerieRps: z.string().optional(),
         nfseRegimeTributario: z.string().optional(),
         nfseNaturezaOperacao: z.string().optional(),
@@ -1473,8 +1473,8 @@ export const appRouter = router({
         // NF-e
         nfeAtivo: z.boolean().optional(),
         nfeInscricaoEstadual: z.string().optional(),
-        nfeSerie: z.string().optional(),
-        nfeUltimoNumero: z.string().optional(),
+        nfeSerie: z.union([z.string(), z.number()]).optional(),
+        nfeUltimoNumero: z.union([z.string(), z.number()]).optional(),
         nfeExcluirIcmsBaseCalculo: z.boolean().optional(),
         // NFC-e
         nfceAtivo: z.boolean().optional(),

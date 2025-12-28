@@ -841,3 +841,4 @@
 ## Bug Fixes
 - [x] Corrigir erro de inserção em configFiscais - campo usuarioId não está sendo definido
 - [x] Corrigir erro de tamanho nos campos dadosAntes e dadosDepois da tabela logsAuditoria
+- [x] Corrigir validação tRPC - campos nfseUltimoRps e nfeSerie devem aceitar números
