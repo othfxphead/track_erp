@@ -739,3 +739,13 @@
 ## Padronização de Badges de Status
 - [x] Ajustar badges de status para height 22px, padding 5px, border-radius 2px
 - [x] Aplicar padrão em todas as páginas (Orçamentos, Vendas, Produtos, Clientes, Serviços, Compras, Financeiro)
+
+## Construção de Páginas Faltantes/Incompletas
+- [x] Criar página Favoritos (/favoritos)
+- [x] Criar página Contratos (/contratos)
+- [x] Criar página Parcelas a Receber (/parcelas)
+- [x] Criar página Ordens de Serviço (/ordens-servico)
+- [x] Criar página Integrações (/integracoes)
+- [x] Criar página Fornecedores (/fornecedores)
+- [x] Criar página Usuários (/configuracoes/usuarios)
+- [x] Criar página Integrações (Configurações) (/configuracoes/integracoes)

@@ -20,6 +20,14 @@ import ComprasCompleta from "./pages/ComprasCompleta";
 import FinanceiroCompleto from "./pages/FinanceiroCompleto";
 import ConfiguracoesCompleta from "./pages/ConfiguracoesCompleta";
 import DadosEmpresa from "./pages/DadosEmpresa";
+import Favoritos from "./pages/Favoritos";
+import Fornecedores from "./pages/Fornecedores";
+import Contratos from "./pages/Contratos";
+import Parcelas from "./pages/Parcelas";
+import OrdensServico from "./pages/OrdensServico";
+import Integracoes from "./pages/Integracoes";
+import Usuarios from "./pages/Usuarios";
+import IntegracoesConfig from "./pages/IntegracoesConfig";
 
 function Router() {
   return (
@@ -27,21 +35,28 @@ function Router() {
       <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/apresentacao"} component={Apresentacao} />
-        <Route path="/orcamentos" component={OrcamentosNew} />
+      <Route path={"/favoritos"} component={Favoritos} />        <Route path="/orcamentos" component={OrcamentosNew} />
         <Route path="/orcamentos/novo" component={NovoOrcamentoPage} />
       <Route path={"/vendas"} component={VendasNew} />
       <Route path={"/vendas/nova"} component={NovaVendaPage} />
       <Route path={"/produtos"} component={Produtos} />
       <Route path={"/clientes"} component={Clientes} />
       <Route path={"/servicos"} component={Servicos} />
+      <Route path={"/fornecedores"} component={Fornecedores} />
+      <Route path={"/contratos"} component={Contratos} />
+      <Route path={"/parcelas"} component={Parcelas} />
+      <Route path={"/ordens-servico"} component={OrdensServico} />
       <Route path={"/compras"} component={ComprasCompleta} />
       <Route path={"/estoque"} component={EstoqueAvancado} />
       <Route path={"/financeiro"} component={FinanceiroCompleto} />
       <Route path={"/fiscal"} component={Fiscal} />
       <Route path={"/relatorios"} component={Relatorios} />
+      <Route path={"/integracoes"} component={Integracoes} />
       <Route path={"/serasa"} component={ConsultaSerasa} />
       <Route path={"/configuracoes"} component={ConfiguracoesCompleta} />
       <Route path={"/configuracoes/dados-empresa"} component={DadosEmpresa} />
+      <Route path={"/configuracoes/usuarios"} component={Usuarios} />
+      <Route path={"/configuracoes/integracoes"} component={IntegracoesConfig} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
         <Route component={NotFound} />
