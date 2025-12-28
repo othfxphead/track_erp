@@ -672,3 +672,6 @@
 ## Ajustes Visuais do Menu
 - [x] Remover espaços brancos entre menus quando expandem
 - [x] Preencher background do submenu com cor uniforme
+
+## Ajuste Final de Menu
+- [x] Remover bordas arredondadas do menu lateral principal (rounded-r-2xl)

@@ -152,7 +152,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-20 h-[calc(100vh-80px)] bg-[#00A3E0] text-white transition-all duration-300 z-40 rounded-r-2xl shadow-lg ${
+          className={`fixed left-0 top-20 h-[calc(100vh-80px)] bg-[#00A3E0] text-white transition-all duration-300 z-40 shadow-lg ${
             isExpanded ? "w-64" : "w-16"
           }`}
           onMouseLeave={() => {
