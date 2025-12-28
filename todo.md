@@ -778,3 +778,9 @@
 - [x] Criar página Inadimplentes com backend (URGENTE)
 - [x] Criar página Extrato Bancário com backend (URGENTE)
 - [x] Registrar todas as 5 rotas financeiras no App.tsx (URGENTE)
+
+## Submenu Financeiro no Sidebar
+- [x] Adicionar submenu dropdown no item Financeiro do sidebar
+- [x] Incluir todas as 5 páginas financeiras no submenu
+- [x] Manter FinanceiroCompleto como primeira opção (Visão Geral)
+- [x] Testar navegação entre as páginas
