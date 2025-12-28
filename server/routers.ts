@@ -6,6 +6,7 @@ import { z } from "zod";
 import * as db from "./db";
 import { aiRouter } from "./routers/ai";
 import { integrationsRouter } from "./routers/integrations";
+import { AIOrchestrator } from "./services/aiOrchestrator";
 
 export const appRouter = router({
   system: systemRouter,
@@ -59,7 +60,7 @@ export const appRouter = router({
         cnpj: z.string(),
         inscricaoEstadual: z.string().optional(),
         inscricaoMunicipal: z.string().optional(),
-        email: z.string().email().or(z.literal("")).optional(),
+        email: z.string().optional(),
         telefone: z.string().optional(),
         logoUrl: z.string().optional(),
         certificadoDigitalUrl: z.string().optional(),
@@ -188,7 +189,7 @@ export const appRouter = router({
         tipo: z.enum(["fisica", "juridica"]),
         nome: z.string(),
         cpfCnpj: z.string(),
-        email: z.string().email().or(z.literal("")).optional(),
+        email: z.string().optional(),
         telefone: z.string().optional(),
         celular: z.string().optional(),
         endereco: z.string().optional(),
@@ -215,7 +216,7 @@ export const appRouter = router({
           tipo: z.enum(["fisica", "juridica"]).optional(),
           nome: z.string().optional(),
           cpfCnpj: z.string().optional(),
-          email: z.string().email().or(z.literal("")).optional(),
+          email: z.string().optional(),
           telefone: z.string().optional(),
           celular: z.string().optional(),
           endereco: z.string().optional(),
@@ -249,7 +250,7 @@ export const appRouter = router({
         tipo: z.enum(["fisica", "juridica"]),
         nome: z.string(),
         cpfCnpj: z.string(),
-        email: z.string().email().or(z.literal("")).optional(),
+        email: z.string().optional(),
         telefone: z.string().optional(),
         endereco: z.string().optional(),
         cidade: z.string().optional(),
@@ -451,13 +452,18 @@ export const appRouter = router({
         const orcamento = await db.getOrcamentoById(input.id);
         if (orcamento) {
           // Criar venda automaticamente
+          // Garantir que itens seja string JSON
+          const itensString = typeof orcamento.itens === 'string' 
+            ? orcamento.itens 
+            : JSON.stringify(orcamento.itens);
+          
           await db.createVenda({
             numero: `VEN-${Date.now()}`,
             clienteId: orcamento.clienteId,
             valorTotal: orcamento.valorTotal,
             desconto: orcamento.desconto,
             observacoes: `Convertido do orçamento ${orcamento.numero}`,
-            itens: orcamento.itens,
+            itens: itensString,
             usuarioId: ctx.user.id,
           });
         }
@@ -511,7 +517,14 @@ export const appRouter = router({
         });
         
         // Atualizar estoque dos produtos vendidos
-        const itens = JSON.parse(input.itens);
+        let itens = [];
+        try {
+          itens = typeof input.itens === 'string' ? JSON.parse(input.itens) : input.itens;
+          if (!Array.isArray(itens)) itens = [];
+        } catch (e) {
+          console.error('Erro ao fazer parse de itens:', e);
+          itens = [];
+        }
         for (const item of itens) {
           if (item.tipo === "produto") {
             const produto = await db.getProdutoById(item.id);
@@ -1516,6 +1529,65 @@ export const appRouter = router({
       }))
       .query(async ({ input }) => {
         return await db.getLogsIntegracoes(input.servico, input.limit);
+      }),
+  }),
+
+  // IA Orquestradora
+  aiAssistant: router({
+    analisarSistema: protectedProcedure.query(async () => {
+      const vendas = await db.getAllVendas();
+      const clientes = await db.getAllClientes();
+      const produtos = await db.getAllProdutos();
+      
+      return await AIOrchestrator.analisarSistema({
+        vendas,
+        clientes,
+        produtos,
+      });
+    }),
+    sugerirDestino: protectedProcedure
+      .input(z.object({ descricao: z.string() }))
+      .mutation(async ({ input }) => {
+        return await AIOrchestrator.sugerirDestino(input.descricao);
+      }),
+    gerarRelatorio: protectedProcedure
+      .input(z.object({
+        tipo: z.string(),
+        periodo: z.object({
+          inicio: z.date(),
+          fim: z.date(),
+        }).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        let dados: any[] = [];
+        
+        // Buscar dados baseado no tipo de relatório
+        switch (input.tipo.toLowerCase()) {
+          case 'vendas':
+            dados = await db.getAllVendas();
+            break;
+          case 'clientes':
+            dados = await db.getAllClientes();
+            break;
+          case 'produtos':
+            dados = await db.getAllProdutos();
+            break;
+          case 'financeiro':
+            dados = await db.getAllVendas(); // Usar vendas como base
+            break;
+          default:
+            dados = [];
+        }
+        
+        return await AIOrchestrator.gerarRelatorio(input.tipo, dados, input.periodo);
+      }),
+    validarDados: protectedProcedure
+      .input(z.object({
+        modulo: z.string(),
+        dados: z.any(),
+      }))
+      .mutation(async ({ input }) => {
+        return await AIOrchestrator.validarEEnriquecerDados(input.modulo, input.dados);
       }),
   }),
 });

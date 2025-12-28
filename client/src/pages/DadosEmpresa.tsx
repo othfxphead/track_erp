@@ -12,9 +12,51 @@ import {
 import { Card } from "@/components/ui/card";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+import { useEffect } from "react";
 
 export default function DadosEmpresa() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  
+  // Buscar dados existentes
+  const { data: empresa, refetch } = trpc.empresa.get.useQuery();
+  
+  // Mutation para salvar dados
+  const salvarMutation = trpc.empresa.upsert.useMutation({
+    onSuccess: () => {
+      toast.success("Dados da empresa salvos com sucesso!");
+      refetch();
+    },
+    onError: (error: any) => {
+      toast.error(`Erro ao salvar: ${error.message}`);
+    },
+  });
+  
+  // Carregar dados existentes
+  useEffect(() => {
+    if (empresa) {
+      setFormData({
+        razaoSocial: empresa.razaoSocial || "",
+        nomeFantasia: empresa.nomeFantasia || "",
+        cnpj: empresa.cnpj || "",
+        inscricaoEstadual: empresa.inscricaoEstadual || "",
+        inscricaoMunicipal: empresa.inscricaoMunicipal || "",
+        telefone: empresa.telefone || "",
+        email: empresa.email || "",
+        endereco: empresa.endereco || "",
+        numero: empresa.numero || "",
+        complemento: empresa.complemento || "",
+        bairro: empresa.bairro || "",
+        cidade: empresa.cidade || "",
+        estado: empresa.estado || "SP",
+        cep: empresa.cep || "",
+      });
+      if (empresa.logoUrl) {
+        setLogoPreview(empresa.logoUrl);
+      }
+    }
+  }, [empresa]);
   const [formData, setFormData] = useState({
     razaoSocial: "",
     nomeFantasia: "",
@@ -39,6 +81,7 @@ export default function DadosEmpresa() {
         toast.error("Arquivo muito grande. Máximo 2MB.");
         return;
       }
+      setLogoFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result as string);
@@ -90,7 +133,7 @@ export default function DadosEmpresa() {
     setFormData((prev) => ({ ...prev, [field]: formattedValue }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.razaoSocial || !formData.cnpj) {
@@ -98,7 +141,35 @@ export default function DadosEmpresa() {
       return;
     }
 
-    toast.success("Dados da empresa salvos com sucesso!");
+    // Preparar dados para envio
+    const dadosParaSalvar: any = {
+      razaoSocial: formData.razaoSocial,
+      nomeFantasia: formData.nomeFantasia || undefined,
+      cnpj: formData.cnpj.replace(/\D/g, ""),
+      inscricaoEstadual: formData.inscricaoEstadual || undefined,
+      inscricaoMunicipal: formData.inscricaoMunicipal || undefined,
+      telefone: formData.telefone || undefined,
+      email: formData.email || undefined,
+      endereco: formData.endereco || undefined,
+      numero: formData.numero || undefined,
+      complemento: formData.complemento || undefined,
+      bairro: formData.bairro || undefined,
+      cidade: formData.cidade || undefined,
+      estado: formData.estado || undefined,
+      cep: formData.cep.replace(/\D/g, "") || undefined,
+    };
+    
+    // Se houver logo, converter para base64
+    if (logoFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        dadosParaSalvar.logoUrl = reader.result as string;
+        salvarMutation.mutate(dadosParaSalvar);
+      };
+      reader.readAsDataURL(logoFile);
+    } else {
+      salvarMutation.mutate(dadosParaSalvar);
+    }
   };
 
   const estados = [

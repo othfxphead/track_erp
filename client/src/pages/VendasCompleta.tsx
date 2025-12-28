@@ -468,6 +468,22 @@ export default function VendasCompleta() {
                 <TableBody>
                   {vendas.map((venda) => {
                     const cliente = clientes?.find((c) => c.id === venda.clienteId);
+                    
+                    // Determinar tipo de venda baseado nos itens
+                    let tipoVenda: "nfe" | "nfse" | "ambos" = "nfe";
+                    try {
+                      const itens = typeof venda.itens === 'string' ? JSON.parse(venda.itens) : venda.itens;
+                      if (Array.isArray(itens) && itens.length > 0) {
+                        const temProduto = itens.some((item: any) => item.tipo === "produto");
+                        const temServico = itens.some((item: any) => item.tipo === "servico");
+                        if (temProduto && temServico) tipoVenda = "ambos";
+                        else if (temServico) tipoVenda = "nfse";
+                        else tipoVenda = "nfe";
+                      }
+                    } catch (e) {
+                      console.error('Erro ao determinar tipo de venda:', e);
+                    }
+                    
                     return (
                       <TableRow key={venda.id}>
                         <TableCell className="font-medium">#{venda.numero}</TableCell>
@@ -481,30 +497,34 @@ export default function VendasCompleta() {
                         </TableCell>
                         <TableCell className="text-center">
                           <div className="flex items-center justify-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 px-2 text-xs"
-                              onClick={() => {
-                                setVendaSelecionada({ id: venda.id, tipo: "nfe" });
-                                setDialogEmissaoOpen(true);
-                              }}
-                            >
-                              <FileText className="h-3 w-3 mr-1" />
-                              NF-e
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 px-2 text-xs"
-                              onClick={() => {
-                                setVendaSelecionada({ id: venda.id, tipo: "nfse" });
-                                setDialogEmissaoOpen(true);
-                              }}
-                            >
-                              <FileText className="h-3 w-3 mr-1" />
-                              NFS-e
-                            </Button>
+                            {(tipoVenda === "nfe" || tipoVenda === "ambos") && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 px-2 text-xs"
+                                onClick={() => {
+                                  setVendaSelecionada({ id: venda.id, tipo: "nfe" });
+                                  setDialogEmissaoOpen(true);
+                                }}
+                              >
+                                <FileText className="h-3 w-3 mr-1" />
+                                NF-e
+                              </Button>
+                            )}
+                            {(tipoVenda === "nfse" || tipoVenda === "ambos") && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 px-2 text-xs"
+                                onClick={() => {
+                                  setVendaSelecionada({ id: venda.id, tipo: "nfse" });
+                                  setDialogEmissaoOpen(true);
+                                }}
+                              >
+                                <FileText className="h-3 w-3 mr-1" />
+                                NFS-e
+                              </Button>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
