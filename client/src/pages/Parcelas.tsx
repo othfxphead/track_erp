@@ -12,47 +12,27 @@ import { DollarSign, TrendingUp, Calendar, CheckCircle2 } from "lucide-react";
 import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function Parcelas() {
-  // Mock data - em produção viria do backend
-  const [parcelas] = useState([
-    {
-      id: 1,
-      numero: "001/003",
-      venda: "Venda #1234",
-      cliente: "João Silva Comércio LTDA",
-      dataVencimento: new Date("2025-02-15"),
-      valor: 500.00,
-      status: "pendente",
+  // Buscar parcelas do backend
+  const { data: parcelas = [], isLoading } = trpc.parcelas.list.useQuery();
+  const deleteMutation = trpc.parcelas.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Parcela excluída com sucesso!");
     },
-    {
-      id: 2,
-      numero: "002/003",
-      venda: "Venda #1234",
-      cliente: "João Silva Comércio LTDA",
-      dataVencimento: new Date("2025-03-15"),
-      valor: 500.00,
-      status: "pendente",
+    onError: (error) => {
+      toast.error("Erro ao excluir parcela: " + error.message);
     },
-    {
-      id: 3,
-      numero: "001/001",
-      venda: "Venda #1235",
-      cliente: "Maria Santos ME",
-      dataVencimento: new Date("2025-01-20"),
-      valor: 1200.00,
-      status: "pago",
+  });
+  const updateMutation = trpc.parcelas.update.useMutation({
+    onSuccess: () => {
+      toast.success("Parcela atualizada com sucesso!");
     },
-    {
-      id: 4,
-      numero: "001/002",
-      venda: "Venda #1236",
-      cliente: "Tech Solutions LTDA",
-      dataVencimento: new Date("2025-01-10"),
-      valor: 800.00,
-      status: "vencido",
+    onError: (error) => {
+      toast.error("Erro ao atualizar parcela: " + error.message);
     },
-  ]);
+  });
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -83,15 +63,15 @@ export default function Parcelas() {
 
   const totalPendente = parcelas
     .filter(p => p.status === "pendente")
-    .reduce((acc, p) => acc + p.valor, 0);
+    .reduce((acc, p) => acc + parseFloat(p.valor), 0);
 
   const totalVencido = parcelas
     .filter(p => p.status === "vencido")
-    .reduce((acc, p) => acc + p.valor, 0);
+    .reduce((acc, p) => acc + parseFloat(p.valor), 0);
 
   const totalRecebido = parcelas
     .filter(p => p.status === "pago")
-    .reduce((acc, p) => acc + p.valor, 0);
+    .reduce((acc, p) => acc + parseFloat(p.valor), 0);
 
   return (
     <div className="space-y-6">
@@ -189,11 +169,11 @@ export default function Parcelas() {
                     <TableCell className="font-medium">
                       {parcela.numero}
                     </TableCell>
-                    <TableCell>{parcela.venda}</TableCell>
-                    <TableCell>{parcela.cliente}</TableCell>
+                    <TableCell>Venda ID: {parcela.vendaId}</TableCell>
+                    <TableCell>-</TableCell>
                     <TableCell>{formatDate(parcela.dataVencimento)}</TableCell>
                     <TableCell className="text-right font-medium">
-                      {formatCurrency(parcela.valor)}
+                      {formatCurrency(parseFloat(parcela.valor))}
                     </TableCell>
                     <TableCell className="text-center">
                       {getStatusBadge(parcela.status)}

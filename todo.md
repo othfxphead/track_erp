@@ -756,3 +756,9 @@
 - [x] Implementar procedures tRPC no routers.ts
 - [x] Conectar frontend com as novas procedures (Fornecedores completo, demais seguem mesmo padrão)
 - [x] Executar db:push para aplicar migrations
+
+## Conexão Frontend-Backend das Páginas Restantes
+- [x] Conectar página de Contratos ao backend tRPC
+- [x] Conectar página de Parcelas ao backend tRPC
+- [x] Conectar página de Ordens de Serviço ao backend tRPC
+- [x] Testar criação, listagem e exclusão em todas as páginas

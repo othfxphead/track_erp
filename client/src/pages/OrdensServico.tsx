@@ -12,44 +12,27 @@ import { Plus, Wrench, Clock, CheckCircle, XCircle } from "lucide-react";
 import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function OrdensServico() {
-  // Mock data - em produção viria do backend
-  const [ordens] = useState([
-    {
-      id: 1,
-      numero: "OS-2025-001",
-      cliente: "João Silva Comércio LTDA",
-      servico: "Manutenção Preventiva",
-      dataAbertura: new Date("2025-01-15"),
-      dataPrevista: new Date("2025-01-20"),
-      valor: 350.00,
-      status: "em_andamento",
-      tecnico: "Carlos Souza",
+  // Buscar ordens de serviço do backend
+  const { data: ordens = [], isLoading } = trpc.ordensServico.list.useQuery();
+  const deleteMutation = trpc.ordensServico.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Ordem de serviço excluída com sucesso!");
     },
-    {
-      id: 2,
-      numero: "OS-2025-002",
-      cliente: "Maria Santos ME",
-      servico: "Instalação de Sistema",
-      dataAbertura: new Date("2025-01-18"),
-      dataPrevista: new Date("2025-01-25"),
-      valor: 800.00,
-      status: "pendente",
-      tecnico: "Ana Paula",
+    onError: (error) => {
+      toast.error("Erro ao excluir ordem de serviço: " + error.message);
     },
-    {
-      id: 3,
-      numero: "OS-2025-003",
-      cliente: "Tech Solutions LTDA",
-      servico: "Reparo de Equipamento",
-      dataAbertura: new Date("2025-01-10"),
-      dataPrevista: new Date("2025-01-15"),
-      valor: 450.00,
-      status: "concluida",
-      tecnico: "Roberto Lima",
+  });
+  const updateMutation = trpc.ordensServico.update.useMutation({
+    onSuccess: () => {
+      toast.success("Ordem de serviço atualizada com sucesso!");
     },
-  ]);
+    onError: (error) => {
+      toast.error("Erro ao atualizar ordem de serviço: " + error.message);
+    },
+  });
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -181,13 +164,13 @@ export default function OrdensServico() {
                     <TableCell className="font-medium">
                       {ordem.numero}
                     </TableCell>
-                    <TableCell>{ordem.cliente}</TableCell>
-                    <TableCell>{ordem.servico}</TableCell>
-                    <TableCell>{ordem.tecnico}</TableCell>
+                    <TableCell>Cliente ID: {ordem.clienteId}</TableCell>
+                    <TableCell>Serviço ID: {ordem.servicoId}</TableCell>
+                    <TableCell>Técnico ID: {ordem.tecnicoId || "-"}</TableCell>
                     <TableCell>{formatDate(ordem.dataAbertura)}</TableCell>
                     <TableCell>{formatDate(ordem.dataPrevista)}</TableCell>
                     <TableCell className="text-right font-medium">
-                      {formatCurrency(ordem.valor)}
+                      {formatCurrency(parseFloat(ordem.valor))}
                     </TableCell>
                     <TableCell className="text-center">
                       {getStatusBadge(ordem.status)}

@@ -12,41 +12,19 @@ import { Plus, FileText, Calendar, Copy } from "lucide-react";
 import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function Contratos() {
-  // Mock data - em produção viria do backend
-  const [contratos] = useState([
-    {
-      id: 1,
-      numero: "CTR-2025-001",
-      cliente: "João Silva Comércio LTDA",
-      tipo: "Mensal",
-      dataInicio: new Date("2025-01-01"),
-      dataFim: new Date("2025-12-31"),
-      valor: 1500.00,
-      status: "ativo",
+  // Buscar contratos do backend
+  const { data: contratos = [], isLoading } = trpc.contratos.list.useQuery();
+  const deleteMutation = trpc.contratos.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Contrato excluído com sucesso!");
     },
-    {
-      id: 2,
-      numero: "CTR-2025-002",
-      cliente: "Maria Santos ME",
-      tipo: "Anual",
-      dataInicio: new Date("2025-01-15"),
-      dataFim: new Date("2026-01-14"),
-      valor: 15000.00,
-      status: "ativo",
+    onError: (error) => {
+      toast.error("Erro ao excluir contrato: " + error.message);
     },
-    {
-      id: 3,
-      numero: "CTR-2024-089",
-      cliente: "Tech Solutions LTDA",
-      tipo: "Trimestral",
-      dataInicio: new Date("2024-10-01"),
-      dataFim: new Date("2024-12-31"),
-      valor: 4500.00,
-      status: "expirado",
-    },
-  ]);
+  });
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -177,12 +155,12 @@ export default function Contratos() {
                     <TableCell className="font-medium">
                       {contrato.numero}
                     </TableCell>
-                    <TableCell>{contrato.cliente}</TableCell>
-                    <TableCell>{contrato.tipo}</TableCell>
+                    <TableCell>Cliente ID: {contrato.clienteId}</TableCell>
+                    <TableCell className="capitalize">{contrato.tipo}</TableCell>
                     <TableCell>{formatDate(contrato.dataInicio)}</TableCell>
                     <TableCell>{formatDate(contrato.dataFim)}</TableCell>
                     <TableCell className="text-right font-medium">
-                      {formatCurrency(contrato.valor)}
+                      {formatCurrency(parseFloat(contrato.valor))}
                     </TableCell>
                     <TableCell className="text-center">
                       {getStatusBadge(contrato.status)}
