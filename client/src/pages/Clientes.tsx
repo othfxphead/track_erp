@@ -26,7 +26,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
-import { Plus, Edit, Phone, Mail } from "lucide-react";
+import { Plus, Edit, Phone, Mail, History } from "lucide-react";
+import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -337,10 +338,38 @@ export default function Clientes() {
                           {cliente.ativo ? "Ativo" : "Inativo"}
                         </span>
                       </TableCell>
-                      <TableCell className="text-center">
-                        <Button variant="ghost" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
+                      <TableCell className="text-right">
+                        <ActionButton
+                          actions={[
+                            {
+                              label: "Visualizar",
+                              icon: ActionIcons.View,
+                              onClick: () => toast.info("Visualizando cliente..."),
+                            },
+                            {
+                              label: "Editar",
+                              icon: ActionIcons.Edit,
+                              onClick: () => toast.info("Editando cliente..."),
+                            },
+                            {
+                              label: "Ver Histórico",
+                              icon: <History className="h-4 w-4" />,
+                              onClick: () => toast.info("Carregando histórico..."),
+                              separator: true,
+                            },
+                            {
+                              label: "Excluir",
+                              icon: ActionIcons.Delete,
+                              onClick: () => {
+                                if (confirm("Tem certeza que deseja excluir este cliente?")) {
+                                  toast.success("Cliente excluído!");
+                                }
+                              },
+                              variant: "destructive" as const,
+                              separator: true,
+                            },
+                          ]}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}

@@ -39,6 +39,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -300,74 +301,59 @@ export default function OrcamentosNew() {
                       </TableCell>
                       <TableCell>{getStatusBadge(orcamento.status)}</TableCell>
                       <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                toast.info("Editando orçamento...");
-                              }}
-                            >
-                              <Edit className="w-4 h-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                toast.success("Orçamento enviado por e-mail!");
-                              }}
-                            >
-                              <Mail className="w-4 h-4 mr-2" />
-                              Enviar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                toast.success("Orçamento clonado!");
-                              }}
-                            >
-                              <Copy className="w-4 h-4 mr-2" />
-                              Clonar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                toast.info("Imprimindo orçamento...");
-                              }}
-                            >
-                              <Printer className="w-4 h-4 mr-2" />
-                              Imprimir
-                            </DropdownMenuItem>
-                            {orcamento.status === "aprovado" && (
-                              <>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => {
-                                    setOrcamentoParaConverter(orcamento);
-                                    setShowNovaVenda(true);
-                                  }}
-                                  className="text-green-600"
-                                >
-                                  <DollarSign className="w-4 h-4 mr-2" />
-                                  Criar venda
-                                </DropdownMenuItem>
-                              </>
-                            )}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => {
+                        <ActionButton
+                          actions={[
+                            {
+                              label: "Visualizar",
+                              icon: ActionIcons.View,
+                              onClick: () => toast.info("Visualizando orçamento..."),
+                            },
+                            {
+                              label: "Editar",
+                              icon: ActionIcons.Edit,
+                              onClick: () => toast.info("Editando orçamento..."),
+                            },
+                            {
+                              label: "Enviar",
+                              icon: <Mail className="h-4 w-4" />,
+                              onClick: () => toast.success("Orçamento enviado por e-mail!"),
+                            },
+                            {
+                              label: "Clonar",
+                              icon: <Copy className="h-4 w-4" />,
+                              onClick: () => toast.success("Orçamento clonado!"),
+                            },
+                            {
+                              label: "Imprimir",
+                              icon: <Printer className="h-4 w-4" />,
+                              onClick: () => toast.info("Imprimindo orçamento..."),
+                            },
+                            ...(orcamento.status === "aprovado"
+                              ? [
+                                  {
+                                    label: "Criar venda",
+                                    icon: <DollarSign className="h-4 w-4" />,
+                                    onClick: () => {
+                                      setOrcamentoParaConverter(orcamento);
+                                      setShowNovaVenda(true);
+                                    },
+                                    separator: true,
+                                  },
+                                ]
+                              : []),
+                            {
+                              label: "Excluir",
+                              icon: ActionIcons.Delete,
+                              onClick: () => {
                                 if (confirm("Tem certeza que deseja excluir este orçamento?")) {
                                   toast.success("Orçamento excluído!");
                                 }
-                              }}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Excluir
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                              },
+                              variant: "destructive" as const,
+                              separator: true,
+                            },
+                          ]}
+                        />
                       </TableCell>
                     </TableRow>
                   ))

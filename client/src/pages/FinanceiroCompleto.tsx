@@ -27,7 +27,8 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
-import { Plus, TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown, DollarSign, Calendar, CheckCircle2 } from "lucide-react";
+import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -386,6 +387,7 @@ export default function FinanceiroCompleto() {
                         <TableHead>Vencimento</TableHead>
                         <TableHead className="text-right">Valor</TableHead>
                         <TableHead className="text-center">Status</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -416,6 +418,39 @@ export default function FinanceiroCompleto() {
                           </TableCell>
                           <TableCell className="text-center">
                             {getStatusBadge(lancamento.status)}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <ActionButton
+                              actions={[
+                                {
+                                  label: "Visualizar",
+                                  icon: ActionIcons.View,
+                                  onClick: () => toast.info("Visualizando lançamento..."),
+                                },
+                                {
+                                  label: "Editar",
+                                  icon: ActionIcons.Edit,
+                                  onClick: () => toast.info("Editando lançamento..."),
+                                },
+                                {
+                                  label: lancamento.tipo === "receita" ? "Receber" : "Pagar",
+                                  icon: <CheckCircle2 className="h-4 w-4" />,
+                                  onClick: () => toast.success(`${lancamento.tipo === "receita" ? "Receita recebida" : "Despesa paga"}!`),
+                                  separator: true,
+                                },
+                                {
+                                  label: "Excluir",
+                                  icon: ActionIcons.Delete,
+                                  onClick: () => {
+                                    if (confirm("Tem certeza que deseja excluir este lançamento?")) {
+                                      toast.success("Lançamento excluído!");
+                                    }
+                                  },
+                                  variant: "destructive" as const,
+                                  separator: true,
+                                },
+                              ]}
+                            />
                           </TableCell>
                         </TableRow>
                       ))}

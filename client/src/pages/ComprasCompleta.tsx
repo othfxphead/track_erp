@@ -26,7 +26,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, ShoppingCart, Package } from "lucide-react";
+import { Plus, Trash2, ShoppingCart, Package, CheckCircle } from "lucide-react";
+import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -566,6 +567,7 @@ export default function ComprasCompleta() {
                     <TableHead>Data</TableHead>
                     <TableHead className="text-right">Valor Total</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -584,6 +586,39 @@ export default function ComprasCompleta() {
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-success/10 text-success">
                           Concluída
                         </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <ActionButton
+                          actions={[
+                            {
+                              label: "Visualizar",
+                              icon: ActionIcons.View,
+                              onClick: () => toast.info("Visualizando compra..."),
+                            },
+                            {
+                              label: "Editar",
+                              icon: ActionIcons.Edit,
+                              onClick: () => toast.info("Editando compra..."),
+                            },
+                            {
+                              label: "Receber",
+                              icon: <CheckCircle className="h-4 w-4" />,
+                              onClick: () => toast.success("Compra recebida!"),
+                              separator: true,
+                            },
+                            {
+                              label: "Excluir",
+                              icon: ActionIcons.Delete,
+                              onClick: () => {
+                                if (confirm("Tem certeza que deseja excluir esta compra?")) {
+                                  toast.success("Compra excluída!");
+                                }
+                              },
+                              variant: "destructive" as const,
+                              separator: true,
+                            },
+                          ]}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}

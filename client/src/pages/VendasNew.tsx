@@ -42,6 +42,7 @@ import {
   Send,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ActionButton, ActionIcons } from "@/components/ActionButton";
 
 export default function VendasNew() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,6 +52,8 @@ export default function VendasNew() {
   const [, setLocation] = useState("");
   const navigate = (path: string) => window.location.href = path;
   const [showEmitirNFS, setShowEmitirNFS] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [vendaToDelete, setVendaToDelete] = useState<any>(null);
   const itemsPerPage = 10;
 
   // Queries
@@ -112,6 +115,25 @@ export default function VendasNew() {
     toast.success("NFS emitida com sucesso!");
     setShowEmitirNFS(false);
     setSelectedVenda(null);
+  };
+
+  const handleEditarVenda = (venda: any) => {
+    navigate(`/vendas/editar/${venda.id}`);
+  };
+
+  const handleVisualizarVenda = (venda: any) => {
+    navigate(`/vendas/detalhes/${venda.id}`);
+  };
+
+  const handleExcluirVenda = (venda: any) => {
+    setVendaToDelete(venda);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
+    toast.success(`Venda #${vendaToDelete?.numero} excluída com sucesso!`);
+    setShowDeleteDialog(false);
+    setVendaToDelete(null);
   };
 
   return (
@@ -310,9 +332,27 @@ export default function VendasNew() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
+                      <ActionButton
+                        actions={[
+                          {
+                            label: "Visualizar",
+                            icon: ActionIcons.View,
+                            onClick: () => handleVisualizarVenda(venda),
+                          },
+                          {
+                            label: "Editar",
+                            icon: ActionIcons.Edit,
+                            onClick: () => handleEditarVenda(venda),
+                          },
+                          {
+                            label: "Excluir",
+                            icon: ActionIcons.Delete,
+                            onClick: () => handleExcluirVenda(venda),
+                            variant: "destructive",
+                            separator: true,
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
@@ -441,6 +481,34 @@ export default function VendasNew() {
             >
               <Send className="w-4 h-4 mr-2" />
               Confirmar Emissão
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Confirmar Exclusão */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar Exclusão</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">
+            Tem certeza que deseja excluir a venda{" "}
+            <span className="font-semibold">#{vendaToDelete?.numero}</span>?
+            Esta ação não pode ser desfeita.
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={confirmDelete}
+            >
+              Excluir
             </Button>
           </DialogFooter>
         </DialogContent>

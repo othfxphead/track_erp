@@ -44,6 +44,7 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import ContaAICaptura from "@/components/ContaAICaptura";
 
 export default function OrcamentosContaAzul() {
@@ -399,13 +400,43 @@ export default function OrcamentosContaAzul() {
                       </Badge>
                     </TableCell>
                     <TableCell>-</TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="icon">
-                        <Send className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
+                    <TableCell className="text-right">
+                      <ActionButton
+                        actions={[
+                          {
+                            label: "Visualizar",
+                            icon: ActionIcons.View,
+                            onClick: () => toast.info("Visualizando orçamento..."),
+                          },
+                          {
+                            label: "Editar",
+                            icon: ActionIcons.Edit,
+                            onClick: () => toast.info("Editando orçamento..."),
+                          },
+                          {
+                            label: "Enviar",
+                            icon: <Send className="h-4 w-4" />,
+                            onClick: () => toast.success("Orçamento enviado!"),
+                          },
+                          {
+                            label: "Converter em Venda",
+                            icon: ActionIcons.Convert,
+                            onClick: () => toast.success("Orçamento convertido em venda!"),
+                            separator: true,
+                          },
+                          {
+                            label: "Excluir",
+                            icon: ActionIcons.Delete,
+                            onClick: () => {
+                              if (confirm("Tem certeza que deseja excluir este orçamento?")) {
+                                toast.success("Orçamento excluído!");
+                              }
+                            },
+                            variant: "destructive" as const,
+                            separator: true,
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

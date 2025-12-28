@@ -724,3 +724,14 @@
 ## Correção de Cores dos Botões
 - [x] Manter botão "Nova Venda" em azul (não verde)
 - [x] Garantir botões "Emitir NFS/NF-e" em verde
+
+## Padronização de Botões de Ações nas Tabelas
+- [x] Criar componente ActionButton padrão (azul transparente com dropdown)
+- [x] Implementar ações para módulo Vendas (Editar, Visualizar, Excluir)
+- [x] Implementar ações para módulo Orçamentos (Editar, Visualizar, Excluir, Converter em Venda)
+- [x] Implementar ações para módulo Produtos (Editar, Visualizar, Excluir, Ajustar Estoque)
+- [x] Implementar ações para módulo Clientes (Editar, Visualizar, Excluir)
+- [x] Implementar ações para módulo Serviços (Editar, Visualizar, Excluir)
+- [x] Implementar ações para módulo Compras (Editar, Visualizar, Excluir)
+- [x] Implementar ações para módulo Financeiro (Editar, Visualizar, Excluir, Receber/Pagar)
+- [x] Substituir todos os botões de 3 pontinhos pelo novo padrão
