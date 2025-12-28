@@ -14,7 +14,8 @@ import NovoOrcamentoPage from "./pages/NovoOrcamentoPage";
 import VendasNew from "./pages/VendasNew";
 import NovaVendaPage from "./pages/NovaVendaPage";
 import Servicos from "./pages/Servicos";
-import { Fiscal, Relatorios, ConsultaSerasa } from "./pages/ModulosSimples";
+import { Fiscal, ConsultaSerasa } from "./pages/ModulosSimples";
+import RelatoriosIA from "./pages/RelatoriosIA";
 import EstoqueAvancado from "./pages/EstoqueAvancado";
 import ComprasCompleta from "./pages/ComprasCompleta";
 import FinanceiroCompleto from "./pages/FinanceiroCompleto";
@@ -62,7 +63,7 @@ function Router() {
       <Route path={"/financeiro/dda"} component={DDA} />
       <Route path={"/financeiro/inadimplentes"} component={Inadimplentes} />      <Route path={"/fiscal"} component={Fiscal} />
       <Route path={"/notas-emitidas"} component={NotasEmitidas} />
-      <Route path={"/relatorios"} component={Relatorios} />
+      <Route path={"/relatorios"} component={RelatoriosIA} />
       <Route path={"/integracoes"} component={Integracoes} />
       <Route path={"/serasa"} component={ConsultaSerasa} />
       <Route path={"/configuracoes"} component={ConfiguracoesCompleta} />
