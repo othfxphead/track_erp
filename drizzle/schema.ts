@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, mediumtext, timestamp, varchar, decimal, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -316,9 +316,9 @@ export const logsAuditoria = mysqlTable("logsAuditoria", {
   usuarioId: int("usuarioId").notNull(),
   acao: varchar("acao", { length: 100 }).notNull(),
   modulo: varchar("modulo", { length: 50 }).notNull(),
-  descricao: text("descricao").notNull(),
-  dadosAntes: text("dadosAntes"), // JSON
-  dadosDepois: text("dadosDepois"), // JSON
+  descricao: text("descricao"),
+  dadosAntes: mediumtext("dadosAntes"), // JSON
+  dadosDepois: mediumtext("dadosDepois"), // JSON
   ipAddress: varchar("ipAddress", { length: 45 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

@@ -50,6 +50,13 @@
       "when": 1766890560687,
       "tag": "0006_jazzy_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1766891579824,
+      "tag": "0007_living_grandmaster",
+      "breakpoints": true
     }
   ]
 }
