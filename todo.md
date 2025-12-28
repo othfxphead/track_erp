@@ -665,3 +665,6 @@
 - [x] Remover bordas azuis de foco de elementos clicáveis (ícones, avatares)
 - [x] Aplicar outline: none e ring-0 globalmente em elementos interativos
 - [x] Testar navegação e interação sem bordas de foco
+
+## Ajustes de Menu
+- [x] Remover item "Crédito" do menu lateral

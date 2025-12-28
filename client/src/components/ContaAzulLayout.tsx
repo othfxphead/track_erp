@@ -85,7 +85,6 @@ const menuItems: MenuItem[] = [
   },
   { id: "compras", label: "Compras", icon: <ShoppingCart className="w-5 h-5" />, path: "/compras" },
   { id: "financeiro", label: "Financeiro", icon: <DollarSign className="w-5 h-5" />, path: "/financeiro" },
-  { id: "credito", label: "Crédito", icon: <CreditCard className="w-5 h-5" />, path: "/credito" },
   { id: "estoque", label: "Estoque", icon: <Warehouse className="w-5 h-5" />, path: "/estoque" },
   { id: "relatorios", label: "Relatórios", icon: <FileText className="w-5 h-5" />, path: "/relatorios" },
   { id: "integracoes", label: "Integrações", icon: <LinkIcon className="w-5 h-5" />, path: "/integracoes" },
