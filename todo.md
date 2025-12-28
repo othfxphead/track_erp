@@ -793,3 +793,16 @@
 - [ ] Criar página de Contas Bancárias com CRUD completo
 - [ ] Adicionar interface de configuração de credenciais de API no modal
 - [x] Documentar processo de configuração (ver cabeçalho de bankIntegration.ts)
+
+## Integração Focus NFe
+- [x] Estudar documentação da API Focus NFe
+- [x] Criar serviço de integração (server/services/focusNFe.ts)
+- [x] Implementar emissão de NF-e
+- [ ] Implementar emissão de NFS-e (documentado, não implementado)
+- [x] Implementar consulta de status
+- [x] Implementar cancelamento de notas
+- [x] Implementar download de XML/PDF
+- [ ] Criar procedures tRPC para operações fiscais
+- [ ] Integrar com módulo de Vendas
+- [ ] Integrar com módulo de Serviços
+- [ ] Solicitar token de produção via webdev_request_secrets
