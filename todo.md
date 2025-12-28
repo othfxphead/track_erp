@@ -715,3 +715,12 @@
 ## Ajuste de Dimensões do Botão Nova Venda
 - [x] Verificar por que o botão não está herdando o padrão h-[22px] px-[5px]
 - [x] Aplicar classes corretas para seguir padrão global
+
+## Investigação de Problema com Dimensões do Botão
+- [x] Verificar se CSS global está sobrescrevendo classes Tailwind
+- [x] Testar com !important nas classes de dimensão
+- [x] Verificar se DialogTrigger asChild está causando conflito
+
+## Correção de Cores dos Botões
+- [x] Manter botão "Nova Venda" em azul (não verde)
+- [x] Garantir botões "Emitir NFS/NF-e" em verde

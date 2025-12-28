@@ -125,10 +125,10 @@ export default function VendasNew() {
           </p>
         </div>
         <Button 
-          className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
+          className="bg-blue-600 hover:bg-blue-700"
           onClick={() => navigate("/vendas/nova")}
         >
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="h-3 w-3 mr-1" />
           Nova Venda
         </Button>
       </div>
@@ -299,9 +299,7 @@ export default function VendasNew() {
                     <TableCell>
                       {venda.status === "faturada" ? (
                         <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 text-xs"
+                          className="bg-green-600 hover:bg-green-700 text-white text-xs"
                           onClick={() => handleEmitirNFS(venda)}
                         >
                           <Send className="w-3 h-3 mr-1" />
