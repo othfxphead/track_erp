@@ -220,7 +220,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     {/* Submenu - aparece com hover (SEMPRE lateral, mesmo expandido) */}
                     {hoveredItem === item.id && (
                       <>
-                        <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-80px)] w-[250px] bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto`}>
+                        <div className={`fixed ${isExpanded ? 'left-64' : 'left-16'} top-20 h-[calc(100vh-80px)] w-[200px] bg-[#003d7a] text-white shadow-2xl z-50 overflow-y-auto`}>
                         {/* Cabeçalho do submenu com seta de voltar */}
                         <div className="flex items-center gap-3 px-4 py-4 bg-[#002a5c] border-b border-[#004d8a]">
                           <button 
@@ -229,7 +229,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                           >
                             <ChevronLeft className="w-5 h-5" />
                           </button>
-                          <span className="text-lg font-semibold">{item.label}</span>
+                          <span className="text-sm font-semibold">{item.label}</span>
                         </div>
                         
                         {/* Itens do submenu */}
@@ -237,7 +237,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                           {item.submenu.map((subitem) => (
                             <Link key={subitem.path} href={subitem.path}>
                               <div
-                                className={`flex items-center justify-between px-6 py-3 text-base hover:bg-[#004d8a] transition-colors cursor-pointer ${
+                                className={`flex items-center justify-between px-4 py-2.5 text-sm hover:bg-[#004d8a] transition-colors cursor-pointer ${
                                   location === subitem.path ? "bg-[#004d8a] text-white font-medium border-l-4 border-white" : ""
                                 }`}
                               >

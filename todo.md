@@ -678,3 +678,7 @@
 
 ## Ajuste de Largura do Submenu
 - [x] Reduzir largura do submenu de 320px (w-80) para 250px
+
+## Ajuste Adicional do Submenu
+- [x] Reduzir largura do submenu de 250px para 200px
+- [x] Diminuir tamanho do texto do submenu (título e itens)
