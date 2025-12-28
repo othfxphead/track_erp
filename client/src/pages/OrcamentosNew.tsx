@@ -119,7 +119,7 @@ export default function OrcamentosNew() {
             </p>
           </div>
           <Button 
-          className="bg-blue-600 hover:bg-blue-700 h-9"
+          className="bg-blue-600 hover:bg-blue-700"
           onClick={() => setLocation("/orcamentos/novo")}
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -138,14 +138,14 @@ export default function OrcamentosNew() {
                   placeholder="Pesquisar por número, cliente..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-9"
+                  className="pl-10"
                 />
               </div>
             </div>
 
             {/* Filtro de status */}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px] h-9">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -158,15 +158,15 @@ export default function OrcamentosNew() {
             </Select>
 
             {/* Botões de ação */}
-            <Button variant="outline" size="sm" className="h-9">
+            <Button variant="outline" size="sm">
               <Filter className="w-4 h-4 mr-2" />
               Filtros
             </Button>
-            <Button variant="outline" size="sm" className="h-9">
+            <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
               Exportar
             </Button>
-            <Button variant="outline" size="sm" className="h-9">
+            <Button variant="outline" size="sm">
               <Printer className="w-4 h-4 mr-2" />
               Imprimir
             </Button>

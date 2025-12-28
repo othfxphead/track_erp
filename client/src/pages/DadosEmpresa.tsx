@@ -172,7 +172,7 @@ export default function DadosEmpresa() {
                   onChange={(e) =>
                     handleInputChange("razaoSocial", e.target.value)
                   }
-                  className="mt-1 h-9"
+                  className="mt-1"
                   required
                 />
               </div>
@@ -186,7 +186,7 @@ export default function DadosEmpresa() {
                   onChange={(e) =>
                     handleInputChange("nomeFantasia", e.target.value)
                   }
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function DadosEmpresa() {
                   value={formData.cnpj}
                   onChange={(e) => handleInputChange("cnpj", e.target.value)}
                   placeholder="00.000.000/0000-00"
-                  className="mt-1 h-9"
+                  className="mt-1"
                   maxLength={18}
                   required
                 />
@@ -220,7 +220,7 @@ export default function DadosEmpresa() {
                   onChange={(e) =>
                     handleInputChange("inscricaoEstadual", e.target.value)
                   }
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
               <div>
@@ -236,7 +236,7 @@ export default function DadosEmpresa() {
                   onChange={(e) =>
                     handleInputChange("inscricaoMunicipal", e.target.value)
                   }
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
             </div>
@@ -254,7 +254,7 @@ export default function DadosEmpresa() {
                     handleInputChange("telefone", e.target.value)
                   }
                   placeholder="(00) 0000-0000"
-                  className="mt-1 h-9"
+                  className="mt-1"
                   maxLength={15}
                 />
               </div>
@@ -267,7 +267,7 @@ export default function DadosEmpresa() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
             </div>
@@ -284,7 +284,7 @@ export default function DadosEmpresa() {
                   onChange={(e) =>
                     handleInputChange("endereco", e.target.value)
                   }
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
               <div className="md:col-span-2">
@@ -295,7 +295,7 @@ export default function DadosEmpresa() {
                   id="numero"
                   value={formData.numero}
                   onChange={(e) => handleInputChange("numero", e.target.value)}
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
               <div className="md:col-span-2">
@@ -308,7 +308,7 @@ export default function DadosEmpresa() {
                   onChange={(e) =>
                     handleInputChange("complemento", e.target.value)
                   }
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ export default function DadosEmpresa() {
                   id="bairro"
                   value={formData.bairro}
                   onChange={(e) => handleInputChange("bairro", e.target.value)}
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
               <div className="md:col-span-4">
@@ -334,7 +334,7 @@ export default function DadosEmpresa() {
                   id="cidade"
                   value={formData.cidade}
                   onChange={(e) => handleInputChange("cidade", e.target.value)}
-                  className="mt-1 h-9"
+                  className="mt-1"
                 />
               </div>
               <div className="md:col-span-2">
@@ -345,7 +345,7 @@ export default function DadosEmpresa() {
                   value={formData.estado}
                   onValueChange={(value) => handleInputChange("estado", value)}
                 >
-                  <SelectTrigger className="mt-1 h-9">
+                  <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -366,7 +366,7 @@ export default function DadosEmpresa() {
                   value={formData.cep}
                   onChange={(e) => handleInputChange("cep", e.target.value)}
                   placeholder="00000-000"
-                  className="mt-1 h-9"
+                  className="mt-1"
                   maxLength={9}
                 />
               </div>
@@ -376,7 +376,7 @@ export default function DadosEmpresa() {
             <div className="flex justify-end pt-4 border-t">
               <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 h-9 px-6"
+                className="bg-blue-600 hover:bg-blue-700 px-6"
               >
                 Salvar
               </Button>

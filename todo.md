@@ -695,3 +695,8 @@
 - [x] Alterar componente Button base para height 22px
 - [x] Alterar padding padrão para 5px horizontal
 - [x] Alterar border-radius padrão para 2px (rounded-sm)
+
+## Ajuste de Botões em Páginas Específicas
+- [x] Ajustar botões na página de Orçamentos
+- [x] Ajustar botões na página Nova Venda
+- [x] Ajustar botões na página Dados da Empresa
