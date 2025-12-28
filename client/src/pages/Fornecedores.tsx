@@ -29,6 +29,7 @@ import { Plus, Phone, Mail, History } from "lucide-react";
 import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function Fornecedores() {
   const [open, setOpen] = useState(false);
@@ -46,38 +47,53 @@ export default function Fornecedores() {
     observacoes: "",
   });
 
-  // Mock data - em produção viria do backend
-  const fornecedores = [
-    {
-      id: 1,
-      tipo: "juridica",
-      nome: "Tech Distribuidora LTDA",
-      cpfCnpj: "12.345.678/0001-90",
-      email: "contato@techdist.com.br",
-      telefone: "(11) 3456-7890",
-      celular: "(11) 98765-4321",
-      cidade: "São Paulo",
-      estado: "SP",
-      ativo: true,
+  // Buscar fornecedores do backend
+  const { data: fornecedores = [], isLoading } = trpc.fornecedores.list.useQuery();
+  const createMutation = trpc.fornecedores.create.useMutation({
+    onSuccess: () => {
+      toast.success("Fornecedor criado com sucesso!");
+      setOpen(false);
+      setFormData({
+        tipo: "juridica",
+        nome: "",
+        cpfCnpj: "",
+        email: "",
+        telefone: "",
+        celular: "",
+        endereco: "",
+        cidade: "",
+        estado: "",
+        cep: "",
+        observacoes: "",
+      });
     },
-    {
-      id: 2,
-      tipo: "juridica",
-      nome: "Eletrônicos Brasil S.A.",
-      cpfCnpj: "98.765.432/0001-10",
-      email: "vendas@eletronicosb.com",
-      telefone: "(21) 2345-6789",
-      celular: "(21) 99876-5432",
-      cidade: "Rio de Janeiro",
-      estado: "RJ",
-      ativo: true,
+    onError: (error) => {
+      toast.error("Erro ao criar fornecedor: " + error.message);
     },
-  ];
+  });
+  const deleteMutation = trpc.fornecedores.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Fornecedor excluído com sucesso!");
+    },
+    onError: (error) => {
+      toast.error("Erro ao excluir fornecedor: " + error.message);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Fornecedor criado com sucesso!");
-    setOpen(false);
+    createMutation.mutate({
+      tipo: formData.tipo,
+      nome: formData.nome,
+      cpfCnpj: formData.cpfCnpj,
+      email: formData.email || undefined,
+      telefone: formData.telefone || undefined,
+      endereco: formData.endereco || undefined,
+      cidade: formData.cidade || undefined,
+      estado: formData.estado || undefined,
+      cep: formData.cep || undefined,
+      observacoes: formData.observacoes || undefined,
+    });
   };
 
   const formatCpfCnpj = (value: string) => {
@@ -310,10 +326,10 @@ export default function Fornecedores() {
                             {fornecedor.email}
                           </div>
                         )}
-                        {fornecedor.celular && (
+                        {fornecedor.telefone && (
                           <div className="flex items-center gap-1 text-sm">
                             <Phone className="h-3 w-3" />
-                            {fornecedor.celular}
+                            {fornecedor.telefone}
                           </div>
                         )}
                       </div>

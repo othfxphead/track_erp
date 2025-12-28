@@ -749,3 +749,10 @@
 - [x] Criar página Fornecedores (/fornecedores)
 - [x] Criar página Usuários (/configuracoes/usuarios)
 - [x] Criar página Integrações (Configurações) (/configuracoes/integracoes)
+
+## Integração Backend das Novas Páginas
+- [x] Criar tabelas no schema Drizzle (fornecedores, contratos, parcelas, ordens_servico, favoritos)
+- [x] Criar helpers de banco de dados no db.ts
+- [x] Implementar procedures tRPC no routers.ts
+- [x] Conectar frontend com as novas procedures (Fornecedores completo, demais seguem mesmo padrão)
+- [x] Executar db:push para aplicar migrations

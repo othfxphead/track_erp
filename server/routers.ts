@@ -216,6 +216,51 @@ export const appRouter = router({
         });
         return { success: true, id };
       }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getFornecedorById(input.id);
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        data: z.object({
+          tipo: z.enum(["fisica", "juridica"]).optional(),
+          nome: z.string().optional(),
+          cpfCnpj: z.string().optional(),
+          email: z.string().email().optional(),
+          telefone: z.string().optional(),
+          endereco: z.string().optional(),
+          cidade: z.string().optional(),
+          estado: z.string().optional(),
+          cep: z.string().optional(),
+          observacoes: z.string().optional(),
+          ativo: z.boolean().optional(),
+        }),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await db.updateFornecedor(input.id, input.data);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "update_fornecedor",
+          modulo: "fornecedores",
+          descricao: `Fornecedor ID ${input.id} atualizado`,
+          dadosDepois: JSON.stringify(input.data),
+        });
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteFornecedor(input.id);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "delete_fornecedor",
+          modulo: "fornecedores",
+          descricao: `Fornecedor ID ${input.id} excluído`,
+        });
+        return { success: true };
+      }),
   }),
 
   // Produtos
@@ -696,6 +741,268 @@ export const appRouter = router({
 
   // Integrações
   integrations: integrationsRouter,
+
+  // Contratos
+  contratos: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllContratos();
+    }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getContratoById(input.id);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        numero: z.string(),
+        clienteId: z.number(),
+        tipo: z.enum(["mensal", "trimestral", "semestral", "anual"]),
+        dataInicio: z.date(),
+        dataFim: z.date(),
+        valor: z.string(),
+        diaVencimento: z.number(),
+        status: z.enum(["ativo", "pendente", "expirado", "cancelado"]).default("ativo"),
+        observacoes: z.string().optional(),
+        itens: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createContrato({ ...input, usuarioId: ctx.user.id });
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "create_contrato",
+          modulo: "contratos",
+          descricao: `Contrato ${input.numero} criado`,
+          dadosDepois: JSON.stringify(input),
+        });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        data: z.object({
+          numero: z.string().optional(),
+          clienteId: z.number().optional(),
+          tipo: z.enum(["mensal", "trimestral", "semestral", "anual"]).optional(),
+          dataInicio: z.date().optional(),
+          dataFim: z.date().optional(),
+          valor: z.string().optional(),
+          diaVencimento: z.number().optional(),
+          status: z.enum(["ativo", "pendente", "expirado", "cancelado"]).optional(),
+          observacoes: z.string().optional(),
+          itens: z.string().optional(),
+        }),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await db.updateContrato(input.id, input.data);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "update_contrato",
+          modulo: "contratos",
+          descricao: `Contrato ID ${input.id} atualizado`,
+          dadosDepois: JSON.stringify(input.data),
+        });
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteContrato(input.id);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "delete_contrato",
+          modulo: "contratos",
+          descricao: `Contrato ID ${input.id} excluído`,
+        });
+        return { success: true };
+      }),
+  }),
+
+  // Parcelas
+  parcelas: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllParcelas();
+    }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getParcelaById(input.id);
+      }),
+    getByVendaId: protectedProcedure
+      .input(z.object({ vendaId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getParcelasByVendaId(input.vendaId);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        vendaId: z.number(),
+        contratoId: z.number().optional(),
+        numero: z.string(),
+        dataVencimento: z.date(),
+        dataPagamento: z.date().optional(),
+        valor: z.string(),
+        status: z.enum(["pendente", "pago", "vencido"]).default("pendente"),
+        formaPagamento: z.string().optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createParcela(input);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "create_parcela",
+          modulo: "parcelas",
+          descricao: `Parcela ${input.numero} criada`,
+          dadosDepois: JSON.stringify(input),
+        });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        data: z.object({
+          dataVencimento: z.date().optional(),
+          dataPagamento: z.date().optional(),
+          valor: z.string().optional(),
+          status: z.enum(["pendente", "pago", "vencido"]).optional(),
+          formaPagamento: z.string().optional(),
+          observacoes: z.string().optional(),
+        }),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await db.updateParcela(input.id, input.data);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "update_parcela",
+          modulo: "parcelas",
+          descricao: `Parcela ID ${input.id} atualizada`,
+          dadosDepois: JSON.stringify(input.data),
+        });
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteParcela(input.id);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "delete_parcela",
+          modulo: "parcelas",
+          descricao: `Parcela ID ${input.id} excluída`,
+        });
+        return { success: true };
+      }),
+  }),
+
+  // Ordens de Serviço
+  ordensServico: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllOrdensServico();
+    }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getOrdemServicoById(input.id);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        numero: z.string(),
+        clienteId: z.number(),
+        servicoId: z.number(),
+        tecnicoId: z.number().optional(),
+        dataPrevista: z.date(),
+        dataConclusao: z.date().optional(),
+        valor: z.string(),
+        status: z.enum(["pendente", "em_andamento", "concluida", "cancelada"]).default("pendente"),
+        descricaoProblema: z.string().optional(),
+        descricaoSolucao: z.string().optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createOrdemServico({ ...input, usuarioId: ctx.user.id });
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "create_ordem_servico",
+          modulo: "ordens_servico",
+          descricao: `Ordem de serviço ${input.numero} criada`,
+          dadosDepois: JSON.stringify(input),
+        });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        data: z.object({
+          numero: z.string().optional(),
+          clienteId: z.number().optional(),
+          servicoId: z.number().optional(),
+          tecnicoId: z.number().optional(),
+          dataPrevista: z.date().optional(),
+          dataConclusao: z.date().optional(),
+          valor: z.string().optional(),
+          status: z.enum(["pendente", "em_andamento", "concluida", "cancelada"]).optional(),
+          descricaoProblema: z.string().optional(),
+          descricaoSolucao: z.string().optional(),
+          observacoes: z.string().optional(),
+        }),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await db.updateOrdemServico(input.id, input.data);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "update_ordem_servico",
+          modulo: "ordens_servico",
+          descricao: `Ordem de serviço ID ${input.id} atualizada`,
+          dadosDepois: JSON.stringify(input.data),
+        });
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteOrdemServico(input.id);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "delete_ordem_servico",
+          modulo: "ordens_servico",
+          descricao: `Ordem de serviço ID ${input.id} excluída`,
+        });
+        return { success: true };
+      }),
+  }),
+
+  // Favoritos
+  favoritos: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return await db.getAllFavoritos(ctx.user.id);
+    }),
+    create: protectedProcedure
+      .input(z.object({
+        tipo: z.enum(["produto", "cliente", "fornecedor", "venda", "servico", "orcamento"]),
+        referenciaId: z.number(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createFavorito({
+          usuarioId: ctx.user.id,
+          tipo: input.tipo,
+          referenciaId: input.referenciaId,
+        });
+        return { success: true, id };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteFavorito(input.id);
+        return { success: true };
+      }),
+    deleteByRef: protectedProcedure
+      .input(z.object({
+        tipo: z.string(),
+        referenciaId: z.number(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteFavoritoByRef(ctx.user.id, input.tipo, input.referenciaId);
+        return { success: true };
+      }),
+  }),
 
   // Logs
   logs: router({

@@ -353,3 +353,86 @@ export const notificacoes = mysqlTable("notificacoes", {
 
 export type Notificacao = typeof notificacoes.$inferSelect;
 export type InsertNotificacao = typeof notificacoes.$inferInsert;
+
+/**
+ * Contratos
+ */
+export const contratos = mysqlTable("contratos", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: varchar("numero", { length: 50 }).notNull().unique(),
+  clienteId: int("clienteId").notNull(),
+  tipo: mysqlEnum("tipo", ["mensal", "trimestral", "semestral", "anual"]).notNull(),
+  dataInicio: timestamp("dataInicio").notNull(),
+  dataFim: timestamp("dataFim").notNull(),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  diaVencimento: int("diaVencimento").notNull(), // Dia do mês para vencimento
+  status: mysqlEnum("status", ["ativo", "pendente", "expirado", "cancelado"]).default("ativo").notNull(),
+  observacoes: text("observacoes"),
+  itens: text("itens").notNull(), // JSON array of services/products
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Contrato = typeof contratos.$inferSelect;
+export type InsertContrato = typeof contratos.$inferInsert;
+
+/**
+ * Parcelas a Receber
+ */
+export const parcelas = mysqlTable("parcelas", {
+  id: int("id").autoincrement().primaryKey(),
+  vendaId: int("vendaId").notNull(),
+  contratoId: int("contratoId"), // Se vier de contrato
+  numero: varchar("numero", { length: 20 }).notNull(), // Ex: 001/003
+  dataVencimento: timestamp("dataVencimento").notNull(),
+  dataPagamento: timestamp("dataPagamento"),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pendente", "pago", "vencido"]).default("pendente").notNull(),
+  formaPagamento: varchar("formaPagamento", { length: 50 }),
+  observacoes: text("observacoes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Parcela = typeof parcelas.$inferSelect;
+export type InsertParcela = typeof parcelas.$inferInsert;
+
+/**
+ * Ordens de Serviço
+ */
+export const ordensServico = mysqlTable("ordensServico", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: varchar("numero", { length: 50 }).notNull().unique(),
+  clienteId: int("clienteId").notNull(),
+  servicoId: int("servicoId").notNull(),
+  tecnicoId: int("tecnicoId"), // Usuário responsável
+  dataAbertura: timestamp("dataAbertura").defaultNow().notNull(),
+  dataPrevista: timestamp("dataPrevista").notNull(),
+  dataConclusao: timestamp("dataConclusao"),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pendente", "em_andamento", "concluida", "cancelada"]).default("pendente").notNull(),
+  descricaoProblema: text("descricaoProblema"),
+  descricaoSolucao: text("descricaoSolucao"),
+  observacoes: text("observacoes"),
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OrdemServico = typeof ordensServico.$inferSelect;
+export type InsertOrdemServico = typeof ordensServico.$inferInsert;
+
+/**
+ * Favoritos
+ */
+export const favoritos = mysqlTable("favoritos", {
+  id: int("id").autoincrement().primaryKey(),
+  usuarioId: int("usuarioId").notNull(),
+  tipo: mysqlEnum("tipo", ["produto", "cliente", "fornecedor", "venda", "servico", "orcamento"]).notNull(),
+  referenciaId: int("referenciaId").notNull(), // ID do item favoritado
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Favorito = typeof favoritos.$inferSelect;
+export type InsertFavorito = typeof favoritos.$inferInsert;

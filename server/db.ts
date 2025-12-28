@@ -15,7 +15,11 @@ import {
   lancamentosFinanceiros, InsertLancamentoFinanceiro,
   notasFiscais, InsertNotaFiscal,
   logsAuditoria, InsertLogAuditoria,
-  logsIntegracoes, InsertLogIntegracao
+  logsIntegracoes, InsertLogIntegracao,
+  contratos, InsertContrato,
+  parcelas, InsertParcela,
+  ordensServico, InsertOrdemServico,
+  favoritos, InsertFavorito
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -177,6 +181,25 @@ export async function createFornecedor(data: InsertFornecedor) {
   if (!db) return;
   const result = await db.insert(fornecedores).values(data);
   return result[0].insertId;
+}
+
+export async function getFornecedorById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(fornecedores).where(eq(fornecedores.id, id));
+  return result[0];
+}
+
+export async function updateFornecedor(id: number, data: Partial<InsertFornecedor>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(fornecedores).set(data).where(eq(fornecedores.id, id));
+}
+
+export async function deleteFornecedor(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(fornecedores).where(eq(fornecedores.id, id));
 }
 
 // ============= PRODUTOS =============
@@ -678,3 +701,141 @@ export async function getNotificacoes(usuarioId: number) {
 }
 
 
+
+
+// ============= CONTRATOS =============
+export async function getAllContratos() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(contratos).orderBy(desc(contratos.createdAt));
+}
+
+export async function getContratoById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(contratos).where(eq(contratos.id, id));
+  return result[0];
+}
+
+export async function createContrato(data: InsertContrato) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(contratos).values(data);
+  return result[0].insertId;
+}
+
+export async function updateContrato(id: number, data: Partial<InsertContrato>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(contratos).set(data).where(eq(contratos.id, id));
+}
+
+export async function deleteContrato(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(contratos).where(eq(contratos.id, id));
+}
+
+// ============= PARCELAS =============
+export async function getAllParcelas() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(parcelas).orderBy(desc(parcelas.dataVencimento));
+}
+
+export async function getParcelaById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(parcelas).where(eq(parcelas.id, id));
+  return result[0];
+}
+
+export async function getParcelasByVendaId(vendaId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(parcelas).where(eq(parcelas.vendaId, vendaId));
+}
+
+export async function createParcela(data: InsertParcela) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(parcelas).values(data);
+  return result[0].insertId;
+}
+
+export async function updateParcela(id: number, data: Partial<InsertParcela>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(parcelas).set(data).where(eq(parcelas.id, id));
+}
+
+export async function deleteParcela(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(parcelas).where(eq(parcelas.id, id));
+}
+
+// ============= ORDENS DE SERVIÇO =============
+export async function getAllOrdensServico() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(ordensServico).orderBy(desc(ordensServico.createdAt));
+}
+
+export async function getOrdemServicoById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(ordensServico).where(eq(ordensServico.id, id));
+  return result[0];
+}
+
+export async function createOrdemServico(data: InsertOrdemServico) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(ordensServico).values(data);
+  return result[0].insertId;
+}
+
+export async function updateOrdemServico(id: number, data: Partial<InsertOrdemServico>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(ordensServico).set(data).where(eq(ordensServico.id, id));
+}
+
+export async function deleteOrdemServico(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(ordensServico).where(eq(ordensServico.id, id));
+}
+
+// ============= FAVORITOS =============
+export async function getAllFavoritos(usuarioId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(favoritos)
+    .where(eq(favoritos.usuarioId, usuarioId))
+    .orderBy(desc(favoritos.createdAt));
+}
+
+export async function createFavorito(data: InsertFavorito) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(favoritos).values(data);
+  return result[0].insertId;
+}
+
+export async function deleteFavorito(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(favoritos).where(eq(favoritos.id, id));
+}
+
+export async function deleteFavoritoByRef(usuarioId: number, tipo: string, referenciaId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(favoritos).where(and(
+    eq(favoritos.usuarioId, usuarioId),
+    eq(favoritos.tipo, tipo as any),
+    eq(favoritos.referenciaId, referenciaId)
+  ));
+}
