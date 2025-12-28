@@ -675,3 +675,6 @@
 
 ## Ajuste Final de Menu
 - [x] Remover bordas arredondadas do menu lateral principal (rounded-r-2xl)
+
+## Ajuste de Largura do Submenu
+- [x] Reduzir largura do submenu de 320px (w-80) para 250px
