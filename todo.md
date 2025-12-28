@@ -711,3 +711,7 @@
 
 ## Correção de Botões Nova Venda
 - [x] Corrigir botões da página Nova Venda para seguir padrão de cores
+
+## Ajuste de Dimensões do Botão Nova Venda
+- [x] Verificar por que o botão não está herdando o padrão h-[22px] px-[5px]
+- [x] Aplicar classes corretas para seguir padrão global

@@ -203,7 +203,7 @@ export default function VendasCompleta() {
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-green-600 hover:bg-green-700 text-white">
+              <Button className="h-[22px] px-[5px] bg-green-600 hover:bg-green-700 text-white">
                 <Plus className="h-4 w-4 mr-2" />
                 Nova Venda
               </Button>
