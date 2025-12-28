@@ -836,3 +836,7 @@
 - [x] Implementar dialog de cancelamento com justificativa
 - [x] Adicionar rota /notas-emitidas no App.tsx
 - [x] Adicionar link "Notas emitidas" nos submenus Produtos e Serviços
+
+
+## Bug Fixes
+- [x] Corrigir erro de inserção em configFiscais - campo usuarioId não está sendo definido

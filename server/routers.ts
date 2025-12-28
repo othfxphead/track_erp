@@ -1482,7 +1482,7 @@ export const appRouter = router({
         nfceCodigoCsc: z.string().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        const id = await db.upsertConfigFiscal(input);
+        const id = await db.upsertConfigFiscal({ ...input, usuarioId: ctx.user.id });
         await db.createLogAuditoria({
           usuarioId: ctx.user.id,
           acao: "update",
