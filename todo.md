@@ -682,3 +682,7 @@
 ## Ajuste Adicional do Submenu
 - [x] Reduzir largura do submenu de 250px para 200px
 - [x] Diminuir tamanho do texto do submenu (título e itens)
+
+## Ajustes do Menu Principal
+- [x] Reduzir altura dos ícones de 48px (h-12) para 45px (h-[45px])
+- [x] Remover scroll do menu lateral (overflow-y-auto) deixando-o fixo

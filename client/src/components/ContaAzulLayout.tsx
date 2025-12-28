@@ -171,7 +171,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
             )}
           </button>
 
-          <nav className="flex flex-col h-full overflow-y-auto py-4 scrollbar-hide">
+          <nav className="flex flex-col h-full py-4">
             {menuItems.map((item) => (
               <div key={item.id} className="relative">
                 {item.submenu ? (
@@ -185,7 +185,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            className={`w-full flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors ${
+                            className={`w-full flex items-center justify-center h-[45px] hover:bg-[#0088C0] transition-colors ${
                               location.startsWith(item.submenu[0].path.split("/")[1])
                                 ? "bg-[#0088C0] border-l-4 border-white"
                                 : ""
@@ -201,7 +201,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                     ) : (
                       <button
                         onClick={() => toggleMenu(item.id)}
-                        className={`w-full flex items-center justify-between px-4 h-12 hover:bg-[#0088C0] transition-colors ${
+                        className={`w-full flex items-center justify-between px-4 h-[45px] hover:bg-[#0088C0] transition-colors ${
                           expandedMenus.includes(item.id) ? "bg-[#0088C0]" : ""
                         }`}
                       >
@@ -265,7 +265,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div
-                            className={`flex items-center justify-center h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
+                            className={`flex items-center justify-center h-[45px] hover:bg-[#0088C0] transition-colors cursor-pointer ${
                               location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
                             }`}
                           >
@@ -278,7 +278,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
                       </Tooltip>
                     ) : (
                       <div
-                        className={`flex items-center gap-3 px-4 h-12 hover:bg-[#0088C0] transition-colors cursor-pointer ${
+                        className={`flex items-center gap-3 px-4 h-[45px] hover:bg-[#0088C0] transition-colors cursor-pointer ${
                           location === item.path ? "bg-[#0088C0] border-l-4 border-white" : ""
                         }`}
                       >
