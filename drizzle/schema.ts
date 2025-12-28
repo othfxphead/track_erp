@@ -242,7 +242,7 @@ export const contasBancarias = mysqlTable("contasBancarias", {
   principal: boolean("principal").default(false).notNull(),
   integracaoAsaas: boolean("integracaoAsaas").default(false).notNull(),
   integracaoSicredi: boolean("integracaoSicredi").default(false).notNull(),
-  dadosIntegracao: text("dadosIntegracao"), // JSON with API credentials
+  dadosIntegracao: text("dadosIntegracao"), // JSON: {tipoBanco, apiClientId, apiClientSecret, apiCertificado, apiAmbiente, ultimaSincronizacao, sincronizacaoAutomatica}
   observacoes: text("observacoes"),
   ativo: boolean("ativo").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

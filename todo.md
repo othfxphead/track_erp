@@ -784,3 +784,12 @@
 - [x] Incluir todas as 5 páginas financeiras no submenu
 - [x] Manter FinanceiroCompleto como primeira opção (Visão Geral)
 - [x] Testar navegação entre as páginas
+
+## Infraestrutura de Integração Bancária
+- [x] Schema contasBancarias já possui campo dadosIntegracao (JSON) para credenciais
+- [x] Criar serviço de integração bancária (server/services/bankIntegration.ts)
+- [x] Criar mapeadores de dados bancários (DDA, Extrato, Movimentações)
+- [ ] Implementar procedures tRPC para sincronização manual (syncDDA, syncExtrato)
+- [ ] Criar página de Contas Bancárias com CRUD completo
+- [ ] Adicionar interface de configuração de credenciais de API no modal
+- [x] Documentar processo de configuração (ver cabeçalho de bankIntegration.ts)
