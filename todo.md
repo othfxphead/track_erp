@@ -762,3 +762,19 @@
 - [x] Conectar página de Parcelas ao backend tRPC
 - [x] Conectar página de Ordens de Serviço ao backend tRPC
 - [x] Testar criação, listagem e exclusão em todas as páginas
+
+## Módulo Financeiro Completo
+- [x] Criar tabela contasPagar no schema
+- [x] Criar tabela contasReceber no schema (integrar com parcelas)
+- [x] Criar tabela dda no schema
+- [x] Criar tabela inadimplentes no schema
+- [x] Criar tabela extratosBancarios no schema
+- [x] Aplicar migrations (db:push)
+- [x] Criar helpers de banco de dados para todas as tabelas
+- [x] Criar procedures tRPC para todas as tabelas
+- [x] Criar página Contas a Pagar com backend
+- [ ] Criar página Contas a Receber com backend
+- [ ] Criar página DDA com backend
+- [ ] Criar página Inadimplentes com backend
+- [ ] Criar página Extrato Bancário com backend
+- [ ] Registrar rotas no App.tsx

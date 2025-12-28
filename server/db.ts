@@ -19,7 +19,12 @@ import {
   contratos, InsertContrato,
   parcelas, InsertParcela,
   ordensServico, InsertOrdemServico,
-  favoritos, InsertFavorito
+  favoritos, InsertFavorito,
+  contasPagar, InsertContaPagar,
+  contasReceber, InsertContaReceber,
+  dda, InsertDDA,
+  inadimplentes, InsertInadimplente,
+  extratosBancarios, InsertExtratoBancario
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -839,3 +844,175 @@ export async function deleteFavoritoByRef(usuarioId: number, tipo: string, refer
     eq(favoritos.referenciaId, referenciaId)
   ));
 }
+
+// ============= CONTAS A PAGAR =============
+export async function getAllContasPagar() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(contasPagar).orderBy(desc(contasPagar.dataVencimento));
+}
+
+export async function getContaPagarById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(contasPagar).where(eq(contasPagar.id, id));
+  return result[0] || null;
+}
+
+export async function createContaPagar(data: InsertContaPagar) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(contasPagar).values(data);
+  return result[0].insertId;
+}
+
+export async function updateContaPagar(id: number, data: Partial<InsertContaPagar>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(contasPagar).set(data).where(eq(contasPagar.id, id));
+}
+
+export async function deleteContaPagar(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(contasPagar).where(eq(contasPagar.id, id));
+}
+
+// ============= CONTAS A RECEBER =============
+export async function getAllContasReceber() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(contasReceber).orderBy(desc(contasReceber.dataVencimento));
+}
+
+export async function getContaReceberById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(contasReceber).where(eq(contasReceber.id, id));
+  return result[0] || null;
+}
+
+export async function createContaReceber(data: InsertContaReceber) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(contasReceber).values(data);
+  return result[0].insertId;
+}
+
+export async function updateContaReceber(id: number, data: Partial<InsertContaReceber>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(contasReceber).set(data).where(eq(contasReceber.id, id));
+}
+
+export async function deleteContaReceber(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(contasReceber).where(eq(contasReceber.id, id));
+}
+
+// ============= DDA =============
+export async function getAllDDA() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(dda).orderBy(desc(dda.dataVencimento));
+}
+
+export async function getDDAById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(dda).where(eq(dda.id, id));
+  return result[0] || null;
+}
+
+export async function createDDA(data: InsertDDA) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(dda).values(data);
+  return result[0].insertId;
+}
+
+export async function updateDDA(id: number, data: Partial<InsertDDA>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(dda).set(data).where(eq(dda.id, id));
+}
+
+export async function deleteDDA(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(dda).where(eq(dda.id, id));
+}
+
+// ============= INADIMPLENTES =============
+export async function getAllInadimplentes() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(inadimplentes).orderBy(desc(inadimplentes.diasAtraso));
+}
+
+export async function getInadimplenteById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(inadimplentes).where(eq(inadimplentes.id, id));
+  return result[0] || null;
+}
+
+export async function createInadimplente(data: InsertInadimplente) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(inadimplentes).values(data);
+  return result[0].insertId;
+}
+
+export async function updateInadimplente(id: number, data: Partial<InsertInadimplente>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(inadimplentes).set(data).where(eq(inadimplentes.id, id));
+}
+
+export async function deleteInadimplente(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(inadimplentes).where(eq(inadimplentes.id, id));
+}
+
+// ============= EXTRATOS BANCÁRIOS =============
+export async function getAllExtratosBancarios(contaBancariaId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  if (contaBancariaId) {
+    return await db.select().from(extratosBancarios)
+      .where(eq(extratosBancarios.contaBancariaId, contaBancariaId))
+      .orderBy(desc(extratosBancarios.data));
+  }
+  return await db.select().from(extratosBancarios).orderBy(desc(extratosBancarios.data));
+}
+
+export async function getExtratoBancarioById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(extratosBancarios).where(eq(extratosBancarios.id, id));
+  return result[0] || null;
+}
+
+export async function createExtratoBancario(data: InsertExtratoBancario) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(extratosBancarios).values(data);
+  return result[0].insertId;
+}
+
+export async function updateExtratoBancario(id: number, data: Partial<InsertExtratoBancario>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(extratosBancarios).set(data).where(eq(extratosBancarios.id, id));
+}
+
+export async function deleteExtratoBancario(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(extratosBancarios).where(eq(extratosBancarios.id, id));
+}
+
+

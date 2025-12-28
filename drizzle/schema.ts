@@ -232,14 +232,18 @@ export type InsertMovimentacaoEstoque = typeof movimentacoesEstoque.$inferInsert
 export const contasBancarias = mysqlTable("contasBancarias", {
   id: int("id").autoincrement().primaryKey(),
   banco: varchar("banco", { length: 100 }).notNull(),
+  codigoBanco: varchar("codigoBanco", { length: 10 }),
   agencia: varchar("agencia", { length: 20 }).notNull(),
   conta: varchar("conta", { length: 30 }).notNull(),
+  digito: varchar("digito", { length: 5 }),
   tipo: mysqlEnum("tipo", ["corrente", "poupanca", "investimento"]).default("corrente").notNull(),
-  saldoInicial: decimal("saldoInicial", { precision: 10, scale: 2 }).default("0").notNull(),
-  saldoAtual: decimal("saldoAtual", { precision: 10, scale: 2 }).default("0").notNull(),
+  saldoInicial: decimal("saldoInicial", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  saldoAtual: decimal("saldoAtual", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  principal: boolean("principal").default(false).notNull(),
   integracaoAsaas: boolean("integracaoAsaas").default(false).notNull(),
   integracaoSicredi: boolean("integracaoSicredi").default(false).notNull(),
   dadosIntegracao: text("dadosIntegracao"), // JSON with API credentials
+  observacoes: text("observacoes"),
   ativo: boolean("ativo").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -436,3 +440,138 @@ export const favoritos = mysqlTable("favoritos", {
 
 export type Favorito = typeof favoritos.$inferSelect;
 export type InsertFavorito = typeof favoritos.$inferInsert;
+
+/**
+ * Contas a Pagar - Gestão de despesas e pagamentos
+ */
+export const contasPagar = mysqlTable("contasPagar", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: varchar("numero", { length: 50 }).notNull().unique(),
+  fornecedorId: int("fornecedorId"),
+  compraId: int("compraId"), // Referência à compra que gerou a conta
+  descricao: text("descricao").notNull(),
+  categoria: varchar("categoria", { length: 100 }), // Ex: Fornecedores, Impostos, Salários, Aluguel
+  dataEmissao: timestamp("dataEmissao").defaultNow().notNull(),
+  dataVencimento: timestamp("dataVencimento").notNull(),
+  dataPagamento: timestamp("dataPagamento"),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  valorPago: decimal("valorPago", { precision: 10, scale: 2 }),
+  juros: decimal("juros", { precision: 10, scale: 2 }).default("0.00"),
+  desconto: decimal("desconto", { precision: 10, scale: 2 }).default("0.00"),
+  status: mysqlEnum("status", ["pendente", "pago", "vencido", "cancelado"]).default("pendente").notNull(),
+  formaPagamento: varchar("formaPagamento", { length: 50 }),
+  contaBancariaId: int("contaBancariaId"), // Conta usada para pagamento
+  observacoes: text("observacoes"),
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContaPagar = typeof contasPagar.$inferSelect;
+export type InsertContaPagar = typeof contasPagar.$inferInsert;
+
+/**
+ * Contas a Receber - Gestão de receitas (integra com parcelas)
+ */
+export const contasReceber = mysqlTable("contasReceber", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: varchar("numero", { length: 50 }).notNull().unique(),
+  clienteId: int("clienteId").notNull(),
+  vendaId: int("vendaId"), // Referência à venda que gerou a conta
+  parcelaId: int("parcelaId"), // Referência à parcela
+  descricao: text("descricao").notNull(),
+  categoria: varchar("categoria", { length: 100 }), // Ex: Vendas, Serviços, Outros
+  dataEmissao: timestamp("dataEmissao").defaultNow().notNull(),
+  dataVencimento: timestamp("dataVencimento").notNull(),
+  dataRecebimento: timestamp("dataRecebimento"),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  valorRecebido: decimal("valorRecebido", { precision: 10, scale: 2 }),
+  juros: decimal("juros", { precision: 10, scale: 2 }).default("0.00"),
+  desconto: decimal("desconto", { precision: 10, scale: 2 }).default("0.00"),
+  status: mysqlEnum("status", ["pendente", "recebido", "vencido", "cancelado"]).default("pendente").notNull(),
+  formaPagamento: varchar("formaPagamento", { length: 50 }),
+  contaBancariaId: int("contaBancariaId"), // Conta que recebeu o pagamento
+  observacoes: text("observacoes"),
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContaReceber = typeof contasReceber.$inferSelect;
+export type InsertContaReceber = typeof contasReceber.$inferInsert;
+
+/**
+ * DDA - Débito Direto Autorizado
+ */
+export const dda = mysqlTable("dda", {
+  id: int("id").autoincrement().primaryKey(),
+  contaPagarId: int("contaPagarId"), // Referência à conta a pagar
+  codigoBarras: varchar("codigoBarras", { length: 100 }).notNull().unique(),
+  linhaDigitavel: varchar("linhaDigitavel", { length: 100 }),
+  beneficiario: varchar("beneficiario", { length: 255 }).notNull(), // Quem vai receber
+  pagador: varchar("pagador", { length: 255 }).notNull(), // Quem vai pagar
+  dataEmissao: timestamp("dataEmissao").notNull(),
+  dataVencimento: timestamp("dataVencimento").notNull(),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pendente", "autorizado", "pago", "rejeitado", "cancelado"]).default("pendente").notNull(),
+  dataAutorizacao: timestamp("dataAutorizacao"),
+  dataPagamento: timestamp("dataPagamento"),
+  contaBancariaId: int("contaBancariaId").notNull(), // Conta que vai debitar
+  observacoes: text("observacoes"),
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DDA = typeof dda.$inferSelect;
+export type InsertDDA = typeof dda.$inferInsert;
+
+/**
+ * Inadimplentes - Controle de clientes inadimplentes
+ */
+export const inadimplentes = mysqlTable("inadimplentes", {
+  id: int("id").autoincrement().primaryKey(),
+  clienteId: int("clienteId").notNull(),
+  contaReceberId: int("contaReceberId"), // Conta que gerou a inadimplência
+  parcelaId: int("parcelaId"), // Parcela que gerou a inadimplência
+  valorDevido: decimal("valorDevido", { precision: 10, scale: 2 }).notNull(),
+  diasAtraso: int("diasAtraso").notNull(),
+  dataVencimento: timestamp("dataVencimento").notNull(),
+  dataInadimplencia: timestamp("dataInadimplencia").notNull(), // Quando ficou inadimplente
+  status: mysqlEnum("status", ["ativo", "negociando", "parcelado", "quitado", "protesto"]).default("ativo").notNull(),
+  observacoes: text("observacoes"),
+  acoesTomadas: text("acoesTomadas"), // JSON: [{data, acao, responsavel}]
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Inadimplente = typeof inadimplentes.$inferSelect;
+export type InsertInadimplente = typeof inadimplentes.$inferInsert;
+
+/**
+ * Extratos Bancários - Movimentações das contas PJ
+ */
+export const extratosBancarios = mysqlTable("extratosBancarios", {
+  id: int("id").autoincrement().primaryKey(),
+  contaBancariaId: int("contaBancariaId").notNull(),
+  tipo: mysqlEnum("tipo", ["entrada", "saida", "transferencia"]).notNull(),
+  categoria: varchar("categoria", { length: 100 }), // Ex: Venda, Pagamento Fornecedor, Taxa Bancária
+  descricao: text("descricao").notNull(),
+  data: timestamp("data").notNull(),
+  valor: decimal("valor", { precision: 10, scale: 2 }).notNull(),
+  saldoAnterior: decimal("saldoAnterior", { precision: 10, scale: 2 }).notNull(),
+  saldoPosterior: decimal("saldoPosterior", { precision: 10, scale: 2 }).notNull(),
+  contaPagarId: int("contaPagarId"), // Se foi pagamento de conta
+  contaReceberId: int("contaReceberId"), // Se foi recebimento de conta
+  ddaId: int("ddaId"), // Se foi pagamento via DDA
+  documento: varchar("documento", { length: 100 }), // Número do documento/cheque
+  conciliado: boolean("conciliado").default(false).notNull(), // Se foi conciliado com o extrato bancário real
+  observacoes: text("observacoes"),
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ExtratoBancario = typeof extratosBancarios.$inferSelect;
+export type InsertExtratoBancario = typeof extratosBancarios.$inferInsert;

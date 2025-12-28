@@ -1004,6 +1004,211 @@ export const appRouter = router({
       }),
   }),
 
+  // Contas a Pagar
+  contasPagar: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllContasPagar();
+    }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getContaPagarById(input.id);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        numero: z.string(),
+        fornecedorId: z.number().optional(),
+        compraId: z.number().optional(),
+        descricao: z.string(),
+        categoria: z.string().optional(),
+        dataVencimento: z.date(),
+        valor: z.string(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createContaPagar({ ...input, usuarioId: ctx.user.id });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pendente", "pago", "vencido", "cancelado"]).optional(),
+        dataPagamento: z.date().optional(),
+        valorPago: z.string().optional(),
+        formaPagamento: z.string().optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const { id, ...data } = input;
+        await db.updateContaPagar(id, data);
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteContaPagar(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // Contas a Receber
+  contasReceber: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllContasReceber();
+    }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getContaReceberById(input.id);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        numero: z.string(),
+        clienteId: z.number(),
+        vendaId: z.number().optional(),
+        parcelaId: z.number().optional(),
+        descricao: z.string(),
+        categoria: z.string().optional(),
+        dataVencimento: z.date(),
+        valor: z.string(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createContaReceber({ ...input, usuarioId: ctx.user.id });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pendente", "recebido", "vencido", "cancelado"]).optional(),
+        dataRecebimento: z.date().optional(),
+        valorRecebido: z.string().optional(),
+        formaPagamento: z.string().optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const { id, ...data} = input;
+        await db.updateContaReceber(id, data);
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteContaReceber(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // Extratos Bancários
+  extratosBancarios: router({
+    list: protectedProcedure
+      .input(z.object({ contaBancariaId: z.number().optional() }))
+      .query(async ({ input }) => {
+        return await db.getAllExtratosBancarios(input.contaBancariaId);
+      }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getExtratoBancarioById(input.id);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        contaBancariaId: z.number(),
+        tipo: z.enum(["entrada", "saida", "transferencia"]),
+        categoria: z.string().optional(),
+        descricao: z.string(),
+        data: z.date(),
+        valor: z.string(),
+        saldoAnterior: z.string(),
+        saldoPosterior: z.string(),
+        documento: z.string().optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createExtratoBancario({ ...input, usuarioId: ctx.user.id });
+        return { success: true, id };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteExtratoBancario(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // DDA
+  dda: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllDDA();
+    }),
+    create: protectedProcedure
+      .input(z.object({
+        codigoBarras: z.string(),
+        beneficiario: z.string(),
+        pagador: z.string(),
+        dataVencimento: z.date(),
+        valor: z.string(),
+        contaBancariaId: z.number(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createDDA({ ...input, dataEmissao: new Date(), usuarioId: ctx.user.id });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pendente", "autorizado", "pago", "rejeitado", "cancelado"]),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateDDA(id, data);
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteDDA(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // Inadimplentes
+  inadimplentes: router({
+    list: protectedProcedure.query(async () => {
+      return await db.getAllInadimplentes();
+    }),
+    create: protectedProcedure
+      .input(z.object({
+        clienteId: z.number(),
+        contaReceberId: z.number().optional(),
+        parcelaId: z.number().optional(),
+        valorDevido: z.string(),
+        diasAtraso: z.number(),
+        dataVencimento: z.date(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.createInadimplente({ ...input, dataInadimplencia: new Date(), usuarioId: ctx.user.id });
+        return { success: true, id };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["ativo", "negociando", "parcelado", "quitado", "protesto"]),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateInadimplente(id, data);
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteInadimplente(input.id);
+        return { success: true };
+      }),
+  }),
+
   // Logs
   logs: router({
     auditoria: protectedProcedure
