@@ -30,9 +30,12 @@ import { Plus, FileText, Trash2, ShoppingCart } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DialogEmissaoNota } from "@/components/DialogEmissaoNota";
 
 export default function VendasCompleta() {
   const [open, setOpen] = useState(false);
+  const [dialogEmissaoOpen, setDialogEmissaoOpen] = useState(false);
+  const [vendaSelecionada, setVendaSelecionada] = useState<{ id: number; tipo: "nfe" | "nfse" } | null>(null);
   const [formData, setFormData] = useState({
     clienteId: "",
     dataVenda: new Date(),
@@ -171,6 +174,7 @@ export default function VendasCompleta() {
     const statusConfig = {
       pendente: { label: "Pendente", color: "bg-warning/10 text-warning" },
       pago: { label: "Pago", color: "bg-success/10 text-success" },
+      faturado: { label: "Faturado", color: "bg-blue-100 text-blue-700" },
       cancelado: { label: "Cancelado", color: "bg-destructive/10 text-destructive" },
     };
 
@@ -476,15 +480,32 @@ export default function VendasCompleta() {
                           {getStatusBadge(venda.status)}
                         </TableCell>
                         <TableCell className="text-center">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              toast.info("Emissão de NF em desenvolvimento")
-                            }
-                          >
-                            <FileText className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center justify-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 px-2 text-xs"
+                              onClick={() => {
+                                setVendaSelecionada({ id: venda.id, tipo: "nfe" });
+                                setDialogEmissaoOpen(true);
+                              }}
+                            >
+                              <FileText className="h-3 w-3 mr-1" />
+                              NF-e
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 px-2 text-xs"
+                              onClick={() => {
+                                setVendaSelecionada({ id: venda.id, tipo: "nfse" });
+                                setDialogEmissaoOpen(true);
+                              }}
+                            >
+                              <FileText className="h-3 w-3 mr-1" />
+                              NFS-e
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
@@ -512,6 +533,21 @@ export default function VendasCompleta() {
             )}
           </CardContent>
         </Card>
+
+        {/* Dialog de Emissão de Nota Fiscal */}
+        {vendaSelecionada && (
+          <DialogEmissaoNota
+            open={dialogEmissaoOpen}
+            onOpenChange={setDialogEmissaoOpen}
+            vendaId={vendaSelecionada.id}
+            tipoNota={vendaSelecionada.tipo}
+            onSuccess={() => {
+              refetch();
+              setDialogEmissaoOpen(false);
+              setVendaSelecionada(null);
+            }}
+          />
+        )}
       </div>
   );
 }

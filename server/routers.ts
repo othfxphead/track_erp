@@ -881,6 +881,13 @@ export const appRouter = router({
             dataEmissao: new Date(),
           });
 
+          // 9.1. Atualizar status da venda para "faturado" se nota foi autorizada
+          if (resultado.status === "autorizado") {
+            await db.updateVenda(venda.id, {
+              status: "faturado",
+            });
+          }
+
           // 10. Atualizar último número da NF-e nas configurações
           if (resultado.numero) {
             await db.upsertConfigFiscal({
@@ -904,6 +911,7 @@ export const appRouter = router({
             chaveAcesso: resultado.chave_nfe,
             status: resultado.status,
             mensagem: resultado.mensagem_sefaz,
+            referencia: referencia,
           };
         } catch (error: any) {
           // Atualizar nota com erro
