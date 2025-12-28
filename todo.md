@@ -668,3 +668,7 @@
 
 ## Ajustes de Menu
 - [x] Remover item "Crédito" do menu lateral
+
+## Ajustes Visuais do Menu
+- [x] Remover espaços brancos entre menus quando expandem
+- [x] Preencher background do submenu com cor uniforme
