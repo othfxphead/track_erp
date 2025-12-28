@@ -441,6 +441,7 @@ export default function ComprasCompleta() {
                   <Button
                     type="button"
                     variant="outline"
+                    className="border-red-600 text-red-600 hover:bg-red-50"
                     onClick={() => setOpen(false)}
                   >
                     Cancelar
@@ -448,6 +449,7 @@ export default function ComprasCompleta() {
                   <Button
                     type="submit"
                     disabled={createMutation.isPending || itens.length === 0}
+                    className="bg-green-600 hover:bg-green-700 text-white"
                   >
                     {createMutation.isPending ? "Salvando..." : "Registrar Compra"}
                   </Button>
@@ -528,6 +530,7 @@ export default function ComprasCompleta() {
                   <Button
                     type="button"
                     variant="outline"
+                    className="border-red-600 text-red-600 hover:bg-red-50"
                     onClick={() => setOpenFornecedor(false)}
                   >
                     Cancelar
@@ -535,10 +538,9 @@ export default function ComprasCompleta() {
                   <Button
                     type="submit"
                     disabled={createFornecedorMutation.isPending}
+                    className="bg-green-600 hover:bg-green-700 text-white"
                   >
-                    {createFornecedorMutation.isPending
-                      ? "Salvando..."
-                      : "Cadastrar"}
+                    {createFornecedorMutation.isPending ? "Salvando..." : "Salvar Fornecedor"}
                   </Button>
                 </div>
               </form>

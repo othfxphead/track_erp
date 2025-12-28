@@ -376,7 +376,7 @@ export default function DadosEmpresa() {
             <div className="flex justify-end pt-4 border-t">
               <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 px-6"
+                className="bg-green-600 hover:bg-green-700 text-white px-6"
               >
                 Salvar
               </Button>

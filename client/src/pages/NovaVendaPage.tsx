@@ -599,7 +599,7 @@ export default function NovaVendaPage() {
 
         {/* Footer */}
         <div className="border-t bg-white px-6 py-4 flex items-center justify-between sticky bottom-0">
-          <Button type="button" variant="outline" onClick={() => navigate("/vendas")}>
+          <Button type="button" variant="outline" className="border-red-600 text-red-600 hover:bg-red-50" onClick={() => navigate("/vendas")}>
             Cancelar
           </Button>
           <Button

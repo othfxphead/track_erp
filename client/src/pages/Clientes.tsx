@@ -255,11 +255,12 @@ export default function Clientes() {
                   <Button
                     type="button"
                     variant="outline"
+                    className="border-red-600 text-red-600 hover:bg-red-50"
                     onClick={() => setOpen(false)}
                   >
                     Cancelar
                   </Button>
-                  <Button type="submit" disabled={createMutation.isPending}>
+                  <Button type="submit" disabled={createMutation.isPending} className="bg-green-600 hover:bg-green-700 text-white">
                     {createMutation.isPending ? "Salvando..." : "Salvar"}
                   </Button>
                 </div>

@@ -225,11 +225,12 @@ export function NovoClienteModal({ open, onOpenChange, onClienteCriado }: NovoCl
             <Button
               type="button"
               variant="outline"
+              className="border-red-600 text-red-600 hover:bg-red-50"
               onClick={() => onOpenChange(false)}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={criarCliente.isPending}>
+            <Button type="submit" disabled={criarCliente.isPending} className="bg-green-600 hover:bg-green-700 text-white">
               {criarCliente.isPending ? "Salvando..." : "Salvar Cliente"}
             </Button>
           </div>

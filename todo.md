@@ -700,3 +700,10 @@
 - [x] Ajustar botões na página de Orçamentos
 - [x] Ajustar botões na página Nova Venda
 - [x] Ajustar botões na página Dados da Empresa
+
+## Padronização de Cores de Botões por Ação
+- [ ] Buscar todos os botões com texto "Salvar"
+- [ ] Buscar todos os botões com texto "Emitir"
+- [ ] Buscar todos os botões com texto "Cancelar"
+- [ ] Aplicar cor verde (green-600) em Salvar e Emitir
+- [ ] Aplicar cor vermelha (red-600) em Cancelar

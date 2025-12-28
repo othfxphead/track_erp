@@ -495,7 +495,7 @@ export default function NovoOrcamentoPage() {
 
         {/* Footer */}
         <div className="border-t bg-white px-6 py-4 flex items-center justify-between sticky bottom-0">
-          <Button type="button" variant="outline" onClick={() => navigate("/orcamentos")}>
+          <Button type="button" variant="outline" className="border-red-600 text-red-600 hover:bg-red-50" onClick={() => navigate("/orcamentos")}>
             Cancelar
           </Button>
           <Button

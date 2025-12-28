@@ -200,13 +200,14 @@ export function NovoProdutoModal({ open, onOpenChange, onProdutoCriado }: NovoPr
             <Button
               type="button"
               variant="outline"
+              className="border-red-600 text-red-600 hover:bg-red-50"
               onClick={() => onOpenChange(false)}
             >
               Cancelar
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-green-600 hover:bg-green-700 text-white"
               disabled={createMutation.isPending}
             >
               {createMutation.isPending ? "Salvando..." : "Salvar Produto"}
