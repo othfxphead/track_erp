@@ -69,6 +69,9 @@ export default function ERPLayout({ children }: ERPLayoutProps) {
   const [location] = useLocation();
   const { theme, toggleTheme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
+  // Buscar dados da empresa
+  const { data: empresa } = trpc.empresa.get.useQuery();
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
       window.location.href = getLoginUrl();
@@ -104,12 +107,25 @@ export default function ERPLayout({ children }: ERPLayoutProps) {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
           {!sidebarCollapsed && (
-            <Link href="/">
-              <img
-                src="/logo-track-erp.png"
-                alt="Track ERP"
-                className="h-8 cursor-pointer"
-              />
+            <Link href="/" className="flex items-center gap-2">
+              {empresa?.logoUrl ? (
+                <img
+                  src={empresa.logoUrl}
+                  alt={empresa.nomeFantasia || empresa.razaoSocial || "ERP"}
+                  className="h-8 w-8 object-contain cursor-pointer"
+                />
+              ) : (
+                <img
+                  src="/logo-track-erp.png"
+                  alt="Track ERP"
+                  className="h-8 cursor-pointer"
+                />
+              )}
+              {empresa?.nomeFantasia && (
+                <span className="text-sm font-semibold text-sidebar-foreground">
+                  {empresa.nomeFantasia}
+                </span>
+              )}
             </Link>
           )}
           <Button
@@ -181,7 +197,7 @@ export default function ERPLayout({ children }: ERPLayoutProps) {
                       {user.name || "Usuário"}
                     </span>
                     <span className="text-xs text-sidebar-foreground/70 truncate w-full">
-                      {user.email}
+                      {empresa?.nomeFantasia || "Configurações e plano"}
                     </span>
                   </div>
                 )}
