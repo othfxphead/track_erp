@@ -38,7 +38,7 @@ export default function Vendas() {
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pendente;
 
     return (
-      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+      <span className={`inline-flex items-center px-[5px] h-[22px] rounded-sm text-xs font-medium ${config.color}`}>
         {config.label}
       </span>
     );

@@ -98,7 +98,7 @@ export default function OrcamentosNew() {
 
     return (
       <span
-        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${
+        className={`inline-flex items-center gap-1 px-[5px] h-[22px] rounded-sm text-xs font-medium border ${
           styles[status as keyof typeof styles] || styles.pendente
         }`}
       >

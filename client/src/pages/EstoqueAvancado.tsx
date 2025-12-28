@@ -212,11 +212,11 @@ export default function EstoqueAvancado() {
                       </TableCell>
                       <TableCell className="text-center">
                         {produto.estoque === 0 ? (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive">
+                          <span className="inline-flex items-center px-[5px] h-[22px] rounded-sm text-xs font-medium bg-destructive/10 text-destructive">
                             Crítico
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning">
+                          <span className="inline-flex items-center px-[5px] h-[22px] rounded-sm text-xs font-medium bg-warning/10 text-warning">
                             Baixo
                           </span>
                         )}

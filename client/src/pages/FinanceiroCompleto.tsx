@@ -114,7 +114,7 @@ export default function FinanceiroCompleto() {
 
     return (
       <span
-        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
+        className={`inline-flex items-center px-[5px] h-[22px] rounded-sm text-xs font-medium ${config.color}`}
       >
         {config.label}
       </span>

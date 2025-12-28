@@ -735,3 +735,7 @@
 - [x] Implementar ações para módulo Compras (Editar, Visualizar, Excluir)
 - [x] Implementar ações para módulo Financeiro (Editar, Visualizar, Excluir, Receber/Pagar)
 - [x] Substituir todos os botões de 3 pontinhos pelo novo padrão
+
+## Padronização de Badges de Status
+- [x] Ajustar badges de status para height 22px, padding 5px, border-radius 2px
+- [x] Aplicar padrão em todas as páginas (Orçamentos, Vendas, Produtos, Clientes, Serviços, Compras, Financeiro)

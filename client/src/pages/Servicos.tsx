@@ -219,7 +219,7 @@ export default function Servicos() {
                       <TableCell>{servico.categoria || "-"}</TableCell>
                       <TableCell className="text-center">
                         <span
-                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          className={`inline-flex items-center px-[5px] h-[22px] rounded-sm text-xs font-medium ${
                             servico.ativo
                               ? "bg-success/10 text-success"
                               : "bg-muted text-muted-foreground"
