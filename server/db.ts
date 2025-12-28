@@ -24,7 +24,8 @@ import {
   contasReceber, InsertContaReceber,
   dda, InsertDDA,
   inadimplentes, InsertInadimplente,
-  extratosBancarios, InsertExtratoBancario
+  extratosBancarios, InsertExtratoBancario,
+  configFiscais, InsertConfigFiscal
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1016,3 +1017,29 @@ export async function deleteExtratoBancario(id: number) {
 }
 
 
+
+// ============= CONFIGURAÇÕES FISCAIS =============
+export async function getConfigFiscal() {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(configFiscais).limit(1);
+  return result[0] || null;
+}
+
+export async function upsertConfigFiscal(data: Partial<InsertConfigFiscal>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Verifica se já existe configuração
+  const existing = await getConfigFiscal();
+  
+  if (existing) {
+    // Atualiza configuração existente
+    await db.update(configFiscais).set(data).where(eq(configFiscais.id, existing.id));
+    return existing.id;
+  } else {
+    // Cria nova configuração
+    const result = await db.insert(configFiscais).values(data as InsertConfigFiscal);
+    return result[0].insertId;
+  }
+}

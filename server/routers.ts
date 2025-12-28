@@ -1209,6 +1209,46 @@ export const appRouter = router({
       }),
   }),
 
+  // Configurações Fiscais
+  configFiscais: router({
+    get: protectedProcedure.query(async () => {
+      return await db.getConfigFiscal();
+    }),
+    upsert: protectedProcedure
+      .input(z.object({
+        // NFS-e
+        nfseAtivo: z.boolean().optional(),
+        nfseInscricaoMunicipal: z.string().optional(),
+        nfseUltimoRps: z.string().optional(),
+        nfseSerieRps: z.string().optional(),
+        nfseRegimeTributario: z.string().optional(),
+        nfseNaturezaOperacao: z.string().optional(),
+        nfseUsuario: z.string().optional(),
+        nfseSenha: z.string().optional(),
+        // NF-e
+        nfeAtivo: z.boolean().optional(),
+        nfeInscricaoEstadual: z.string().optional(),
+        nfeSerie: z.string().optional(),
+        nfeUltimoNumero: z.string().optional(),
+        nfeExcluirIcmsBaseCalculo: z.boolean().optional(),
+        // NFC-e
+        nfceAtivo: z.boolean().optional(),
+        nfceIdCsc: z.string().optional(),
+        nfceCodigoCsc: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const id = await db.upsertConfigFiscal(input);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "update",
+          modulo: "configFiscais",
+          dadosAntes: JSON.stringify(await db.getConfigFiscal()),
+          dadosDepois: JSON.stringify(input),
+        });
+        return { success: true, id };
+      }),
+  }),
+
   // Logs
   logs: router({
     auditoria: protectedProcedure

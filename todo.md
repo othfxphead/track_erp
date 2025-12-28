@@ -806,3 +806,14 @@
 - [ ] Integrar com módulo de Vendas
 - [ ] Integrar com módulo de Serviços
 - [ ] Solicitar token de produção via webdev_request_secrets
+
+
+## Página de Configurações Fiscais
+- [x] Criar tabela configFiscais no schema Drizzle
+- [ ] Criar página ConfiguracoesFiscais.tsx com 3 abas (NFS-e, NF-e, NFC-e)
+- [ ] Implementar aba NFS-e (IM, RPS, série, regime, natureza, certificado)
+- [ ] Implementar aba NF-e (IE, série, número, regras impostos, DIFAL)
+- [ ] Implementar aba NFC-e (dados para emissão)
+- [ ] Criar procedures tRPC para salvar/buscar configurações
+- [ ] Adicionar rota /configuracoes/fiscais no App.tsx
+- [ ] Adicionar link no submenu de Configurações

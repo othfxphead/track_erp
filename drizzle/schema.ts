@@ -575,3 +575,48 @@ export const extratosBancarios = mysqlTable("extratosBancarios", {
 
 export type ExtratoBancario = typeof extratosBancarios.$inferSelect;
 export type InsertExtratoBancario = typeof extratosBancarios.$inferInsert;
+
+/**
+ * Configurações Fiscais - Configurações para emissão de notas fiscais
+ */
+export const configFiscais = mysqlTable("configFiscais", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // NFS-e (Nota Fiscal de Serviço)
+  nfseAtivo: boolean("nfseAtivo").default(false).notNull(),
+  nfseInscricaoMunicipal: varchar("nfseInscricaoMunicipal", { length: 20 }),
+  nfseUltimoRps: int("nfseUltimoRps").default(0),
+  nfseSerieRps: varchar("nfseSerieRps", { length: 10 }).default("1"),
+  nfseRegimeTributario: mysqlEnum("nfseRegimeTributario", [
+    "mei",
+    "simples_nacional",
+    "lucro_presumido",
+    "lucro_real"
+  ]),
+  nfseNaturezaOperacao: varchar("nfseNaturezaOperacao", { length: 255 }),
+  nfseUsuarioAcesso: varchar("nfseUsuarioAcesso", { length: 255 }), // Credenciais prefeitura
+  nfseSenhaAcesso: varchar("nfseSenhaAcesso", { length: 255 }),
+  nfseCertificadoValido: boolean("nfseCertificadoValido").default(false),
+  nfseCertificadoVencimento: timestamp("nfseCertificadoVencimento"),
+  
+  // NF-e (Nota Fiscal de Produto)
+  nfeAtivo: boolean("nfeAtivo").default(false).notNull(),
+  nfeInscricaoEstadual: varchar("nfeInscricaoEstadual", { length: 20 }),
+  nfeSerie: int("nfeSerie").default(1),
+  nfeUltimoNumero: int("nfeUltimoNumero").default(0),
+  nfeExcluirIcmsBaseCalculo: boolean("nfeExcluirIcmsBaseCalculo").default(false),
+  nfeEstadoSubstituto: varchar("nfeEstadoSubstituto", { length: 2 }), // UF
+  nfeInscricaoEstadualSubstituto: varchar("nfeInscricaoEstadualSubstituto", { length: 20 }),
+  
+  // NFC-e (Nota Fiscal de Consumidor)
+  nfceAtivo: boolean("nfceAtivo").default(false).notNull(),
+  nfceIdCsc: varchar("nfceIdCsc", { length: 10 }), // ID do CSC
+  nfceCodigoCsc: varchar("nfceCodigoCsc", { length: 50 }), // Código CSC
+  
+  usuarioId: int("usuarioId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ConfigFiscal = typeof configFiscais.$inferSelect;
+export type InsertConfigFiscal = typeof configFiscais.$inferInsert;

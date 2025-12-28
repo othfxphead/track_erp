@@ -117,6 +117,7 @@ const menuItems: MenuItem[] = [
     icon: <Settings className="w-5 h-5" />,
     submenu: [
       { label: "Dados da Empresa", path: "/configuracoes/dados-empresa" },
+      { label: "Configurações Fiscais", path: "/configuracoes/fiscal" },
       { label: "Usuários", path: "/configuracoes/usuarios" },
       { label: "Integrações", path: "/configuracoes/integracoes" },
     ],

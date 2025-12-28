@@ -33,6 +33,7 @@ import ContasReceber from "./pages/ContasReceber";
 import ExtratoBancario from "./pages/ExtratoBancario";
 import DDA from "./pages/DDA";
 import Inadimplentes from "./pages/Inadimplentes";
+import ConfiguracoesFiscais from "./pages/ConfiguracoesFiscais";
 
 function Router() {
   return (
@@ -64,6 +65,7 @@ function Router() {
       <Route path={"/serasa"} component={ConsultaSerasa} />
       <Route path={"/configuracoes"} component={ConfiguracoesCompleta} />
       <Route path={"/configuracoes/dados-empresa"} component={DadosEmpresa} />
+      <Route path={"/configuracoes/fiscal"} component={ConfiguracoesFiscais} />
       <Route path={"/configuracoes/usuarios"} component={Usuarios} />
       <Route path={"/configuracoes/integracoes"} component={IntegracoesConfig} />
       <Route path={"/404"} component={NotFound} />
