@@ -686,3 +686,12 @@
 ## Ajustes do Menu Principal
 - [x] Reduzir altura dos ícones de 48px (h-12) para 45px (h-[45px])
 - [x] Remover scroll do menu lateral (overflow-y-auto) deixando-o fixo
+
+## Ajuste do Botão "Novo registro"
+- [x] Verificar height e padding atual do botão
+- [x] Reduzir dimensões para deixar mais compacto
+
+## Padronização Global de Botões
+- [x] Alterar componente Button base para height 22px
+- [x] Alterar padding padrão para 5px horizontal
+- [x] Alterar border-radius padrão para 2px (rounded-sm)

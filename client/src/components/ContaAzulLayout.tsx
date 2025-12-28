@@ -324,7 +324,7 @@ export default function ContaAzulLayout({ children }: { children: React.ReactNod
               {/* Novo registro */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="h-8 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
                     <Plus className="w-4 h-4 mr-2" />
                     Novo registro
                     <ChevronDown className="w-4 h-4 ml-2" />
