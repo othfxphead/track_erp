@@ -817,3 +817,22 @@
 - [ ] Criar procedures tRPC para salvar/buscar configurações
 - [ ] Adicionar rota /configuracoes/fiscais no App.tsx
 - [ ] Adicionar link no submenu de Configurações
+
+
+## Módulo Fiscal - Emissão e Gestão de Notas
+- [x] Criar procedure tRPC fiscal.emitirNFe
+- [x] Integrar emissão com configurações fiscais e Focus NFe
+- [x] Adicionar botão "Emitir NF-e" na página de Vendas
+- [x] Implementar loading state e confirmação de emissão
+- [x] Adicionar campos de validade do certificado no schema
+- [x] Criar procedure tRPC empresa.uploadCertificado
+- [x] Implementar validação de formato e tamanho do certificado
+- [x] Criar dialog de upload de certificado na página ConfiguracoesFiscais
+- [x] Adicionar badge de status do certificado (Válido/Não configurado)
+- [x] Criar página NotasEmitidas.tsx completa
+- [x] Implementar filtros por número/chave e status
+- [x] Adicionar ações: visualizar XML, download XML/PDF, cancelar
+- [x] Criar procedures tRPC: cancelarNFe, downloadXML, downloadPDF
+- [x] Implementar dialog de cancelamento com justificativa
+- [x] Adicionar rota /notas-emitidas no App.tsx
+- [x] Adicionar link "Notas emitidas" nos submenus Produtos e Serviços

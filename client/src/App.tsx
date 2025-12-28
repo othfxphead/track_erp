@@ -34,6 +34,7 @@ import ExtratoBancario from "./pages/ExtratoBancario";
 import DDA from "./pages/DDA";
 import Inadimplentes from "./pages/Inadimplentes";
 import ConfiguracoesFiscais from "./pages/ConfiguracoesFiscais";
+import NotasEmitidas from "./pages/NotasEmitidas";
 
 function Router() {
   return (
@@ -60,6 +61,7 @@ function Router() {
       <Route path={"/financeiro/extrato"} component={ExtratoBancario} />
       <Route path={"/financeiro/dda"} component={DDA} />
       <Route path={"/financeiro/inadimplentes"} component={Inadimplentes} />      <Route path={"/fiscal"} component={Fiscal} />
+      <Route path={"/notas-emitidas"} component={NotasEmitidas} />
       <Route path={"/relatorios"} component={Relatorios} />
       <Route path={"/integracoes"} component={Integracoes} />
       <Route path={"/serasa"} component={ConsultaSerasa} />

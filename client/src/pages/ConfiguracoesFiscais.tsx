@@ -12,6 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { FileText, Package, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
@@ -37,8 +44,48 @@ export default function ConfiguracoesFiscais() {
   const [nfceAtivo, setNfceAtivo] = useState(false);
   const [nfceIdCsc, setNfceIdCsc] = useState("");
   const [nfceCodigoCsc, setNfceCodigoCsc] = useState("");
+  const [certificadoSenha, setCertificadoSenha] = useState("");
+  const [showCertificadoDialog, setShowCertificadoDialog] = useState(false);
 
   const { data: config, isLoading } = trpc.configFiscais.get.useQuery();
+  const { data: empresa } = trpc.empresa.get.useQuery();
+  
+  const uploadCertificadoMutation = trpc.empresa.uploadCertificado.useMutation({
+    onSuccess: () => {
+      toast.success("Certificado digital enviado com sucesso!");
+      setShowCertificadoDialog(false);
+      setCertificadoSenha("");
+    },
+    onError: (error) => {
+      toast.error(`Erro ao enviar certificado: ${error.message}`);
+    },
+  });
+  
+  const handleCertificadoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (!file.name.endsWith(".pfx") && !file.name.endsWith(".p12")) {
+      toast.error("Formato inválido. Envie um arquivo .pfx ou .p12");
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Arquivo muito grande. Tamanho máximo: 5MB");
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(",")[1];
+      uploadCertificadoMutation.mutate({
+        base64,
+        fileName: file.name,
+        senha: certificadoSenha,
+      });
+    };
+    reader.readAsDataURL(file);
+  };
   const upsertMutation = trpc.configFiscais.upsert.useMutation({
     onSuccess: () => {
       toast.success("Configurações fiscais salvas com sucesso!");
@@ -181,11 +228,22 @@ export default function ConfiguracoesFiscais() {
                   <p className="text-sm text-muted-foreground">e-CNPJ</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="px-[5px] h-[22px] rounded-sm text-xs font-medium flex items-center bg-green-100 text-green-700">
-                    Válido
-                  </span>
-                  <Button variant="outline" size="sm" className="h-[22px] px-[5px] text-xs">
-                    Configurar
+                  {empresa?.certificadoDigitalUrl ? (
+                    <span className="px-[5px] h-[22px] rounded-sm text-xs font-medium flex items-center bg-green-100 text-green-700">
+                      Válido
+                    </span>
+                  ) : (
+                    <span className="px-[5px] h-[22px] rounded-sm text-xs font-medium flex items-center bg-yellow-100 text-yellow-700">
+                      Não configurado
+                    </span>
+                  )}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-[22px] px-[5px] text-xs"
+                    onClick={() => setShowCertificadoDialog(true)}
+                  >
+                    {empresa?.certificadoDigitalUrl ? "Atualizar" : "Configurar"}
                   </Button>
                 </div>
               </div>
@@ -561,6 +619,64 @@ export default function ConfiguracoesFiscais() {
           </div>
         </div>
       )}
+
+      {/* Dialog Upload Certificado */}
+      <Dialog open={showCertificadoDialog} onOpenChange={setShowCertificadoDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Upload de Certificado Digital A1</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="senha-certificado">
+                Senha do Certificado <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="senha-certificado"
+                type="password"
+                value={certificadoSenha}
+                onChange={(e) => setCertificadoSenha(e.target.value)}
+                placeholder="Digite a senha do certificado"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="arquivo-certificado">
+                Arquivo (.pfx ou .p12) <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="arquivo-certificado"
+                type="file"
+                accept=".pfx,.p12"
+                onChange={handleCertificadoUpload}
+                disabled={!certificadoSenha || uploadCertificadoMutation.isPending}
+                className="mt-1"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Tamanho máximo: 5MB
+              </p>
+            </div>
+            {uploadCertificadoMutation.isPending && (
+              <div className="flex items-center gap-2 text-sm text-blue-600">
+                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                Enviando certificado...
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowCertificadoDialog(false);
+                setCertificadoSenha("");
+              }}
+              disabled={uploadCertificadoMutation.isPending}
+            >
+              Cancelar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

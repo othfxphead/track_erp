@@ -119,6 +119,58 @@ export const appRouter = router({
         
         return { success: true, url };
       }),
+    uploadCertificado: protectedProcedure
+      .input(z.object({
+        base64: z.string(),
+        fileName: z.string(),
+        senha: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const { storagePut } = await import("./storage");
+        const buffer = Buffer.from(input.base64, "base64");
+        
+        // Validar formato do arquivo
+        if (!input.fileName.endsWith(".pfx") && !input.fileName.endsWith(".p12")) {
+          throw new Error("Formato inválido. Envie um arquivo .pfx ou .p12");
+        }
+        
+        // Validar tamanho (máx 5MB)
+        if (buffer.length > 5 * 1024 * 1024) {
+          throw new Error("Arquivo muito grande. Tamanho máximo: 5MB");
+        }
+        
+        // TODO: Validar certificado com a senha fornecida
+        // Isso requer biblioteca como node-forge ou pkcs12
+        // Por ora, apenas salvamos
+        
+        const randomSuffix = Math.random().toString(36).substring(7);
+        const key = `certificados/${Date.now()}-${randomSuffix}-${input.fileName}`;
+        const { url } = await storagePut(key, buffer, "application/x-pkcs12");
+        
+        // Buscar empresa existente e atualizar certificado
+        const empresaAtual = await db.getEmpresa();
+        if (empresaAtual) {
+          await db.upsertEmpresa({
+            ...empresaAtual,
+            certificadoDigitalUrl: url,
+            certificadoSenha: input.senha,
+            // TODO: Extrair datas de validade do certificado
+            // certificadoValidadeInicio: new Date(),
+            // certificadoValidadeFim: new Date(),
+          });
+        } else {
+          throw new Error("Configure os dados da empresa antes de enviar o certificado");
+        }
+        
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "upload_certificado",
+          modulo: "configuracoes",
+          descricao: "Certificado digital A1 atualizado",
+        });
+        
+        return { success: true, url };
+      }),
   }),
 
   // Clientes
@@ -733,6 +785,199 @@ export const appRouter = router({
           dadosDepois: JSON.stringify(input.data),
         });
         return { success: true };
+      }),
+    emitirNFe: protectedProcedure
+      .input(z.object({
+        vendaId: z.number(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // 1. Buscar configurações fiscais
+        const config = await db.getConfigFiscal();
+        if (!config || !config.nfeAtivo) {
+          throw new Error("Emissão de NF-e não está configurada. Configure em Configurações > Configurações Fiscais");
+        }
+
+        // 2. Buscar dados da empresa
+        const empresa = await db.getEmpresa();
+        if (!empresa) {
+          throw new Error("Dados da empresa não encontrados. Configure em Configurações > Dados da Empresa");
+        }
+
+        // 3. Buscar dados da venda com itens
+        const venda = await db.getVendaById(input.vendaId);
+        if (!venda) {
+          throw new Error("Venda não encontrada");
+        }
+
+        // 4. Buscar cliente
+        const cliente = await db.getClienteById(venda.clienteId);
+        if (!cliente) {
+          throw new Error("Cliente não encontrado");
+        }
+
+        // 5. Importar serviço Focus NFe
+        const { emitirNFe: emitirNFeAPI } = await import("./services/focusNFe");
+
+        // 6. Montar dados da NFe
+        const referencia = `VENDA-${venda.id}-${Date.now()}`;
+        const dadosNFe = {
+          natureza_operacao: "Venda de mercadoria",
+          tipo_documento: "1", // Saída
+          finalidade_emissao: "1", // Normal
+          cnpj_emitente: empresa.cnpj?.replace(/\D/g, "") || "",
+          inscricao_estadual_emitente: config.nfeInscricaoEstadual || "",
+          nome_emitente: empresa.razaoSocial || "",
+          nome_fantasia_emitente: empresa.nomeFantasia || "",
+          logradouro_emitente: empresa.endereco || "",
+          numero_emitente: empresa.numero || "",
+          bairro_emitente: empresa.bairro || "",
+          municipio_emitente: empresa.cidade || "",
+          uf_emitente: empresa.estado || "",
+          cep_emitente: empresa.cep?.replace(/\D/g, "") || "",
+          telefone_emitente: empresa.telefone?.replace(/\D/g, "") || "",
+          cpf_destinatario: cliente.cpf?.replace(/\D/g, ""),
+          cnpj_destinatario: cliente.cnpj?.replace(/\D/g, ""),
+          nome_destinatario: cliente.nome,
+          logradouro_destinatario: cliente.endereco || "",
+          numero_destinatario: cliente.numero || "S/N",
+          bairro_destinatario: cliente.bairro || "",
+          municipio_destinatario: cliente.cidade || "",
+          uf_destinatario: cliente.estado || "",
+          cep_destinatario: cliente.cep?.replace(/\D/g, "") || "",
+          items: [{
+            numero_item: "1",
+            codigo_produto: "VENDA",
+            descricao: `Venda #${venda.id}`,
+            cfop: "5102",
+            unidade_comercial: "UN",
+            quantidade_comercial: "1",
+            valor_unitario_comercial: venda.valorTotal,
+            valor_bruto: venda.valorTotal,
+            icms_situacao_tributaria: "102",
+          }],
+        };
+
+        // 7. Criar registro de nota fiscal
+        const notaId = await db.createNotaFiscal({
+          tipo: "produto",
+          clienteId: venda.clienteId,
+          vendaId: venda.id,
+          valorTotal: venda.valorTotal,
+          serie: config.nfeSerie || "1",
+          status: "pendente",
+          focusApiReferencia: referencia,
+          usuarioId: ctx.user.id,
+        });
+
+        try {
+          // 8. Emitir NFe via Focus API
+          const resultado = await emitirNFeAPI(referencia, dadosNFe);
+
+          // 9. Atualizar nota com dados da emissão
+          await db.updateNotaFiscal(notaId, {
+            status: resultado.status === "autorizado" ? "emitida" : "pendente",
+            numero: resultado.numero,
+            chaveAcesso: resultado.chave_nfe,
+            dataEmissao: new Date(),
+          });
+
+          // 10. Atualizar último número da NF-e nas configurações
+          if (resultado.numero) {
+            await db.upsertConfigFiscal({
+              nfeUltimoNumero: resultado.numero,
+            });
+          }
+
+          // 11. Log de auditoria
+          await db.createLogAuditoria({
+            usuarioId: ctx.user.id,
+            acao: "emitir_nfe",
+            modulo: "fiscal",
+            descricao: `NF-e emitida para venda #${venda.id}`,
+            dadosDepois: JSON.stringify(resultado),
+          });
+
+          return { 
+            success: true, 
+            notaId,
+            numero: resultado.numero,
+            chaveAcesso: resultado.chave_nfe,
+            status: resultado.status,
+            mensagem: resultado.mensagem_sefaz,
+          };
+        } catch (error: any) {
+          // Atualizar nota com erro
+          await db.updateNotaFiscal(notaId, {
+            status: "erro",
+            mensagemErro: error.message,
+          });
+          throw error;
+        }
+      }),
+    cancelarNFe: protectedProcedure
+      .input(z.object({
+        referencia: z.string(),
+        justificativa: z.string().min(15, "Justificativa deve ter no mínimo 15 caracteres"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const { cancelarNFe: cancelarNFeAPI } = await import("./services/focusNFe");
+        
+        // Cancelar via Focus API
+        const resultado = await cancelarNFeAPI(input.referencia, input.justificativa);
+        
+        // Buscar nota pelo focusApiReferencia
+        const notas = await db.getAllNotasFiscais();
+        const nota = notas.find(n => n.focusApiReferencia === input.referencia);
+        
+        if (nota) {
+          await db.updateNotaFiscal(nota.id, {
+            status: "cancelada",
+          });
+        }
+        
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "cancelar_nfe",
+          modulo: "fiscal",
+          descricao: `NF-e ${input.referencia} cancelada`,
+          dadosDepois: JSON.stringify({ justificativa: input.justificativa }),
+        });
+        
+        return { success: true, resultado };
+      }),
+    downloadXML: protectedProcedure
+      .input(z.object({
+        referencia: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const { baixarXMLNFe } = await import("./services/focusNFe");
+        const xmlBuffer = await baixarXMLNFe(input.referencia);
+        
+        // Buscar nota para pegar o número
+        const notas = await db.getAllNotasFiscais();
+        const nota = notas.find(n => n.focusApiReferencia === input.referencia);
+        
+        return { 
+          xml: xmlBuffer.toString("utf-8"),
+          numero: nota?.numero || input.referencia,
+        };
+      }),
+    downloadPDF: protectedProcedure
+      .input(z.object({
+        referencia: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const { baixarPDFNFe } = await import("./services/focusNFe");
+        const pdfBuffer = await baixarPDFNFe(input.referencia);
+        
+        // Buscar nota para pegar o número
+        const notas = await db.getAllNotasFiscais();
+        const nota = notas.find(n => n.focusApiReferencia === input.referencia);
+        
+        return { 
+          pdf: pdfBuffer.toString("base64"),
+          numero: nota?.numero || input.referencia,
+        };
       }),
   }),
 

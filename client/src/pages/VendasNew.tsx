@@ -58,6 +58,17 @@ export default function VendasNew() {
 
   // Queries
   const { data: vendas = [], isLoading } = trpc.vendas.list.useQuery();
+  
+  // Mutations
+  const emitirNFeMutation = trpc.fiscal.emitirNFe.useMutation({
+    onSuccess: (data) => {
+      toast.success(`NF-e ${data.numero} emitida com sucesso!`);
+      setShowEmitirNFS(false);
+    },
+    onError: (error) => {
+      toast.error(`Erro ao emitir NF-e: ${error.message}`);
+    },
+  });
 
   // Filtrar vendas
   const filteredVendas = vendas.filter((venda) => {
@@ -321,11 +332,25 @@ export default function VendasNew() {
                     <TableCell>
                       {venda.status === "faturada" ? (
                         <Button
-                          className="bg-green-600 hover:bg-green-700 text-white text-xs"
-                          onClick={() => handleEmitirNFS(venda)}
+                          className="bg-green-600 hover:bg-green-700 text-white text-xs h-[22px] px-[5px]"
+                          onClick={() => {
+                            if (confirm(`Confirma a emissão de NF-e para a venda ${venda.numero}?`)) {
+                              emitirNFeMutation.mutate({ vendaId: venda.id });
+                            }
+                          }}
+                          disabled={emitirNFeMutation.isPending}
                         >
-                          <Send className="w-3 h-3 mr-1" />
-                          Emitir NFS
+                          {emitirNFeMutation.isPending ? (
+                            <>
+                              <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1" />
+                              Emitindo...
+                            </>
+                          ) : (
+                            <>
+                              <FileText className="w-3 h-3 mr-1" />
+                              Emitir NF-e
+                            </>
+                          )}
                         </Button>
                       ) : (
                         <span className="text-xs text-gray-400">-</span>

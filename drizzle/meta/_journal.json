@@ -43,6 +43,13 @@
       "when": 1766889996133,
       "tag": "0005_illegal_kat_farrell",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1766890560687,
+      "tag": "0006_jazzy_kulan_gath",
+      "breakpoints": true
     }
   ]
 }

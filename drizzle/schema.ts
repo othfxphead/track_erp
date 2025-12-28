@@ -34,6 +34,8 @@ export const empresas = mysqlTable("empresas", {
   logoUrl: text("logoUrl"),
   certificadoDigitalUrl: text("certificadoDigitalUrl"),
   certificadoSenha: text("certificadoSenha"),
+  certificadoValidadeInicio: timestamp("certificadoValidadeInicio"),
+  certificadoValidadeFim: timestamp("certificadoValidadeFim"),
   regimeTributario: mysqlEnum("regimeTributario", ["simples", "lucro_presumido", "lucro_real"]),
   endereco: text("endereco"),
   cidade: varchar("cidade", { length: 100 }),
