@@ -773,8 +773,8 @@
 - [x] Criar helpers de banco de dados para todas as tabelas
 - [x] Criar procedures tRPC para todas as tabelas
 - [x] Criar página Contas a Pagar com backend
-- [ ] Criar página Contas a Receber com backend
-- [ ] Criar página DDA com backend
-- [ ] Criar página Inadimplentes com backend
-- [ ] Criar página Extrato Bancário com backend
-- [ ] Registrar rotas no App.tsx
+- [x] Criar página Contas a Receber com backend (URGENTE)
+- [x] Criar página DDA com backend (URGENTE)
+- [x] Criar página Inadimplentes com backend (URGENTE)
+- [x] Criar página Extrato Bancário com backend (URGENTE)
+- [x] Registrar todas as 5 rotas financeiras no App.tsx (URGENTE)

@@ -28,6 +28,11 @@ import OrdensServico from "./pages/OrdensServico";
 import Integracoes from "./pages/Integracoes";
 import Usuarios from "./pages/Usuarios";
 import IntegracoesConfig from "./pages/IntegracoesConfig";
+import ContasPagar from "./pages/ContasPagar";
+import ContasReceber from "./pages/ContasReceber";
+import ExtratoBancario from "./pages/ExtratoBancario";
+import DDA from "./pages/DDA";
+import Inadimplentes from "./pages/Inadimplentes";
 
 function Router() {
   return (
@@ -49,7 +54,11 @@ function Router() {
       <Route path={"/compras"} component={ComprasCompleta} />
       <Route path={"/estoque"} component={EstoqueAvancado} />
       <Route path={"/financeiro"} component={FinanceiroCompleto} />
-      <Route path={"/fiscal"} component={Fiscal} />
+      <Route path={"/financeiro/contas-pagar"} component={ContasPagar} />
+      <Route path={"/financeiro/contas-receber"} component={ContasReceber} />
+      <Route path={"/financeiro/extrato"} component={ExtratoBancario} />
+      <Route path={"/financeiro/dda"} component={DDA} />
+      <Route path={"/financeiro/inadimplentes"} component={Inadimplentes} />      <Route path={"/fiscal"} component={Fiscal} />
       <Route path={"/relatorios"} component={Relatorios} />
       <Route path={"/integracoes"} component={Integracoes} />
       <Route path={"/serasa"} component={ConsultaSerasa} />
