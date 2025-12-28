@@ -30,9 +30,23 @@ import { Plus, Edit, Phone, Mail, History } from "lucide-react";
 import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
+import { EditarClienteModal } from "@/components/EditarClienteModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Clientes() {
   const [open, setOpen] = useState(false);
+  const [editarClienteId, setEditarClienteId] = useState<number | null>(null);
+  const [editarModalOpen, setEditarModalOpen] = useState(false);
+  const [clienteParaExcluir, setClienteParaExcluir] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     tipo: "fisica" as "fisica" | "juridica",
     nome: "",
@@ -72,6 +86,17 @@ export default function Clientes() {
     },
   });
 
+  const deleteMutation = trpc.clientes.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Cliente excluído com sucesso!");
+      refetch();
+      setClienteParaExcluir(null);
+    },
+    onError: (error) => {
+      toast.error(`Erro ao excluir cliente: ${error.message}`);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createMutation.mutate(formData);
@@ -89,7 +114,8 @@ export default function Clientes() {
   };
 
   return (
-          <div className="space-y-6">
+    <>
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -349,7 +375,10 @@ export default function Clientes() {
                             {
                               label: "Editar",
                               icon: ActionIcons.Edit,
-                              onClick: () => toast.info("Editando cliente..."),
+                              onClick: () => {
+                                setEditarClienteId(cliente.id);
+                                setEditarModalOpen(true);
+                              },
                             },
                             {
                               label: "Ver Histórico",
@@ -360,11 +389,7 @@ export default function Clientes() {
                             {
                               label: "Excluir",
                               icon: ActionIcons.Delete,
-                              onClick: () => {
-                                if (confirm("Tem certeza que deseja excluir este cliente?")) {
-                                  toast.success("Cliente excluído!");
-                                }
-                              },
+                              onClick: () => setClienteParaExcluir(cliente.id),
                               variant: "destructive" as const,
                               separator: true,
                             },
@@ -393,5 +418,41 @@ export default function Clientes() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de Edição */}
+      <EditarClienteModal
+        open={editarModalOpen}
+        onOpenChange={setEditarModalOpen}
+        clienteId={editarClienteId}
+      />
+
+      {/* Dialog de Confirmação de Exclusão */}
+      <AlertDialog
+        open={clienteParaExcluir !== null}
+        onOpenChange={(open) => !open && setClienteParaExcluir(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (clienteParaExcluir) {
+                  deleteMutation.mutate({ id: clienteParaExcluir });
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

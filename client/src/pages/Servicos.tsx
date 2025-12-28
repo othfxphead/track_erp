@@ -23,9 +23,23 @@ import { Plus, Edit } from "lucide-react";
 import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
+import { EditarServicoModal } from "@/components/EditarServicoModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Servicos() {
   const [open, setOpen] = useState(false);
+  const [editarServicoId, setEditarServicoId] = useState<number | null>(null);
+  const [editarModalOpen, setEditarModalOpen] = useState(false);
+  const [servicoParaExcluir, setServicoParaExcluir] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     codigo: "",
     nome: "",
@@ -55,6 +69,17 @@ export default function Servicos() {
     },
   });
 
+  const deleteMutation = trpc.servicos.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Serviço excluído com sucesso!");
+      refetch();
+      setServicoParaExcluir(null);
+    },
+    onError: (error: any) => {
+      toast.error(`Erro ao excluir serviço: ${error.message}`);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createMutation.mutate(formData);
@@ -69,7 +94,8 @@ export default function Servicos() {
   };
 
   return (
-          <div className="space-y-6">
+    <>
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -239,16 +265,15 @@ export default function Servicos() {
                             {
                               label: "Editar",
                               icon: ActionIcons.Edit,
-                              onClick: () => toast.info("Editando serviço..."),
+                              onClick: () => {
+                                setEditarServicoId(servico.id);
+                                setEditarModalOpen(true);
+                              },
                             },
                             {
                               label: "Excluir",
                               icon: ActionIcons.Delete,
-                              onClick: () => {
-                                if (confirm("Tem certeza que deseja excluir este serviço?")) {
-                                  toast.success("Serviço excluído!");
-                                }
-                              },
+                              onClick: () => setServicoParaExcluir(servico.id),
                               variant: "destructive" as const,
                               separator: true,
                             },
@@ -277,5 +302,41 @@ export default function Servicos() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de Edição */}
+      <EditarServicoModal
+        open={editarModalOpen}
+        onOpenChange={setEditarModalOpen}
+        servicoId={editarServicoId}
+      />
+
+      {/* Dialog de Confirmação de Exclusão */}
+      <AlertDialog
+        open={servicoParaExcluir !== null}
+        onOpenChange={(open) => !open && setServicoParaExcluir(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (servicoParaExcluir) {
+                  deleteMutation.mutate({ id: servicoParaExcluir });
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

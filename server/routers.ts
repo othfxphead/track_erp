@@ -238,6 +238,18 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteCliente(input.id);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "delete_cliente",
+          modulo: "clientes",
+          descricao: `Cliente ID ${input.id} excluído`,
+        });
+        return { success: true };
+      }),
   }),
 
   // Fornecedores
@@ -405,6 +417,47 @@ export const appRouter = router({
           dadosDepois: JSON.stringify(input),
         });
         return { success: true, id };
+      }),
+    get: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getServicoById(input.id);
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        data: z.object({
+          codigo: z.string().optional(),
+          nome: z.string().optional(),
+          descricao: z.string().optional(),
+          valorUnitario: z.string().optional(),
+          categoria: z.string().optional(),
+          codigoServico: z.string().optional(),
+          ativo: z.boolean().optional(),
+        }),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await db.updateServico(input.id, input.data);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "update_servico",
+          modulo: "servicos",
+          descricao: `Serviço ID ${input.id} atualizado`,
+          dadosDepois: JSON.stringify(input.data),
+        });
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.deleteServico(input.id);
+        await db.createLogAuditoria({
+          usuarioId: ctx.user.id,
+          acao: "delete_servico",
+          modulo: "servicos",
+          descricao: `Serviço ID ${input.id} excluído`,
+        });
+        return { success: true };
       }),
   }),
 

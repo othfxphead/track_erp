@@ -1043,3 +1043,26 @@ export async function upsertConfigFiscal(data: Partial<InsertConfigFiscal>) {
     return result[0].insertId;
   }
 }
+
+export async function getServicoById(id: number) {
+  const db = await getDb();
+  const result = await db.select().from(servicos).where(eq(servicos.id, id)).limit(1);
+  return result[0] || null;
+}
+
+export async function updateServico(id: number, data: Partial<InsertServico>) {
+  const db = await getDb();
+  await db.update(servicos).set(data).where(eq(servicos.id, id));
+}
+
+export async function deleteServico(id: number) {
+  const db = await getDb();
+  await db.delete(servicos).where(eq(servicos.id, id));
+}
+
+
+export async function deleteCliente(id: number) {
+  const db = await getDb();
+  await db.delete(clientes).where(eq(clientes.id, id));
+}
+

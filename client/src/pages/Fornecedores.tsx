@@ -30,9 +30,23 @@ import { ActionButton, ActionIcons } from "@/components/ActionButton";
 import { useState } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { EditarFornecedorModal } from "@/components/EditarFornecedorModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Fornecedores() {
   const [open, setOpen] = useState(false);
+  const [editarFornecedorId, setEditarFornecedorId] = useState<number | null>(null);
+  const [editarModalOpen, setEditarModalOpen] = useState(false);
+  const [fornecedorParaExcluir, setFornecedorParaExcluir] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     tipo: "juridica" as "fisica" | "juridica",
     nome: "",
@@ -74,6 +88,7 @@ export default function Fornecedores() {
   const deleteMutation = trpc.fornecedores.delete.useMutation({
     onSuccess: () => {
       toast.success("Fornecedor excluído com sucesso!");
+      setFornecedorParaExcluir(null);
     },
     onError: (error) => {
       toast.error("Erro ao excluir fornecedor: " + error.message);
@@ -108,7 +123,8 @@ export default function Fornecedores() {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -361,7 +377,10 @@ export default function Fornecedores() {
                           {
                             label: "Editar",
                             icon: ActionIcons.Edit,
-                            onClick: () => toast.info("Editando fornecedor..."),
+                            onClick: () => {
+                              setEditarFornecedorId(fornecedor.id);
+                              setEditarModalOpen(true);
+                            },
                           },
                           {
                             label: "Ver Histórico de Compras",
@@ -372,11 +391,7 @@ export default function Fornecedores() {
                           {
                             label: "Excluir",
                             icon: ActionIcons.Delete,
-                            onClick: () => {
-                              if (confirm("Tem certeza que deseja excluir este fornecedor?")) {
-                                toast.success("Fornecedor excluído!");
-                              }
-                            },
+                            onClick: () => setFornecedorParaExcluir(fornecedor.id),
                             variant: "destructive" as const,
                             separator: true,
                           },
@@ -396,6 +411,42 @@ export default function Fornecedores() {
           )}
         </CardContent>
       </Card>
-    </div>
+      </div>
+
+      {/* Modal de Edição */}
+      <EditarFornecedorModal
+        open={editarModalOpen}
+        onOpenChange={setEditarModalOpen}
+        fornecedorId={editarFornecedorId}
+      />
+
+      {/* Dialog de Confirmação de Exclusão */}
+      <AlertDialog
+        open={fornecedorParaExcluir !== null}
+        onOpenChange={(open) => !open && setFornecedorParaExcluir(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este fornecedor? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (fornecedorParaExcluir) {
+                  deleteMutation.mutate({ id: fornecedorParaExcluir });
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

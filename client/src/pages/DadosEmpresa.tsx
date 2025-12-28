@@ -16,8 +16,26 @@ import { trpc } from "@/lib/trpc";
 import { useEffect } from "react";
 
 export default function DadosEmpresa() {
+  const [formData, setFormData] = useState({
+    razaoSocial: "",
+    nomeFantasia: "",
+    cnpj: "",
+    inscricaoEstadual: "",
+    inscricaoMunicipal: "",
+    telefone: "",
+    email: "",
+    endereco: "",
+    numero: "",
+    complemento: "",
+    bairro: "",
+    cidade: "",
+    estado: "SP",
+    cep: "",
+  });
+  
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   // Buscar dados existentes
   const { data: empresa, refetch } = trpc.empresa.get.useQuery();
@@ -33,9 +51,9 @@ export default function DadosEmpresa() {
     },
   });
   
-  // Carregar dados existentes
+  // Carregar dados existentes apenas uma vez
   useEffect(() => {
-    if (empresa) {
+    if (empresa && !isLoaded) {
       setFormData({
         razaoSocial: empresa.razaoSocial || "",
         nomeFantasia: empresa.nomeFantasia || "",
@@ -55,24 +73,9 @@ export default function DadosEmpresa() {
       if (empresa.logoUrl) {
         setLogoPreview(empresa.logoUrl);
       }
+      setIsLoaded(true);
     }
-  }, [empresa]);
-  const [formData, setFormData] = useState({
-    razaoSocial: "",
-    nomeFantasia: "",
-    cnpj: "",
-    inscricaoEstadual: "",
-    inscricaoMunicipal: "",
-    telefone: "",
-    email: "",
-    endereco: "",
-    numero: "",
-    complemento: "",
-    bairro: "",
-    cidade: "",
-    estado: "SP",
-    cep: "",
-  });
+  }, [empresa, isLoaded]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -133,6 +136,17 @@ export default function DadosEmpresa() {
     setFormData((prev) => ({ ...prev, [field]: formattedValue }));
   };
 
+  // Mutation para upload de logo
+  const uploadLogoMutation = trpc.empresa.uploadLogo.useMutation({
+    onSuccess: (data) => {
+      toast.success("Logo enviada com sucesso!");
+      setLogoPreview(data.url);
+    },
+    onError: (error: any) => {
+      toast.error(`Erro ao enviar logo: ${error.message}`);
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -141,34 +155,54 @@ export default function DadosEmpresa() {
       return;
     }
 
-    // Preparar dados para envio
-    const dadosParaSalvar: any = {
-      razaoSocial: formData.razaoSocial,
-      nomeFantasia: formData.nomeFantasia || undefined,
-      cnpj: formData.cnpj.replace(/\D/g, ""),
-      inscricaoEstadual: formData.inscricaoEstadual || undefined,
-      inscricaoMunicipal: formData.inscricaoMunicipal || undefined,
-      telefone: formData.telefone || undefined,
-      email: formData.email || undefined,
-      endereco: formData.endereco || undefined,
-      numero: formData.numero || undefined,
-      complemento: formData.complemento || undefined,
-      bairro: formData.bairro || undefined,
-      cidade: formData.cidade || undefined,
-      estado: formData.estado || undefined,
-      cep: formData.cep.replace(/\D/g, "") || undefined,
-    };
-    
-    // Se houver logo, converter para base64
-    if (logoFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        dadosParaSalvar.logoUrl = reader.result as string;
-        salvarMutation.mutate(dadosParaSalvar);
+    try {
+      let logoUrl = empresa?.logoUrl;
+      
+      // Se houver nova logo, fazer upload primeiro
+      if (logoFile) {
+        const reader = new FileReader();
+        const base64Promise = new Promise<string>((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(logoFile);
+        });
+        
+        const base64 = await base64Promise;
+        const base64Data = base64.split(',')[1]; // Remove o prefixo data:image/...
+        
+        const uploadResult = await uploadLogoMutation.mutateAsync({
+          base64: base64Data,
+          fileName: logoFile.name,
+          mimeType: logoFile.type,
+        });
+        
+        logoUrl = uploadResult.url;
+      }
+
+      // Preparar dados para envio
+      const dadosParaSalvar: any = {
+        razaoSocial: formData.razaoSocial,
+        nomeFantasia: formData.nomeFantasia || undefined,
+        cnpj: formData.cnpj.replace(/\D/g, ""),
+        inscricaoEstadual: formData.inscricaoEstadual || undefined,
+        inscricaoMunicipal: formData.inscricaoMunicipal || undefined,
+        telefone: formData.telefone || undefined,
+        email: formData.email || undefined,
+        endereco: formData.endereco || undefined,
+        numero: formData.numero || undefined,
+        complemento: formData.complemento || undefined,
+        bairro: formData.bairro || undefined,
+        cidade: formData.cidade || undefined,
+        estado: formData.estado || undefined,
+        cep: formData.cep.replace(/\D/g, "") || undefined,
+        logoUrl: logoUrl,
       };
-      reader.readAsDataURL(logoFile);
-    } else {
-      salvarMutation.mutate(dadosParaSalvar);
+      
+      await salvarMutation.mutateAsync(dadosParaSalvar);
+      setLogoFile(null); // Limpar arquivo após salvar
+      
+    } catch (error: any) {
+      console.error('Erro ao salvar:', error);
+      toast.error(`Erro ao salvar: ${error.message}`);
     }
   };
 
