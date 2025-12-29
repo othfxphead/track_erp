@@ -114,7 +114,18 @@ export default function NovoOrcamentoModal({
 
   const { subtotal, desconto, total } = calcularTotais();
 
+  const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
+
   useEffect(() => {
+    // Criar ou obter o container do modal
+    let container = document.getElementById('modal-root');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'modal-root';
+      document.body.appendChild(container);
+    }
+    setModalRoot(container);
+
     if (open) {
       document.body.style.overflow = "hidden";
     } else {
@@ -125,7 +136,7 @@ export default function NovoOrcamentoModal({
     };
   }, [open]);
 
-  if (!open) return null;
+  if (!open || !modalRoot) return null;
 
   return createPortal(
     <div 
@@ -407,6 +418,6 @@ export default function NovoOrcamentoModal({
         </div>
       </form>
     </div>,
-    document.body
+    modalRoot
   );
 }
